@@ -1,6 +1,6 @@
 ---
 name: videos-opus
-description: Edita vídeos gravados no celular e cria vídeos animados. Corta as pausas, põe legenda palavra a palavra (Bebas Neue e outras fontes), faz edição viral (abertura de impacto, zoom, efeitos sonoros e batida), muda o formato (Reels, feed, quadrado, horizontal), deixa leve para WhatsApp e faz motion graphics. Use quando pedirem "edita meu vídeo", "edição viral", "corta as pausas", "tira os silêncios", "põe legenda", "legenda no vídeo", "deixa no formato do Reels", "diminui o vídeo para o WhatsApp", "vídeo animado", "reel animado", "motion graphics", "logo animada" ou "vídeo de lançamento".
+description: Edita vídeos gravados no celular e cria vídeos animados. Corta as pausas, põe legenda palavra a palavra (Bebas Neue e outras fontes), edita nos 5 estilos completos (celular, editorial, explicativo, colagem e anúncio, com prints e títulos), faz edição viral (abertura de impacto, zoom, efeitos sonoros e batida), muda o formato (Reels, feed, quadrado, horizontal), deixa leve para WhatsApp e faz motion graphics. Use quando pedirem "edita meu vídeo", "edita no estilo celular/editorial/explicativo/colagem/anúncio", "faz um reel", "edição viral", "corta as pausas", "tira os silêncios", "põe legenda", "legenda no vídeo", "deixa no formato do Reels", "diminui o vídeo para o WhatsApp", "vídeo animado", "reel animado", "motion graphics", "logo animada" ou "vídeo de lançamento".
 argument-hint: "<o que fazer> [nome do vídeo]"
 allowed-tools: Bash, Read, Write, Edit, AskUserQuestion
 license: MIT
@@ -23,6 +23,16 @@ Sempre pelo Node que vem na skill, com o caminho completo entre aspas:
 - PowerShell: `& "SKILL_DIR\bin\node.exe" "SKILL_DIR\scripts\video.mjs" <comando> ...`
 
 Cada comando imprime um JSON. Se vier `"ok": false`, leia `erro` ou `motivo` e explique em uma frase o que aconteceu e o que fazer.
+
+## Qual caminho seguir
+
+| Ela pediu | Caminho |
+|---|---|
+| cortar pausas, pôr legenda, mudar formato, deixar leve | **Editar um vídeo gravado** (rápido, 1 a 2 min) |
+| "edição viral", "com efeitos", "abertura chamativa" | **Edição viral** |
+| um estilo pelo nome (celular, editorial, explicativo, colagem, anúncio), prints, títulos, "faz um reel completo" | **Estilos de edição completos** |
+| vídeo animado, motion graphics, logo animada, vídeo sem gravação | **Vídeos animados** |
+| só "edita meu vídeo", sem mais nada | pergunte uma vez: "1. Rápida: cortes e legenda (1 min) · 2. Viral: abertura, zoom e efeitos (2 min) · 3. Estilo completo: celular, editorial, explicativo, colagem ou anúncio (5 min ou mais)" |
 
 ## Editar um vídeo gravado
 
@@ -70,6 +80,27 @@ Cada comando imprime um JSON. Se vier `"ok": false`, leia `erro` ou `motivo` e e
 `formato "<video ou pasta>" --formato quadrado|feed|reels|horizontal [--encaixar] [--leve]`
 - `--leve` deixa o vídeo pequeno para mandar no WhatsApp (720p, uns 15 MB no máximo).
 - Para um vídeo que vai ser legendado, prefira escolher o formato no `preparar`.
+
+## Estilos de edição completos (celular, editorial, explicativo, colagem, anúncio)
+
+Quando ela pedir um destes estilos pelo nome, ou uma edição "com prints em cima da cabeça", "com cara de revista", "explicando com imagens", "com recortes/colagem", "de anúncio para tráfego", use o **kit de estilos** que vem nesta skill (o motor da Edição Automática de Vídeo):
+
+| Estilo | Para quê |
+|---|---|
+| celular | parece editado no próprio Instagram: legenda de uma palavra, prints crus acima da cabeça, cortes secos |
+| editorial | cara de revista: palavra-chave em serifa itálica, pilhas de frase, cards com prints, aproximações |
+| explicativo | notícia/explicação: imagens e vídeos de apoio por cima, diagramas, aprovação do roteiro antes de montar |
+| colagem | recortes: títulos atrás da cabeça (a pessoa é recortada do fundo), fotos recortadas, sons |
+| anúncio | tráfego pago: esquemas na faixa de cima, gancho forte, CTA |
+
+Como usar: **leia `SKILL_DIR/kit/.claude/skills/editar/SKILL.md` e siga do começo ao fim**. Ele acha o vídeo, pergunta o estilo uma vez se faltar, pede o perfil dela na primeira vez e manda ler o guia do estilo (`SKILL_DIR/kit/.claude/skills/estilo-<nome>/SKILL.md`). Todos os comandos desses guias passam pelo lançador:
+
+- Git Bash: `"SKILL_DIR/bin/node.exe" "SKILL_DIR/scripts/video.mjs" kit [--em <subpasta>] <node|hyperframes|ffmpeg|ffprobe> ...`
+- PowerShell: `& "SKILL_DIR\bin\node.exe" "SKILL_DIR\scripts\video.mjs" kit [--em <subpasta>] ...`
+
+Os guias chamam isso de `$K`. O lançador põe os programas portáteis no caminho e roda na pasta de trabalho do kit (`kit pasta` mostra qual é, normalmente `%LOCALAPPDATA%\videos-opus\kit`): projetos em `video-projects\<slug>`, perfil em `perfil.json`. Para ler ou editar arquivos de um projeto (`keeps.json`, `src/index.template.html`, `reel.json`…), use o caminho completo dentro dessa pasta. Os vídeos prontos aparecem em **Vídeos editados**, na Área de Trabalho.
+
+Esses estilos levam mais tempo do que a edição comum (uns 2 a 5 minutos por vídeo curto; a colagem, com o recorte da pessoa, uns 6 minutos por minuto de vídeo a mais). Avise antes.
 
 ## Edição viral
 

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Colagem</title>
+<script src="assets/gsap.min.js"></script>
+<style>
+/* ===== Estilo colagem (vertical) — leia SKILL.md e DESIGN.md antes de mudar o sistema ===== */
+@font-face{font-family:"Titulo";src:url("assets/fonts/ArchivoBlack-Regular.ttf") format("truetype");font-weight:400 900}
+@font-face{font-family:"Inter";src:url("assets/fonts/Inter-Variable.ttf") format("truetype");font-weight:100 900}
+:root{--navy:#070b16;--blue:#2f7bff;--glow:#6aa8ff;--red:#ff2d3a;--yel:__ACCENT__;--paper:#f3f3f1;--tit:"__FONT_TITLE__","Titulo",sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000}
+#reel{position:relative;width:1080px;height:1920px;overflow:hidden;background:#000;font-family:var(--tit);color:#fff}
+
+/* palco = mundo da apresentadora: câmera + títulos ATRÁS da cabeça + recorte (fg) na frente. Aproximação e escurecer movem tudo junto. */
+#stage{position:absolute;inset:0;transform-origin:50% 40%;filter:brightness(1)}
+#stage video{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover}
+#behind{position:absolute;inset:0}
+.bh{position:absolute;left:0;width:1080px;text-align:center;color:#fff;text-transform:uppercase;
+  text-shadow:0 0 34px rgba(106,168,255,.75),0 8px 0 #22408f,0 14px 30px rgba(0,0,0,.45)}
+.bh svg{overflow:visible}
+.bh text{font-family:var(--tit);fill:#fff}
+
+/* camadas por cima */
+.ov{position:absolute;inset:0;pointer-events:none}
+.scene{position:absolute;inset:0;overflow:hidden}
+.navy{background:radial-gradient(ellipse 70% 55% at 50% 42%,#13204a 0%,#0a1024 55%,#05070f 100%)}
+.navy::before{content:"";position:absolute;inset:-200px;background-image:linear-gradient(rgba(90,150,255,.13) 2px,transparent 2px),linear-gradient(90deg,rgba(90,150,255,.13) 2px,transparent 2px);background-size:90px 90px;transform:perspective(900px) rotateX(38deg) translateY(380px);transform-origin:50% 100%}
+.paper{background:var(--paper)}
+.paper::before{content:"";position:absolute;inset:0;background-image:linear-gradient(#dcdcd8 2px,transparent 2px),linear-gradient(90deg,#dcdcd8 2px,transparent 2px);background-size:96px 96px}
+.paper::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 45%,rgba(0,0,0,.28) 100%)}
+.dark{background:radial-gradient(ellipse 80% 60% at 50% 45%,#141414 0%,#000 75%)}
+.persp{position:absolute;inset:0;perspective:1400px}
+.card{position:absolute;border-radius:26px;overflow:hidden;border:5px solid #fff;background:#111;
+  box-shadow:0 0 0 2px rgba(106,168,255,.55),0 0 48px rgba(106,168,255,.55),0 30px 60px rgba(0,0,0,.55)}
+.card img,.card video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card img.emo{position:static;inset:auto;width:auto;height:1em;object-fit:contain}
+.card.print{background:#fff}
+.card.print img{object-fit:contain;object-position:50% 0}
+.stick{position:absolute;filter:drop-shadow(5px 0 0 #fff) drop-shadow(-5px 0 0 #fff) drop-shadow(0 5px 0 #fff) drop-shadow(0 -5px 0 #fff) drop-shadow(0 22px 30px rgba(0,0,0,.5))}
+.title{position:absolute;left:65px;width:950px;text-align:center;line-height:.95;text-transform:uppercase}
+.chip{position:absolute;display:inline-flex;align-items:center;gap:14px;padding:16px 28px;border-radius:999px;font:44px/1 var(--tit);text-transform:uppercase;
+  background:rgba(8,14,30,.86);border:3px solid var(--glow);box-shadow:0 0 30px rgba(47,123,255,.55);white-space:nowrap}
+.chip.red{border-color:var(--red);box-shadow:0 0 30px rgba(255,45,58,.6)}
+.chip.yel{border-color:var(--yel);box-shadow:0 0 30px color-mix(in srgb,var(--yel) 50%,transparent)}
+.chip.white{background:#fff;color:#0b0b0b;border-color:#fff}
+.tag{position:absolute;font:600 26px/1 "Inter";letter-spacing:.08em;text-transform:uppercase;background:#0b0b0b;color:#fff;padding:10px 14px;border-radius:8px}
+.stamp{position:absolute;font:110px/1 var(--tit);text-transform:uppercase;color:var(--red);border:10px solid var(--red);padding:12px 26px 6px;border-radius:18px;
+  background:rgba(255,255,255,.06);text-shadow:0 0 30px rgba(255,45,58,.5);white-space:nowrap}
+.emo{height:1em;width:auto;vertical-align:-.12em}
+svg.draw path{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+#flash{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#fff 0%,#cfe0ff 45%,#2f7bff 100%);opacity:0;mix-blend-mode:screen}
+#leak{position:absolute;inset:0;background:radial-gradient(circle at 15% 20%,rgba(255,170,90,.9),transparent 45%),radial-gradient(circle at 90% 85%,rgba(47,123,255,.9),transparent 50%);opacity:0;mix-blend-mode:screen}
+
+/* itens empilhados ligados por arcos que brilham */
+.fn{position:absolute;left:110px;width:860px;height:170px;display:flex;align-items:center;gap:26px}
+.fn .num{width:86px;height:86px;flex:none;border-radius:50%;display:grid;place-items:center;font:54px/1 var(--tit);color:#071025;background:#fff;box-shadow:0 0 34px rgba(106,168,255,.9)}
+.fn .ph{width:200px;height:150px;flex:none;border-radius:20px;overflow:hidden;border:4px solid #fff;box-shadow:0 0 28px rgba(106,168,255,.6);background:#0d1630;display:grid;place-items:center;font-size:96px}
+.fn .ph img{width:100%;height:100%;object-fit:cover}
+.fn .txt{display:flex;flex-direction:column;gap:10px}
+.fn .t{font:50px/1 var(--tit);text-transform:uppercase;white-space:nowrap}
+.fn .s{display:flex;gap:10px;flex-wrap:wrap}
+.fn .s span{font:600 30px/1 "Inter";background:rgba(47,123,255,.22);border:2px solid rgba(106,168,255,.8);padding:8px 12px;border-radius:10px;white-space:nowrap}
+
+/* lista ✅ / ❌ sobre painel opaco (texto nunca flutua sobre o rosto) */
+.panel{position:absolute;left:120px;width:840px;border-radius:34px;background:rgba(9,14,30,.94);border:3px solid rgba(255,255,255,.18);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.row{position:absolute;left:150px;width:780px;display:flex;align-items:center;gap:22px;font:58px/1 var(--tit);text-transform:uppercase}
+.row .emo{height:70px}
+
+/* celular: a tela troca a cada oração; #mini mostra o próprio vídeo */
+.phone{position:absolute;left:310px;top:360px;width:460px;height:740px;border-radius:66px;background:#0b0b0d;border:12px solid #222;box-shadow:0 0 0 3px #555,0 0 60px rgba(106,168,255,.55),0 40px 80px rgba(0,0,0,.6);overflow:hidden}
+.phone .scr{position:absolute;inset:0;border-radius:52px;overflow:hidden;background:#fff}
+.phone .notch{position:absolute;left:50%;top:14px;width:140px;height:36px;margin-left:-70px;border-radius:20px;background:#000;z-index:3}
+.feed{position:absolute;left:0;top:0;width:100%}
+.feed img{display:block;width:100%;border-bottom:8px solid #eee}
+
+/* legenda: blocos curtos no peito; a palavra-chave vira bloco GRANDE (emphasis.json) */
+#cap{position:absolute;left:65px;width:950px;top:__CAP_TOP__px;height:150px}
+.c{position:absolute;left:0;top:0;width:950px;text-align:center;font:58px/1.05 var(--tit);color:var(--capc,#fff);
+  -webkit-text-stroke:3px var(--capst,rgba(0,0,0,.55));paint-order:stroke fill;text-shadow:var(--capsh,0 2px 10px rgba(0,0,0,.45))}
+.c.big{font-size:96px;top:-14px}
+.c.big.red{color:#fff;text-shadow:0 0 34px rgba(255,45,58,.95),0 6px 18px rgba(0,0,0,.5)}
+.c.big.blue{text-shadow:0 0 34px rgba(47,123,255,.95),0 6px 18px rgba(0,0,0,.5)}
+.c.big.yel{color:var(--yel)}
+</style></head><body>
+<div id="reel" data-composition-id="reel" data-start="0" data-duration="__DUR__" data-width="1080" data-height="1920">
+
+  <div id="stage">
+    <video id="cam" src="assets/clean.mp4" data-start="0" data-duration="__DUR__" data-track-index="0" muted playsinline></video>
+    <div id="behind">
+      <!-- ===== TÍTULOS ATRÁS DA CABEÇA (o recorte #fg cobre a parte que passa atrás dela). Exemplos:
+      <div class="bh clip" id="bhA" data-start="14.6" data-duration="2.4" data-track-index="40" style="top:330px">
+        <svg width="1080" height="300" viewBox="0 0 1080 300"><path id="arcA" d="M120 270 Q540 40 960 270" fill="none"/><text font-size="170" letter-spacing="8"><textPath href="#arcA" startOffset="50%" text-anchor="middle">NOME</textPath></text></svg>
+      </div>
+      <div class="bh clip" id="bhB" data-start="30.0" data-duration="3.0" data-track-index="41" style="top:300px">
+        <div id="bhB1" style="font-size:78px;line-height:1">PERGUNTA EM</div>
+        <div id="bhB2" style="font-size:118px;line-height:1.02;text-shadow:0 0 40px rgba(47,123,255,1),0 8px 0 #22408f">DUAS LINHAS?</div>
+      </div>
+      -->
+    </div>
+    <video id="fg" src="assets/fg.webm" data-start="0" data-duration="__DUR__" data-track-index="2" muted playsinline></video>
+  </div>
+
+  <audio id="voice" src="assets/clean.mp4" data-start="0" data-duration="__DUR__" data-track-index="1" data-volume="1"></audio>
+__MUSICA__
+__SFX__
+
+  <div class="ov">
+    <!-- ===== CENAS (uma .clip por frase; troque pelos da história dela e apague o que não usar). Exemplos:
+    adesivo + chip acima da cabeça:
+    <div class="clip" id="s1" data-start="0.1" data-duration="2.4" data-track-index="10">
+      <img class="stick" id="s1img" src="assets/photos/objeto-recorte.png" style="left:110px;top:300px;width:300px;transform:rotate(-7deg)" alt="">
+      <div class="chip" id="s1chip" style="left:120px;top:530px">FRASE CURTA?</div></div>
+    revelação de nome (pessoa real, recortada, com o nome em arco):
+    <div class="scene navy clip" id="s2" data-start="2.4" data-duration="1.7" data-track-index="11">
+      <div class="bh" id="s2t" style="top:300px"><svg width="1080" height="260" viewBox="0 0 1080 260"><path id="arcS" d="M70 240 Q540 30 1010 240" fill="none"/><text font-size="96"><textPath href="#arcS" startOffset="50%" text-anchor="middle">NOME DA PESSOA</textPath></text></svg></div>
+      <img id="s2cut" src="assets/photos/pessoa-recorte.png" style="position:absolute;left:150px;top:470px;width:780px" alt="">
+      <div class="chip white" id="s2chip" style="left:255px;top:1010px">QUEM ELA É</div></div>
+    card de foto sobre a apresentadora escurecida (blurIn/blurOut), com seta e anel:
+    <div class="clip" id="s3" data-start="8.5" data-duration="3.2" data-track-index="13">
+      <div class="persp"><div class="card" id="s3c" style="left:250px;top:290px;width:580px;height:780px"><img src="assets/photos/foto.jpg" alt=""><div class="tag" style="left:16px;bottom:16px;top:auto">Imagem ilustrativa</div></div></div>
+      <svg class="draw" id="s3arr" width="1080" height="1920" style="position:absolute;inset:0"><path d="M985 330 C 930 380, 900 400, 760 470" stroke="#ff2d3a" stroke-width="12"/><path d="M790 440 L 758 472 L 800 486" stroke="#ff2d3a" stroke-width="12"/></svg></div>
+    prints reais de notícia em papel quadriculado (troca um pelo outro com swapCard):
+    <div class="scene paper clip" id="s4" data-start="31.0" data-duration="4.7" data-track-index="20">
+      <div class="tag" style="left:110px;top:300px">Veículo · data</div>
+      <div class="persp"><div class="card print" id="pr1" style="left:110px;top:360px;width:860px;height:570px"><img src="assets/photos/print-1.png" alt=""></div></div>
+      <div class="stamp" id="s4st" style="left:140px;top:860px;transform:rotate(-6deg)">PALAVRA</div></div>
+    itens empilhados com arcos (fn) e lista ✅/❌ (panel + row): veja SKILL.md → Catálogo.
+    -->
+
+    <div id="leak"></div>
+    <div id="flash"></div>
+  </div>
+
+  <div id="cap">__CAPTIONS__</div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+const S = "#stage";
+// ---------- ajudantes ----------
+// aproximação suave do palco (0,7 s) — o estilo colagem pode animar o zoom, sempre devagar
+const punch = (t, s) => tl.to(S, { scale: s, duration: 0.7, ease: "power2.inOut" }, t - 0.2);
+// escurece a apresentadora sob uma cena por cima (nunca desfoque)
+const blurIn = (t, d = 0.45) => tl.to(S, { filter: "brightness(0.72)", duration: d, ease: "sine.inOut" }, t);
+const blurOut = (t, d = 0.45) => tl.to(S, { filter: "brightness(1)", duration: d, ease: "sine.inOut" }, t);
+const flash = (t) => { tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.45, duration: 0.14, ease: "sine.out" }, t); tl.to("#flash", { opacity: 0, duration: 0.55, ease: "sine.inOut" }, t + 0.15); tl.set("#flash", { opacity: 0 }, t + 0.7); };
+const leak = (t) => { tl.fromTo("#leak", { opacity: 0 }, { opacity: 0.5, duration: 0.3, ease: "sine.out" }, t); tl.to("#leak", { opacity: 0, duration: 0.8, ease: "sine.inOut" }, t + 0.3); tl.set("#leak", { opacity: 0 }, t + 1.1); };
+const pop = (s, t, extra = {}) => tl.from(s, { scale: 0.6, opacity: 0, duration: 0.5, ease: "back.out(1.3)", ...extra }, t);
+const rise = (s, t, extra = {}) => tl.from(s, { y: 70, opacity: 0, duration: 0.65, ease: "power2.out", ...extra }, t);
+const slideX = (s, t, x, extra = {}) => tl.from(s, { x: x * 0.6, opacity: 0, duration: 0.6, ease: "power3.out", ...extra }, t);
+// card 3D: entra inclinado e balança devagar pelos `d` segundos seguintes
+const tilt = (s, t, d) => { tl.from(s, { rotationY: -22, rotationX: 6, z: -250, opacity: 0, duration: 0.7, ease: "power3.out" }, t);
+  tl.fromTo(s, { rotationY: 0 }, { rotationY: 6, rotationX: -2, duration: Math.max(0.2, d - 0.15), ease: "sine.inOut", immediateRender: false }, t + 0.7); };
+const stamp = (s, t) => { tl.from(s, { scale: 1.6, opacity: 0, duration: 0.35, ease: "power3.out" }, t); shake(t + 0.3); };
+const shake = (t) => tl.fromTo("#reel", { x: 0, y: 0 }, { keyframes: [{ x: -5, y: 3 }, { x: 4, y: -3 }, { x: -2, y: 2 }, { x: 0, y: 0 }], duration: 0.35, ease: "sine.inOut" }, t);
+// desenha traços SVG (setas, X, arcos), um depois do outro
+const draw = (s, t, d = 0.35) => document.querySelectorAll(s).forEach((p, i) => { const L = p.getTotalLength();
+  tl.set(p, { opacity: 1 }, t + i * 0.12);
+  tl.fromTo(p, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: d, ease: "power2.inOut" }, t + i * 0.12); });
+const out = (s, t, d = 0.25) => { tl.to(s, { opacity: 0, scale: 0.92, duration: d, ease: "power2.in" }, t); tl.set(s, { opacity: 0 }, t + d + 0.01); };
+const swapCard = (a, b, t) => { tl.to(a, { rotationY: 35, x: -160, opacity: 0, duration: 0.45, ease: "sine.in" }, t); tl.set(a, { opacity: 0 }, t + 0.46);
+  tl.from(b, { rotationY: -35, x: 160, opacity: 0, duration: 0.6, ease: "power3.out" }, t + 0.2); };
+// legenda escura sobre papel claro (de t0 até t1)
+const capPapel = (t0, t1) => { tl.set("#cap", { "--capc": "#111", "--capst": "rgba(255,255,255,.85)", "--capsh": "none" }, t0);
+  tl.set("#cap", { "--capc": "#fff", "--capst": "rgba(0,0,0,.55)", "--capsh": "0 2px 10px rgba(0,0,0,.45)" }, t1); };
+
+// ===== TEMPOS (troque por vídeo; valores de ancoras.mjs, entrando na palavra que nomeia o objeto ou até 0,5 s antes) =====
+tl.fromTo(S, { scale: 1.12 }, { scale: 1.04, duration: 0.9, ease: "power2.out" }, 0);
+// punch(6.1, 1.12); punch(13.7, 1.0);
+// pop("#s1img", 0.2, { rotation: -40 }); slideX("#s1chip", 1.6, 200);
+// flash(2.4); rise("#s2cut", 2.45, { y: 400, duration: 0.6, ease: "expo.out" }); pop("#s2chip", 2.9);
+// blurIn(8.5); tilt("#s3c", 8.52, 2.6); draw("#s3arr path", 8.6); blurOut(11.55);
+// flash(31.0); tilt("#pr1", 31.04, 0.85); stamp("#s4st", 31.9); capPapel(31.0, 35.7);
+// tl.from("#bhB1", { y: 60, opacity: 0, duration: 0.4, ease: "power3.out" }, 30.1); tl.from("#bhB2", { scale: 0.4, opacity: 0, duration: 0.55, ease: "back.out(1.7)" }, 30.9);
+
+// legenda: cada bloco entra com um pequeno movimento; o grande cresce
+document.querySelectorAll("#cap .c").forEach((c) => {
+  const t = +c.dataset.start;
+  if (c.classList.contains("big")) tl.from(c, { scale: 0.75, opacity: 0, duration: 0.3, ease: "back.out(1.4)" }, t);
+  else tl.from(c, { y: 10, opacity: 0, duration: 0.16, ease: "sine.out" }, t);
+});
+
+window.__timelines = window.__timelines || {};
+window.__timelines["reel"] = tl;
+</script>
+</body></html>

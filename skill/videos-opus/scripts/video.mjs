@@ -11,7 +11,7 @@
 //   formato <video ou pasta> --formato quadrado [--leve] [--encaixar] [--nome saida]
 //   entregar <arquivo> [--nome saida]
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, mkdirSync, copyFileSync } from "node:fs";
-import { join, basename, extname, resolve } from "node:path";
+import { join, basename, extname, resolve, dirname } from "node:path";
 import { homedir, cpus } from "node:os";
 import {
   ffmpeg, probe, filtroHDR, encoderRapido, ENCODER_FINAL, FORMATOS, pastaTrabalho, entregar, lerArgs,
@@ -20,6 +20,11 @@ import {
 import { montarLegenda } from "./legenda.mjs";
 
 const [cmd, ...resto] = process.argv.slice(2);
+// "kit": os argumentos passam crus para o comando do kit (sem ler opções aqui)
+if (cmd === "kit") {
+  const { rodarKit } = await import("./kit.mjs");
+  try { process.exit(await rodarKit(resto)); } catch (e) { console.log(JSON.stringify({ ok: false, erro: e.message }, null, 1)); process.exit(1); }
+}
 const { pos, op } = lerArgs(resto);
 const saida = (obj) => { console.log(JSON.stringify(obj, null, 1)); };
 const lerJSON = (p) => JSON.parse(readFileSync(p, "utf8"));
@@ -160,7 +165,9 @@ function cmdTranscrever() {
   const pulo = fala > 0.6 ? +(fala - 0.15).toFixed(2) : 0;
   ffmpeg([...(pulo ? ["-ss", String(pulo)] : []), "-i", arquivo, "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav]);
   const threads = String(Math.max(2, Math.min(8, cpus().length)));
-  rodar(WHISPER, ["-m", MODELO, "-f", wav, "-l", op.idioma || "pt", "-ml", "1", "-sow", "-oj", "-of", join(pasta, "whisper"), "-t", threads, "-np"]);
+  const vad = join(dirname(MODELO), "ggml-silero-v5.1.2.bin"); // detector de voz: tempos certos mesmo com silêncio longo
+  rodar(WHISPER, ["-m", MODELO, "-f", wav, "-l", op.idioma || "pt", "-ml", "1", "-sow", "-oj", "-of", join(pasta, "whisper"), "-t", threads, "-np",
+    ...(existsSync(vad) ? ["--vad", "-vm", vad] : [])]);
   const j = JSON.parse(readFileSync(join(pasta, "whisper.json"), "utf8"));
   const palavras = [];
   for (const s of j.transcription || []) {
@@ -296,7 +303,7 @@ function cmdAcervo() {
 }
 
 // ---------------------------------------------------------------- diagnostico
-let navegadorOk = null;
+let navegadorOk = null, kitOk = "";
 function cmdDiagnostico() {
   if (navegadorOk === null) return cmdDiagnosticoCompleto();
   const r = { ok: !navegadorOk.startsWith("FALHOU"), itens: { navegador: navegadorOk } };
@@ -307,6 +314,8 @@ function cmdDiagnostico() {
   testa("fontes", () => `${readdirSync(FONTES).filter((f) => /\.ttf$/i.test(f)).length} fontes`);
   testa("encoder", () => encoderRapido()[1]);
   testa("pasta de saída", () => join(areaDeTrabalho(), "Vídeos editados"));
+  r.itens["kit de estilos"] = kitOk;
+  if (kitOk.startsWith("FALHOU")) r.ok = false;
   saida(r);
 }
 async function cmdDiagnosticoCompleto() {
@@ -318,6 +327,12 @@ async function cmdDiagnosticoCompleto() {
     await p.fechar();
     navegadorOk = "ok";
   } catch (e) { navegadorOk = `FALHOU: ${e.message.split("\n")[0]}`; }
+  try {
+    const { prepararKit, ambienteKit } = await import("./kit.mjs");
+    const W = prepararKit();
+    const v = rodar(process.execPath, [join(W, "node_modules", "hyperframes", "dist", "cli.js"), "--version"], { env: ambienteKit(W), cwd: W });
+    kitOk = `ok (HyperFrames ${(v.stdout || "").trim().split("\n").pop()}, pasta ${W})`;
+  } catch (e) { kitOk = `FALHOU: ${e.message.split("\n")[0]}`; }
   cmdDiagnostico();
 }
 

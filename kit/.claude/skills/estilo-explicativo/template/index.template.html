@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Reel</title>
+<script src="assets/gsap.min.js"></script>
+<style>
+/* ===== Estilo explicativo — leia SKILL.md e DESIGN.md antes de mudar qualquer coisa aqui ===== */
+@font-face{font-family:"ExSans";src:url("assets/fonts/Inter-Variable.ttf") format("truetype");font-weight:100 900}
+@font-face{font-family:"Titulo";src:url("assets/fonts/ArchivoBlack-Regular.ttf") format("truetype");font-weight:700}
+:root{--box:#0f1a24;--ink:#1c2733;--muted:#5d6670;--accent:__ACCENT__;--paper:#fbfbfa;--band:668px}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000;color:#fff}
+#reel{position:relative;width:1080px;height:1920px;overflow:hidden}
+
+/* Apresentadora: wrapper SEM tempo. punch() = reenquadramento seco entre frases; split() empurra para baixo da faixa. */
+#camwrap{position:absolute;inset:0;transform-origin:50% 30%}
+#camwrap video{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover}
+
+/* Faixa de apoio: tira no topo, largura total, ~16:9 (var(--band) de altura). Material real, foto de arquivo ou ilustração. */
+.sup{position:absolute;left:0;top:0;width:1080px;height:var(--band);overflow:hidden;background:#000;opacity:0}
+.sup.full{height:1920px}                                  /* apoio em tela cheia (revelação, montagem de recapitulação) */
+.sup video,.sup img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* Etiqueta de contexto, canto superior esquerdo: ARQUIVO · 2020 / ILUSTRAÇÃO / FOTO OFICIAL. Crédito, canto inferior direito. */
+.tag{position:absolute;left:56px;top:52px;background:#111;color:#fff;font:600 27px/1 "ExSans",sans-serif;letter-spacing:.06em;padding:12px 16px;border-radius:5px;text-transform:uppercase}
+.credit{position:absolute;right:24px;bottom:18px;background:rgba(0,0,0,.55);color:#fff;font:400 19px/1 "ExSans",sans-serif;padding:6px 10px;border-radius:4px}
+
+/* Diagrama: tela cheia, chapado, quase branco. O texto É o nó (sem caixas). Setas finas. Uma cor de destaque. */
+.dia{position:absolute;inset:0;background:var(--paper);opacity:0;color:var(--ink);font-family:"ExSans",sans-serif}
+.dia .step{position:absolute;left:0;width:1080px;top:118px;text-align:center;font:500 38px/1 "ExSans",sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.dia .note{position:absolute;left:0;width:1080px;top:180px;text-align:center;font:400 34px/1 "ExSans",sans-serif;color:var(--muted)}
+.dia .n{position:absolute;font:600 88px/1 "ExSans",sans-serif;letter-spacing:-.035em;white-space:nowrap}
+.dia .n.acc{color:var(--accent)}
+.dia .n.mid{font-size:52px;font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:normal;text-align:center}
+.dia .sub{position:absolute;font:400 32px/1 "ExSans",sans-serif;color:var(--muted)}
+.dia .lbl{position:absolute;font:500 34px/1.1 "ExSans",sans-serif;color:var(--ink)}
+.dia .lbl.acc{color:var(--accent)} .dia .lbl small{display:block;font-size:26px;color:var(--muted);font-weight:400}
+.dia .box{position:absolute;border:3px solid var(--ink);opacity:0}            /* destaque = contorno fino, nunca zoom */
+.dia svg{position:absolute;inset:0;overflow:visible}
+.dia path{fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.dia path.acc{stroke:var(--accent);stroke-width:5}
+.dia path.dot{stroke-dasharray:3 11;stroke-width:5}
+.dia .k{opacity:0}                                           /* todo elemento começa escondido; a linha do tempo revela */
+
+/* Legenda modo palavra (reel.json "captions": "words"): uma palavra por vez, branca, contorno preto. */
+.w{position:absolute;left:0;top:__CAP_TOP__px;width:1080px;text-align:center;font-family:"Titulo",sans-serif;font-weight:700;
+  font-size:86px;line-height:120px;color:#fff;-webkit-text-stroke:14px #000;paint-order:stroke fill}
+/* Legenda padrão: FRASES de 1–2 linhas em UMA caixa escura opaca, no mesmo lugar em todo plano (terço inferior). */
+.ph{position:absolute;left:90px;width:900px;top:__CAP_TOP__px;text-align:center}
+.ph span{display:inline-block;background:var(--box);color:#fff;font:600 46px/1.24 "ExSans",sans-serif;letter-spacing:-.01em;padding:16px 28px;border-radius:9px;max-width:780px}
+</style></head><body>
+<div id="reel" data-composition-id="reel" data-start="0" data-duration="__DUR__" data-width="1080" data-height="1920">
+  <div id="camwrap">
+    <video id="cam" src="assets/clean.mp4" data-start="0" data-duration="__DUR__" data-track-index="0" muted playsinline></video>
+  </div>
+  <audio id="voice" src="assets/clean.mp4" data-start="0" data-duration="__DUR__" data-track-index="1" data-volume="1"></audio>
+
+  <!-- ===== APOIO (um .sup por ID do mapa de edição; apague o que não usar) =====
+  Vídeo: o <video> tem tempo (mudo, sem classe); o wrapper .sup é mostrado/escondido pela linha do tempo.
+  <div class="sup" id="V01"><video id="vV01" src="assets/broll/V01.mp4" data-start="0" data-duration="4.5" data-media-start="0" data-track-index="2" muted playsinline></video><div class="tag">Arquivo</div></div>
+  <div class="sup full" id="V02"><video id="vV02" src="assets/broll/V02.mp4" data-start="4.5" data-duration="3.2" data-media-start="0" data-track-index="3" muted playsinline></video></div>
+  <div class="sup" id="R02"><img src="assets/photos/R02.jpg" alt=""><div class="tag">Inauguração · 2014</div><div class="credit">Foto: Autor · CC BY-SA 4.0</div></div>
+  <div class="sup" id="B02"><video id="vB02" src="assets/broll/B02.mp4" data-start="28.4" data-duration="3.4" data-media-start="0" data-track-index="2" muted playsinline></video><div class="tag">Ilustração</div></div>
+  -->
+
+  <!-- ===== DIAGRAMA (exemplo: passos numerados de UM mecanismo, todos no MESMO plano) =====
+  <div class="dia" id="M1">
+    <div class="step" id="M1-step">1 · A dívida</div>
+    <div class="note k" id="M1-note">Sujeito a aprovação.</div>
+    <svg width="1080" height="1920">
+      <path class="k" id="M1-deve" d="M370 560 L690 560 M672 546 L690 560 L672 574"/>
+      <path class="k" id="M1-ctrl" d="M90 640 L90 1000 M76 982 L90 1000 L104 982"/>
+    </svg>
+    <div class="lbl k" id="M1-devel" style="left:490px;top:508px">deve</div>
+    <div class="n" id="M1-a" style="left:40px;top:510px">Empresa A</div>
+    <div class="n acc k" id="M1-b1" style="left:720px;top:500px">Banco 1</div>
+    <div class="n acc k" id="M1-b2" style="left:740px;top:510px">Banco 2</div>
+    <div class="box" id="M1-b2box" style="left:722px;top:494px;width:300px;height:118px"></div>
+    <div class="n mid acc k" id="M1-val" style="left:240px;top:640px;font-size:56px">cerca de R$ 650 mi</div>
+    <div class="lbl k" id="M1-ctrll" style="left:112px;top:800px">controla</div>
+    <div class="n k" id="M1-op" style="left:40px;top:1030px">Operadora</div>
+    <div class="sub k" id="M1-ops" style="left:44px;top:1130px">shows · camarotes · estacionamento</div>
+  </div>
+  -->
+
+  <div id="cap">__CAPTIONS__</div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+const show = (s, t) => tl.set(s, { opacity: 1 }, t);
+const hide = (s, t) => tl.set(s, { opacity: 0 }, t);
+const CFG = __CFG__;   // reel.json: {"split": {"y": 668, "scale": 1, "origin": "50% 0%"}, "punch": 1.18}
+
+// ---- Enquadramento da apresentadora. Só corte seco: muda o enquadramento na fronteira da frase, nunca anima zoom.
+const punch = (scale = CFG.punch, t) => tl.set("#camwrap", { scale, y: 0 }, t);
+const wide = (t) => tl.set("#camwrap", { scale: 1, y: 0 }, t);
+
+// ---- Split: faixa de apoio em cima, apresentadora empurrada para baixo. Entra e sai em corte seco.
+const splitIn = (id, t) => { show("#" + id, t); tl.set("#camwrap", { y: CFG.split.y, scale: CFG.split.scale, transformOrigin: CFG.split.origin }, t); };
+const splitOut = (id, t, scale = 1) => { hide("#" + id, t); tl.set("#camwrap", { y: 0, scale, transformOrigin: "50% 30%" }, t); };
+const split = (id, t0, t1, after = 1) => { splitIn(id, t0); splitOut(id, t1, after); };
+const swapSup = (de, para, t) => { hide("#" + de, t); show("#" + para, t); };  // apoios em sequência, apresentadora fica
+const full = (id, t0, t1) => { show("#" + id, t0); hide("#" + id, t1); };       // apoio em tela cheia (apresentadora escondida)
+// Foto parada: aproximação quase invisível (≤ 5 %) para não parecer congelado.
+const drift = (sel, t, d, to = 1.05) => tl.fromTo(sel, { scale: 1 }, { scale: to, duration: d, ease: "none" }, t);
+
+// ---- Diagrama. Um plano por mecanismo; os passos mudam as coisas NO LUGAR. Nada viaja, nada dá zoom.
+const diaIn = (s, t) => show(s, t);
+const diaOut = (s, t) => hide(s, t);
+const reveal = (s, t, d = 0.3) => tl.to(s, { opacity: 1, duration: d, ease: "power1.out" }, t);
+const remove = (s, t, d = 0.3) => tl.to(s, { opacity: 0, duration: d, ease: "power1.in" }, t);
+const swap = (a, b, t) => { remove(a, t, 0.25); reveal(b, t + 0.1, 0.3); };     // "Banco 1" → "Banco 2" no mesmo lugar
+const relabel = (s, txt, t) => tl.set(s, { textContent: txt }, t);              // "1 · A dívida" → "2 · Muda o credor"
+const draw = (path, t, d = 0.5) => { const p = document.querySelector(path); if (!p) return; const L = p.getTotalLength(); const dot = p.classList.contains("dot");
+  tl.set(p, { opacity: 1 }, t);
+  if (dot) { tl.fromTo(p, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: d, ease: "none" }, t); return; }
+  tl.fromTo(p, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: d, ease: "power1.inOut" }, t); };
+const outline = (box, t, hold = 1.2) => { reveal(box, t, 0.15); remove(box, t + hold, 0.25); };  // destaque = contorno fino
+const fade = (s, t, to = 0.35) => tl.to(s, { opacity: to, duration: 0.4 }, t);  // rebaixa para secundário ("segue sócia")
+
+// ===== TEMPOS (troque por vídeo; valores de ancoras.mjs na linha do tempo FINAL, entrando no substantivo falado) =====
+// split("V01", 0, 4.5);  full("V02", 4.5, 7.7);  punch(1.18, 12.9);  wide(16.2);
+// diaIn("#M1", 44.5); reveal("#M1-b1", 44.5); draw("#M1-deve", 44.6); reveal("#M1-devel", 44.8); reveal("#M1-val", 45.0);
+//   draw("#M1-ctrl", 45.2); reveal("#M1-ctrll", 45.3); reveal("#M1-op,#M1-ops", 45.4);
+//   relabel("#M1-step", "2 · Muda o credor", 46.3); swap("#M1-b1", "#M1-b2", 46.3); outline("#M1-b2box", 48.0); diaOut("#M1", 51.1);
+
+window.__timelines = window.__timelines || {};
+window.__timelines["reel"] = tl;
+</script>
+</body></html>

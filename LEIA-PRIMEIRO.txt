@@ -1,14 +1,16 @@
 VÍDEOS OPUS — edição de vídeo pelo Claude
 ==========================================
 
-Corta as pausas, põe legenda, muda o formato e deixa o vídeo leve para o
-WhatsApp. Tudo roda no seu computador, sem internet e sem custo por vídeo.
-Os programas já vêm dentro deste arquivo: você não instala mais nada.
+Corta as pausas, põe legenda, faz edição viral, edita nos 5 estilos completos
+(celular, editorial, explicativo, colagem e anúncio), cria vídeos animados,
+muda o formato e deixa o vídeo leve para o WhatsApp. Tudo roda no seu
+computador, sem custo por vídeo. Os programas já vêm dentro deste arquivo:
+você não instala mais nada.
 
 
 ANTES DE COMEÇAR
 ----------------
-- Windows 10 ou 11, com uns 2 GB livres no disco.
+- Windows 10 ou 11, com uns 3 GB livres no disco.
 - O app do Claude instalado, com login feito, em um plano pago
   (Pro ou acima). O plano gratuito não tem a aba Code.
 
@@ -20,11 +22,13 @@ INSTALAR (uma vez só, uns 2 minutos)
   3. Copie a mensagem abaixo, cole no Claude e envie:
 
   ---------------------------------------------------------------------
-  Instale a skill videos-opus. Descompacte o arquivo videos-opus-v1.zip
-  desta pasta e copie a pasta videos-opus que está dentro dele para
-  .claude\skills\videos-opus dentro da minha pasta de usuário
-  (C:\Users\<meu usuário>). Crie as pastas que faltarem; se já existir
-  uma versão antiga, substitua. Depois rode o diagnóstico:
+  Instale a skill videos-opus que está no arquivo videos-opus-v1.zip
+  desta pasta. Use o tar do Windows, que é rápido (o Expand-Archive leva
+  mais de meia hora com este arquivo): crie a pasta .claude\skills dentro
+  da minha pasta de usuário se ela não existir e rode
+  tar -xf videos-opus-v1.zip -C "<minha pasta de usuário>\.claude\skills" videos-opus
+  Se já existir uma pasta videos-opus antiga ali, apague-a antes.
+  Depois rode o diagnóstico:
   "<pasta da skill>\bin\node.exe" "<pasta da skill>\scripts\video.mjs" diagnostico
   e me diga se deu tudo certo. Não altere nenhum arquivo do pacote.
   ---------------------------------------------------------------------
@@ -39,7 +43,10 @@ Abra o app do Claude > aba Code (qualquer pasta) e peça do seu jeito:
 
   - Corta as pausas e põe legenda no vídeo IMG_2041
   - Põe legenda em Bebas Neue no meu último vídeo
-  - Legenda amarela, uma palavra por vez, no vídeo que está nos Downloads
+  - Faz uma edição viral do vídeo que está nos Downloads
+  - Edita meu último vídeo no estilo celular (ou editorial, explicativo,
+    colagem, anúncio)
+  - Cria um vídeo animado da minha oferta de R$ 97
   - Deixa esse vídeo quadrado para o feed
   - Diminui o vídeo para eu mandar no WhatsApp
 
