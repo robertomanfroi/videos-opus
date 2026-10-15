@@ -111,6 +111,11 @@
   .tecla { display: inline-block; min-width: 26px; padding: 2px 8px 1px; border: 1.5px solid var(--chocolate); border-bottom-width: 3px; border-radius: 6px;
     background: var(--branco-quente); font-family: "Montserrat"; font-weight: 700; font-size: 11px; text-align: center; }
   .linha-cmd { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; font-size: 6.5px; white-space: nowrap; letter-spacing: 0; color: var(--chocolate); }
+
+  .caminho { font-family: "Bebas Neue"; font-size: 20px; letter-spacing: 2px; margin: 12px 0 2px; display: flex; align-items: center; gap: 10px; }
+  .caminho .tag { font-family: "Montserrat"; font-size: 8.5px; letter-spacing: 2px; font-weight: 700; padding: 2px 8px; border-radius: 100px; background: var(--terracota); color: var(--branco-quente); }
+  .caminho .tag.reserva { background: var(--bege-lt); color: var(--ocre); border: 1px solid var(--bege-escuro); }
+  .passo.mini { margin: 5px 0; } .passo.mini .num { flex-basis: 26px; height: 26px; font-size: 17px; }
 </style>
 </head>
 <body>
@@ -189,15 +194,22 @@
 
   <div class="rotulo" style="margin-top:22px">Passo a passo</div>
   <h1>Instalação</h1>
-  <h2>Uma linha, uma vez só.</h2>
+  <h2>Uma vez só, uns 3 minutos.</h2>
 
-  <div class="passo"><div class="num">1</div><div class="txt">Aperte as teclas <span class="tecla">⊞ Windows</span> + <span class="tecla">R</span> ao mesmo tempo. Abre uma janelinha chamada <b>Executar</b>.</div></div>
-  <div class="passo"><div class="num">2</div><div class="txt">Copie a linha abaixo <b>inteira</b>, cole na janela Executar e aperte <b>Enter</b>:
-    <div class="prompt"><span class="etq">Linha para copiar</span><span class="linha-cmd">cmd /c "cd /d %USERPROFILE%\Downloads &amp;&amp; curl -sLO https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar.cmd &amp;&amp; instalar.cmd"</span></div>
-    <span class="pequeno">Se preferir, copie a mesma linha da página <a href="https://github.com/robertomanfroi/videos-opus" style="color:var(--terracota);font-weight:700">github.com/robertomanfroi/videos-opus</a>.</span></div></div>
-  <div class="passo"><div class="num">3</div><div class="txt">Abre uma <b>janela preta</b> que baixa (uns 390 MB) e instala tudo sozinha, em 1 a 3 minutos. Quando aparecer <b>PRONTO!</b>, aperte qualquer tecla.</div></div>
-  <div class="passo"><div class="num">4</div><div class="txt">Abra o <b>app do Claude</b>, aba <b>Code</b>, e no seletor <b>Environment</b> escolha <b>Local</b> (não Cloud). Pronto: é só pedir a edição.</div></div>
-  <div class="cartao pequeno"><b>O que essa linha faz?</b> Baixa o instalador da página oficial do projeto no GitHub e roda. Ele coloca a skill na pasta do Claude e testa. Não pede senha, não instala nada no Windows e não mexe nos seus arquivos. Para atualizar no futuro, é só repetir a mesma linha.</div>
+  <div class="caminho">Jeito 1: pedindo ao Claude <span class="tag">RECOMENDADO</span></div>
+  <div class="passo mini"><div class="num">1</div><div class="txt">Abra o <b>app do Claude</b>, aba <b>Code</b>. No seletor <b>Environment</b>, escolha <b>Local</b> (não Cloud).</div></div>
+  <div class="passo mini"><div class="num">2</div><div class="txt">Copie esta mensagem, cole no Claude e envie:
+    <div class="prompt"><span class="etq">Mensagem para copiar</span>Quero instalar a skill de edição de vídeo Vídeos Opus. Baixa o instalador oficial <span style="white-space:nowrap">https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar.cmd</span>, lê o que ele faz e roda pra mim.</div></div></div>
+  <div class="passo mini"><div class="num">3</div><div class="txt">O Claude lê o instalador e explica o que ele faz. Quando ele perguntar se pode rodar, responda <b>"pode"</b>. Se aparecer um pedido de permissão, clique em <b>Permitir</b>.</div></div>
+  <div class="passo mini"><div class="num">4</div><div class="txt">Quando ele disser que <b>deu certo</b>, abra uma <b>conversa nova</b>. Pronto!</div></div>
+
+  <div class="caminho">Jeito 2: se o Claude não quiser instalar <span class="tag reserva">RESERVA</span></div>
+  <div class="passo mini"><div class="num">1</div><div class="txt">Clique aqui: <a class="link" href="https://github.com/robertomanfroi/videos-opus/releases/latest/download/Instalar-Videos-Opus.cmd" style="text-decoration:none;padding:4px 12px">Baixar o instalador</a></div></div>
+  <div class="passo mini"><div class="num">2</div><div class="txt">Se o navegador perguntar se você quer <b>manter</b> o arquivo, clique em <b>Manter</b>.</div></div>
+  <div class="passo mini"><div class="num">3</div><div class="txt">Na pasta <b>Downloads</b>, dê dois cliques em <b>Instalar-Videos-Opus</b>.</div></div>
+  <div class="passo mini"><div class="num">4</div><div class="txt">Se aparecer a tela azul <b>"O Windows protegeu o computador"</b>, clique em <b>Mais informações</b> e depois em <b>Executar assim mesmo</b>.</div></div>
+  <div class="passo mini"><div class="num">5</div><div class="txt">Espere a janela preta mostrar <b>PRONTO!</b> e aperte qualquer tecla.</div></div>
+  <div class="cartao pequeno"><b>É seguro?</b> O instalador é um arquivo de texto aberto, no GitHub oficial do projeto. Ele baixa o pacote, coloca a skill na pasta do Claude e testa. Não pede senha e não mexe nos seus arquivos. Para atualizar no futuro, é só repetir.</div>
   <div class="rodape"><span>Vídeos Opus · Guia</span><span>4</span></div>
 </section>
 
@@ -336,15 +348,15 @@
   <h1>Perguntas e problemas</h1>
   <table>
     <tr><th style="width:36%">Aconteceu</th><th>O que fazer</th></tr>
-    <tr><td>A janela preta mostrou um erro</td><td>Confira a internet e o espaço no disco (uns 3 GB) e repita a linha. Se o erro continuar, mande uma foto da janela para o suporte.</td></tr>
+    <tr><td>A janela preta mostrou um erro</td><td>Confira a internet e o espaço no disco (uns 3 GB) e repita. Se o erro continuar, mande uma foto da janela para o suporte.</td></tr>
     <tr><td>Não aparece a aba <b>Code</b> no app</td><td>A aba Code é dos planos pagos. Confira seu plano em claude.ai, em Configurações. Atualize o app do Claude.</td></tr>
-    <tr><td>O Claude disse que não conhece a skill</td><td>Confira se a janela preta mostrou <b>PRONTO!</b>. Abra uma <b>conversa nova</b> no app, aba Code, ambiente <b>Local</b>.</td></tr>
+    <tr><td>O Claude não quis instalar</td><td>Use o <b>Jeito 2</b> da página de instalação: baixar o instalador e dar dois cliques.</td></tr>
+    <tr><td>O Claude disse que não conhece a skill</td><td>Abra uma <b>conversa nova</b> no app, aba Code, ambiente <b>Local</b>. Se continuar, refaça a instalação.</td></tr>
     <tr><td>O Claude pede permissão toda hora</td><td>Clique em <b>Permitir</b>. Se o app oferecer "permitir sempre" para esse tipo de comando, pode usar.</td></tr>
     <tr><td>"Não achei nenhum vídeo"</td><td>Confira se o vídeo terminou de baixar e está em Downloads, Área de Trabalho ou Vídeos. Ou diga o nome do arquivo.</td></tr>
     <tr><td>A legenda errou uma palavra</td><td>Peça a correção ("na legenda, troca X por Y"). Nomes próprios: diga ao Claude, que ele guarda no seu perfil.</td></tr>
-    <tr><td>Cortou fala demais ou de menos</td><td>Peça "deixa mais respiro" ou "corta mais as pausas". Ambientes com barulho atrapalham o corte.</td></tr>
     <tr><td>Demorou muito</td><td>Computador sem placa de vídeo é mais lento, principalmente no estilo colagem. Prefira vídeos de até 90 segundos.</td></tr>
-    <tr><td>Quero atualizar para uma versão nova</td><td>Repita a linha de instalação: vem sempre a versão mais nova, sem apagar seus vídeos.</td></tr>
+    <tr><td>Quero atualizar para uma versão nova</td><td>Repita a instalação: vem sempre a versão mais nova, sem apagar seus vídeos.</td></tr>
   </table>
 
   <h3>O que a skill nunca faz</h3>
