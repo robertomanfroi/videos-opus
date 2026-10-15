@@ -127,6 +127,10 @@
   .print-dl img { display: block; width: 100%; }
   .print-dl .marca { position: absolute; left: 23.6%; top: 78.5%; width: 22.4%; height: 13%; border: 3px solid var(--terracota); border-radius: 10px;
     box-shadow: 0 0 0 4px rgba(193,75,34,.25); }
+
+  .tecla { display: inline-block; min-width: 26px; padding: 2px 8px 1px; border: 1.5px solid var(--chocolate); border-bottom-width: 3px; border-radius: 6px;
+    background: var(--branco-quente); font-family: "Montserrat"; font-weight: 700; font-size: 11px; text-align: center; }
+  .linha-cmd { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; font-size: 6.5px; white-space: nowrap; letter-spacing: 0; color: var(--chocolate); }
 </style>
 </head>
 <body>
@@ -204,20 +208,20 @@
     <li>Uns <b>3 GB livres</b> no disco</li>
     <li>App do <b>Claude</b> instalado no computador, com login feito (veja a página anterior)</li>
     <li>Plano <b>Pro, Max, Team ou Enterprise</b> (a aba <b>Code</b> aparece no topo do app)</li>
-    <li>Internet para o Claude baixar o pacote (uns 390 MB, uma vez só)</li>
+    <li>Internet para baixar o pacote (uns 390 MB, uma vez só)</li>
   </ul>
 
   <div class="rotulo" style="margin-top:22px">Passo a passo</div>
   <h1>Instalação</h1>
-  <h2>Uma vez só, em 4 passos.</h2>
+  <h2>Uma linha, uma vez só.</h2>
 
-  <div class="passo"><div class="num">1</div><div class="txt">Abra o <b>app do Claude</b> e clique na aba <b>Code</b>. Na caixa de mensagem, no seletor <b>Environment</b> (ambiente), escolha <b>Local</b>, e não Cloud. Se ele pedir uma pasta, escolha <b>Downloads</b>.</div></div>
-  <div class="passo"><div class="num">2</div><div class="txt">Copie a mensagem abaixo, cole no Claude e envie. O Claude lê as instruções no endereço, baixa o pacote e instala tudo sozinho.
-    <div class="prompt"><span class="etq">Mensagem para copiar</span>Instala a skill videos-opus seguindo as instruções de <span style="white-space:nowrap">https://github.com/robertomanfroi/videos-opus</span></div></div></div></div>
-  <div class="passo"><div class="num">3</div><div class="txt">Quando o Claude pedir permissão, clique em <b>Permitir</b>. Ele baixa (uns 390 MB), instala e testa tudo sozinho em poucos minutos.</div></div>
-  <div class="passo"><div class="num">4</div><div class="txt">Quando ele disser que <b>deu tudo certo</b>, abra uma <b>conversa nova</b>. Pronto: a skill está instalada para sempre.</div></div>
-  <div class="cartao pequeno"><b>Não anexe nenhum arquivo na conversa:</b> o chat só aceita anexos de até 30 MB, e não precisa. Prefere baixar você mesma?
-    Baixe o <b>videos-opus.zip</b> em <a href="https://github.com/robertomanfroi/videos-opus/releases/latest" style="color:var(--terracota);font-weight:700">github.com/robertomanfroi/videos-opus/releases</a>, deixe em Downloads e escreva ao Claude: <i>"Instala a skill do arquivo videos-opus.zip que está em Downloads, seguindo o LEIA-PRIMEIRO.txt que está dentro dele."</i></div>
+  <div class="passo"><div class="num">1</div><div class="txt">Aperte as teclas <span class="tecla">⊞ Windows</span> + <span class="tecla">R</span> ao mesmo tempo. Abre uma janelinha chamada <b>Executar</b>.</div></div>
+  <div class="passo"><div class="num">2</div><div class="txt">Copie a linha abaixo <b>inteira</b>, cole na janela Executar e aperte <b>Enter</b>:
+    <div class="prompt"><span class="etq">Linha para copiar</span><span class="linha-cmd">cmd /c "cd /d %USERPROFILE%\Downloads &amp;&amp; curl -sLO https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar.cmd &amp;&amp; instalar.cmd"</span></div>
+    <span class="pequeno">Se preferir, copie a mesma linha da página <a href="https://github.com/robertomanfroi/videos-opus" style="color:var(--terracota);font-weight:700">github.com/robertomanfroi/videos-opus</a>.</span></div></div>
+  <div class="passo"><div class="num">3</div><div class="txt">Abre uma <b>janela preta</b> que baixa (uns 390 MB) e instala tudo sozinha, em 1 a 3 minutos. Quando aparecer <b>PRONTO!</b>, aperte qualquer tecla.</div></div>
+  <div class="passo"><div class="num">4</div><div class="txt">Abra o <b>app do Claude</b>, aba <b>Code</b>, e no seletor <b>Environment</b> escolha <b>Local</b> (não Cloud). Pronto: é só pedir a edição.</div></div>
+  <div class="cartao pequeno"><b>O que essa linha faz?</b> Baixa o instalador da página oficial do projeto no GitHub e roda. Ele coloca a skill na pasta do Claude e testa. Não pede senha, não instala nada no Windows e não mexe nos seus arquivos. Para atualizar no futuro, é só repetir a mesma linha.</div>
   <div class="rodape"><span>Vídeos Opus · Guia</span><span>4</span></div>
 </section>
 
@@ -356,15 +360,15 @@
   <h1>Perguntas e problemas</h1>
   <table>
     <tr><th style="width:36%">Aconteceu</th><th>O que fazer</th></tr>
-    <tr><td>O Claude disse que está "na nuvem", "num container" ou que a rede bloqueou o download</td><td>A sessão foi aberta no ambiente <b>Cloud</b>. Comece uma sessão nova na aba Code com o seletor <b>Environment</b> em <b>Local</b> e mande a mensagem de novo.</td></tr>
+    <tr><td>A janela preta mostrou um erro</td><td>Confira a internet e o espaço no disco (uns 3 GB) e repita a linha. Se o erro continuar, mande uma foto da janela para o suporte.</td></tr>
     <tr><td>Não aparece a aba <b>Code</b> no app</td><td>A aba Code é dos planos pagos. Confira seu plano em claude.ai, em Configurações. Atualize o app do Claude.</td></tr>
-    <tr><td>O Claude disse que não conhece a skill</td><td>Abra uma <b>conversa nova</b> depois de instalar. Se continuar, peça: "roda o diagnóstico da skill videos-opus".</td></tr>
+    <tr><td>O Claude disse que não conhece a skill</td><td>Confira se a janela preta mostrou <b>PRONTO!</b>. Abra uma <b>conversa nova</b> no app, aba Code, ambiente <b>Local</b>.</td></tr>
     <tr><td>O Claude pede permissão toda hora</td><td>Clique em <b>Permitir</b>. Se o app oferecer "permitir sempre" para esse tipo de comando, pode usar.</td></tr>
     <tr><td>"Não achei nenhum vídeo"</td><td>Confira se o vídeo terminou de baixar e está em Downloads, Área de Trabalho ou Vídeos. Ou diga o nome do arquivo.</td></tr>
     <tr><td>A legenda errou uma palavra</td><td>Peça a correção ("na legenda, troca X por Y"). Nomes próprios: diga ao Claude, que ele guarda no seu perfil.</td></tr>
     <tr><td>Cortou fala demais ou de menos</td><td>Peça "deixa mais respiro" ou "corta mais as pausas". Ambientes com barulho atrapalham o corte.</td></tr>
     <tr><td>Demorou muito</td><td>Computador sem placa de vídeo é mais lento, principalmente no estilo colagem. Prefira vídeos de até 90 segundos.</td></tr>
-    <tr><td>Quero atualizar para uma versão nova</td><td>Mande a mesma mensagem de instalação: vem sempre a versão mais nova, sem apagar seus vídeos.</td></tr>
+    <tr><td>Quero atualizar para uma versão nova</td><td>Repita a linha de instalação: vem sempre a versão mais nova, sem apagar seus vídeos.</td></tr>
   </table>
 
   <h3>O que a skill nunca faz</h3>

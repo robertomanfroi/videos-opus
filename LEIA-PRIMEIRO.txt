@@ -17,44 +17,21 @@ ANTES DE COMEÇAR
 
 INSTALAR (uma vez só, uns 2 minutos)
 ------------------------------------
-  1. Abra o app do Claude > aba Code.
-  2. No seletor Environment da caixa de mensagem, escolha Local (não Cloud).
-  3. Escreva para o Claude:
+  1. Aperte as teclas Windows + R ao mesmo tempo (abre a janela Executar).
+  2. Cole a linha abaixo e aperte Enter:
 
-       Instala a skill videos-opus seguindo as instruções de
-       https://github.com/robertomanfroi/videos-opus
+  cmd /c "cd /d %USERPROFILE%\Downloads && curl -sLO https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar.cmd && instalar.cmd"
 
-     (Se você já baixou este zip, pode escrever: Instala a skill do arquivo
-     videos-opus.zip que está em Downloads, seguindo o LEIA-PRIMEIRO.txt
-     que está dentro dele.)
-  4. Quando o Claude pedir permissão, clique em Permitir.
-  5. Quando ele disser que deu certo, abra uma conversa nova.
+  3. Espere a janela preta mostrar PRONTO e aperte qualquer tecla.
 
-  Não anexe o zip na conversa: o chat só aceita anexos de até 30 MB, e
-  não precisa. Na aba Code o Claude abre o arquivo direto da pasta.
-
-
-PARA O CLAUDE (como instalar este pacote)
------------------------------------------
-Se a pessoa pediu para instalar este arquivo, faça exatamente isto:
-  1. Destino: a pasta .claude\skills dentro da pasta do usuário
-     (%USERPROFILE%\.claude\skills). Crie se não existir.
-  2. Se já existir uma pasta videos-opus ali (versão antiga), apague-a.
-  3. Descompacte com o tar do Windows, que leva segundos
-     (NÃO use Expand-Archive nem "Extrair tudo": com os 7.500 arquivos
-     deste pacote eles levam mais de meia hora), usando o caminho
-     completo do zip (normalmente em Downloads):
-       tar -xf "<caminho do zip>" -C "%USERPROFILE%\.claude\skills" videos-opus
-  4. Rode o diagnóstico:
-       "%USERPROFILE%\.claude\skills\videos-opus\bin\node.exe" "%USERPROFILE%\.claude\skills\videos-opus\scripts\video.mjs" diagnostico
-     Todos os itens devem dizer ok.
-  5. Diga à pessoa, em português simples, que deu certo e que ela deve
-     abrir uma conversa nova para usar. Não altere nenhum arquivo do pacote.
+  Para atualizar, repita a mesma linha. Detalhes e o que o instalador
+  faz: https://github.com/robertomanfroi/videos-opus
 
 
 COMO USAR
 ---------
-Abra o app do Claude > aba Code (qualquer pasta) e peça do seu jeito:
+Abra o app do Claude > aba Code, com o seletor Environment em Local, e
+peça do seu jeito:
 
   - Corta as pausas e põe legenda no vídeo IMG_2041
   - Põe legenda em Bebas Neue no meu último vídeo

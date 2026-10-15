@@ -9,22 +9,24 @@ Tudo roda no seu computador. Você instala uma vez e não precisa instalar mais 
 - Computador com **Windows 10 ou 11** e uns 3 GB livres
 - O **app do Claude** instalado ([claude.ai/download](https://claude.ai/download)), com plano **Pro ou acima** (a aba **Code** não existe no plano gratuito)
 
-## Como instalar (uma vez só)
+## Como instalar (uma vez só, uns 2 minutos)
 
-1. Abra o app do Claude e clique na aba **Code**.
-2. Na caixa de mensagem, no seletor **Environment**, escolha **Local** (e não Cloud). Se ele pedir uma pasta, escolha **Downloads**.
-3. Copie esta mensagem, cole no Claude e envie:
+1. Aperte as teclas **Windows + R** ao mesmo tempo. Abre a janelinha **Executar**.
+2. Copie a linha abaixo, cole nessa janela e aperte **Enter**:
 
    ```
-   Instala a skill videos-opus seguindo as instruções de https://github.com/robertomanfroi/videos-opus
+   cmd /c "cd /d %USERPROFILE%\Downloads && curl -sLO https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar.cmd && instalar.cmd"
    ```
 
-4. Quando o Claude pedir permissão, clique em **Permitir**.
-5. Quando ele disser que deu certo, abra uma **conversa nova**. Pronto.
+3. Abre uma janela preta que baixa e instala tudo sozinha. Espere aparecer **PRONTO** e aperte qualquer tecla.
+
+Para atualizar no futuro, é só repetir a mesma linha.
+
+**O que o instalador faz** ([instalar.cmd](instalar.cmd), texto simples, dá para ler antes): baixa o pacote `videos-opus.zip` da página de [Releases](https://github.com/robertomanfroi/videos-opus/releases) deste repositório, descompacta em `%USERPROFILE%\.claude\skills\videos-opus` (substituindo a versão anterior), apaga o zip e roda um teste. Não pede senha de administrador e não mexe em mais nada do computador.
 
 ## Como usar
 
-Na aba Code (ambiente **Local**), peça do seu jeito:
+Abra o app do Claude, aba **Code**, com o seletor **Environment** em **Local**, e peça do seu jeito:
 
 - *Corta as pausas e põe legenda no meu último vídeo*
 - *Faz uma edição viral do vídeo que está nos Downloads*
@@ -36,37 +38,9 @@ O vídeo pronto aparece na pasta **Vídeos editados**, na sua Área de Trabalho.
 
 ---
 
-## Para o Claude: como instalar esta skill
-
-Se a pessoa pediu para instalar esta skill, faça exatamente isto, sem pedir que ela faça nada além de clicar em Permitir:
-
-1. **Confira o ambiente.** A skill só funciona numa sessão **Local** no Windows (ela edita arquivos do computador da pessoa). Se você estiver num container na nuvem (sem `C:\`, sem Windows, rede restrita), pare e diga, em português simples: "Esta conversa está rodando na nuvem. Abra uma conversa nova na aba Code com o seletor Environment em **Local** e mande a mesma mensagem."
-2. **Baixe o pacote** (uns 390 MB) com o curl do Windows:
-   ```
-   curl.exe -L -o "%USERPROFILE%\Downloads\videos-opus.zip" https://github.com/robertomanfroi/videos-opus/releases/latest/download/videos-opus.zip
-   ```
-   (PowerShell: troque `%USERPROFILE%` por `$env:USERPROFILE`.)
-3. **Instale** em `%USERPROFILE%\.claude\skills\videos-opus`:
-   - crie `%USERPROFILE%\.claude\skills` se não existir;
-   - se já existir uma pasta `videos-opus` ali (versão antiga), apague-a;
-   - descompacte com o **tar** do Windows, que leva segundos (não use Expand-Archive nem "Extrair tudo": com os 7.500 arquivos do pacote eles levam mais de meia hora):
-     ```
-     tar -xf "%USERPROFILE%\Downloads\videos-opus.zip" -C "%USERPROFILE%\.claude\skills" videos-opus
-     ```
-4. **Teste:**
-   ```
-   "%USERPROFILE%\.claude\skills\videos-opus\bin\node.exe" "%USERPROFILE%\.claude\skills\videos-opus\scripts\video.mjs" diagnostico
-   ```
-   Todos os itens devem dizer `ok`. Se algum falhar, mostre à pessoa qual foi.
-5. **Termine** dizendo que deu certo e que ela deve abrir uma conversa nova para usar. Pode apagar o zip de Downloads se ela concordar.
-
-Não altere nenhum arquivo do pacote.
-
----
-
 ## Para quem mantém o projeto
 
 - `skill/videos-opus/` — a skill (SKILL.md e scripts). `kit/` — motor dos 5 estilos (adaptado da Edição Automática de Vídeo).
 - `./empacotar.sh` gera `dist/videos-opus.zip` com os programas portáteis (FFmpeg, Node, whisper.cpp, modelos e o kit compilado para Windows), que ficam fora do git em `vendor-cache/`.
-- Cada versão é publicada como **Release** com o arquivo `videos-opus.zip`; o link `releases/latest/download/videos-opus.zip` sempre aponta para a mais nova.
+- Cada versão é publicada como **Release** com os arquivos `videos-opus.zip` e `instalar.cmd` (`gh release create vX.Y.Z dist/videos-opus.zip instalar.cmd`); os links `releases/latest/download/...` sempre apontam para a mais nova.
 - Licenças dos programas incluídos: pasta `licencas/` dentro do pacote.
