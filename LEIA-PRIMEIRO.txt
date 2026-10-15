@@ -1,0 +1,60 @@
+VÍDEOS OPUS — edição de vídeo pelo Claude
+==========================================
+
+Corta as pausas, põe legenda, muda o formato e deixa o vídeo leve para o
+WhatsApp. Tudo roda no seu computador, sem internet e sem custo por vídeo.
+Os programas já vêm dentro deste arquivo: você não instala mais nada.
+
+
+ANTES DE COMEÇAR
+----------------
+- Windows 10 ou 11, com uns 2 GB livres no disco.
+- O app do Claude instalado, com login feito, em um plano pago
+  (Pro ou acima). O plano gratuito não tem a aba Code.
+
+
+INSTALAR (uma vez só, uns 2 minutos)
+------------------------------------
+  1. Deixe este arquivo .zip na pasta Downloads (não precisa descompactar).
+  2. Abra o app do Claude > aba Code > escolha a pasta Downloads.
+  3. Copie a mensagem abaixo, cole no Claude e envie:
+
+  ---------------------------------------------------------------------
+  Instale a skill videos-opus. Descompacte o arquivo videos-opus-v1.zip
+  desta pasta e copie a pasta videos-opus que está dentro dele para
+  .claude\skills\videos-opus dentro da minha pasta de usuário
+  (C:\Users\<meu usuário>). Crie as pastas que faltarem; se já existir
+  uma versão antiga, substitua. Depois rode o diagnóstico:
+  "<pasta da skill>\bin\node.exe" "<pasta da skill>\scripts\video.mjs" diagnostico
+  e me diga se deu tudo certo. Não altere nenhum arquivo do pacote.
+  ---------------------------------------------------------------------
+
+  4. Quando o Claude pedir permissão, clique em Permitir.
+  5. Quando ele disser que deu certo, abra uma conversa nova.
+
+
+COMO USAR
+---------
+Abra o app do Claude > aba Code (qualquer pasta) e peça do seu jeito:
+
+  - Corta as pausas e põe legenda no vídeo IMG_2041
+  - Põe legenda em Bebas Neue no meu último vídeo
+  - Legenda amarela, uma palavra por vez, no vídeo que está nos Downloads
+  - Deixa esse vídeo quadrado para o feed
+  - Diminui o vídeo para eu mandar no WhatsApp
+
+O vídeo pronto aparece na pasta "Vídeos editados", na Área de Trabalho.
+
+Dica de gravação: grave em pé (vertical), perto do celular e em lugar
+silencioso. Quanto mais limpo o áudio, melhor o corte e a legenda.
+
+
+SUPORTE
+-------
+https://links.suellenwarmling.com.br/fale-com-suporte-aqui
+
+
+CRÉDITOS E LICENÇAS
+-------------------
+Os programas incluídos (FFmpeg, Node.js, whisper.cpp, modelo Whisper e
+fontes) estão listados com as suas licenças em videos-opus\licencas.

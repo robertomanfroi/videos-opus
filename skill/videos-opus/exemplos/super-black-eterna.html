@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Super Black Eterna — vídeo WhatsApp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600;1,700&family=Sora:wght@500;600;700;800&display=block">
+<style>
+  /* Identidade da página da Super Black Eterna: preto achocolatado, laranja #F74502, Sora + Cormorant Garamond itálico */
+  :root {
+    --preto: #0b0605;
+    --chocolate: #24110a;
+    --laranja: #f74502;
+    --branco: #ffffff;
+    --verde: #19c23a;
+    --sora: "Sora", "Segoe UI", sans-serif;
+    --serif: "Cormorant Garamond", Georgia, serif;
+  }
+  html, body { margin: 0; padding: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--preto); }
+  #palco {
+    position: relative; width: 1080px; height: 1920px; overflow: hidden;
+    background: linear-gradient(160deg, var(--chocolate) 0%, var(--preto) 55%, #050302 100%);
+    font-family: var(--sora); color: var(--branco);
+  }
+  #brilho {
+    position: absolute; width: 1500px; height: 1500px; left: -210px; top: 210px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(247,69,2,.34) 0%, rgba(247,69,2,.10) 38%, rgba(247,69,2,0) 68%);
+    will-change: transform;
+  }
+  #grao {
+    position: absolute; inset: 0; opacity: .10; mix-blend-mode: overlay; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  #camera { position: absolute; inset: 0; will-change: transform; }
+  .el { position: absolute; opacity: 0; will-change: transform, opacity, filter; }
+
+  /* Cena 1 */
+  #logo1 { width: 780px; left: 150px; top: 610px; }
+  .pilula {
+    display: inline-flex; align-items: center; gap: 16px;
+    background: var(--laranja); color: var(--branco); border-radius: 100px;
+    font-weight: 700; font-size: 46px; letter-spacing: 1px; padding: 18px 44px;
+  }
+  .pilula svg { width: 40px; height: 40px; }
+  #data1 { left: 0; right: 0; top: 1180px; text-align: center; }
+  #reflexo { width: 780px; left: 150px; top: 610px; position: absolute; opacity: 0; filter: brightness(2.4);
+    -webkit-mask-image: linear-gradient(105deg, transparent 42%, #000 50%, transparent 58%);
+    mask-image: linear-gradient(105deg, transparent 42%, #000 50%, transparent 58%);
+    -webkit-mask-size: 300% 100%; mask-size: 300% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+
+  /* Cena 2 */
+  #frase-a { left: 108px; width: 864px; top: 560px; font-weight: 800; font-size: 96px; line-height: 1.08; letter-spacing: -1.5px; }
+  #frase-b { left: 108px; width: 864px; top: 900px; font-family: var(--serif); font-style: italic; font-weight: 700; font-size: 132px; line-height: .98; color: var(--laranja); }
+  .palavra { display: inline-block; opacity: 0; will-change: transform, opacity, filter; }
+  #sublinhado { left: 108px; top: 785px; height: 14px; width: 540px; background: var(--laranja); transform-origin: left center; border-radius: 7px; }
+
+  /* Cena 3 */
+  #rotulo { left: 0; right: 0; top: 330px; text-align: center; font-weight: 700; font-size: 38px; letter-spacing: 8px; color: var(--laranja); }
+  .card { left: 108px; width: 864px; }
+  #c1 { top: 470px; } #c2 { top: 710px; } #c3 { top: 950px; } #c4 { top: 1190px; }
+  #extra { left: 108px; width: 864px; top: 1480px; text-align: center; font-weight: 600; font-size: 46px; line-height: 1.3; }
+  #extra b { color: var(--laranja); font-weight: 800; }
+
+  /* Cena 4 */
+  #surreal { left: 0; right: 0; top: 600px; text-align: center; font-family: var(--serif); font-style: italic; font-weight: 700; font-size: 136px; line-height: 1; }
+  #comum { left: 0; right: 0; top: 900px; text-align: center; font-weight: 700; font-size: 66px; letter-spacing: -.5px; }
+  #fartura { left: 0; right: 0; top: 1020px; text-align: center; font-weight: 800; font-size: 200px; letter-spacing: -6px; color: var(--laranja); line-height: 1.05; }
+
+  /* Cena 5 */
+  #retrato { left: 330px; top: 260px; width: 420px; height: 420px; border-radius: 50%; overflow: hidden;
+    box-shadow: 0 0 0 10px var(--laranja), 0 30px 80px rgba(247,69,2,.35); }
+  #retrato img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #logo5 { width: 640px; left: 220px; top: 740px; }
+  #data5 { left: 0; right: 0; top: 1190px; text-align: center; }
+  #cta { left: 108px; width: 864px; top: 1360px; height: 150px; border-radius: 16px;
+    background: linear-gradient(180deg, #2bd94d, var(--verde)); box-shadow: 0 0 60px rgba(25,194,58,.45);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 50px; letter-spacing: 1px; color: var(--branco); }
+
+  /* Transição */
+  #cortina { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: var(--laranja); transform: translateY(100%); will-change: transform; }
+</style>
+</head>
+<body>
+<div id="palco">
+  <div id="brilho"></div>
+  <div id="camera">
+    <!-- Cena 1: marca -->
+    <img id="logo1" class="el" src="logo.webp" alt="Super Black Eterna">
+    <img id="reflexo" src="logo.webp" alt="">
+    <div id="data1" class="el"><span class="pilula"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg>28/10 · QUARTA</span></div>
+
+    <!-- Cena 2: promessa -->
+    <div id="frase-a" class="el" data-palavras>Você nunca mais vai precisar</div>
+    <div id="sublinhado" class="el"></div>
+    <div id="frase-b" class="el" data-palavras>comprar cursos de marketing e vendas na vida.</div>
+
+    <!-- Cena 3: o que vem -->
+    <div id="rotulo" class="el">O QUE VEM NA BLACK</div>
+    <img id="c1" class="el card" src="IA-1.webp" alt="Suellen Warmling, consultoria por IA">
+    <img id="c2" class="el card" src="SOCIAL-MEDIA-1.webp" alt="Social Media criando seu conteúdo por 12 meses">
+    <img id="c3" class="el card" src="ENGRENE-1.webp" alt="Engrene, acesso vitalício">
+    <img id="c4" class="el card" src="mentoria-2.webp" alt="Mentoria intensiva de 3 meses">
+    <div id="extra" class="el">+ cursos com <b>acesso vitalício</b><br>e muito mais</div>
+
+    <!-- Cena 4: valor -->
+    <div id="surreal" class="el">Um valor surreal.</div>
+    <div id="comum" class="el">Não é uma black comum.</div>
+    <div id="fartura" class="el">É fartura.</div>
+
+    <!-- Cena 5: chamada -->
+    <div id="retrato" class="el"><img src="suellen.png" alt="Suellen Warmling"></div>
+    <img id="logo5" class="el" src="logo.webp" alt="">
+    <div id="data5" class="el"><span class="pilula"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg>28/10 · QUARTA</span></div>
+    <div id="cta" class="el">GARANTA SUA VAGA</div>
+  </div>
+  <div id="grao"></div>
+  <div id="cortina"></div>
+</div>
+
+<script>
+  const DURACAO = 18;
+  const $ = (id) => document.getElementById(id);
+
+  // Quebra frases em palavras para animar uma a uma
+  document.querySelectorAll("[data-palavras]").forEach((el) => {
+    el.innerHTML = el.textContent.trim().split(/\s+/).map((p) => `<span class="palavra">${p}</span>`).join(" ");
+  });
+
+  const clamp = (x) => Math.min(1, Math.max(0, x));
+  const prog = (t, ini, dur) => clamp((t - ini) / dur);
+  const outExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+  const outBack = (x) => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+  const inCubic = (x) => x * x * x;
+  const lerp = (a, b, x) => a + (b - a) * x;
+
+  function estilo(el, { op = 1, x = 0, y = 0, s = 1, blur = 0, rot = 0 }) {
+    el.style.opacity = op;
+    el.style.transform = `translate(${x}px, ${y}px) scale(${s}) rotate(${rot}deg)`;
+    el.style.filter = blur > 0.05 ? `blur(${blur}px)` : "none";
+  }
+
+  // Entrada e saída padrão: sobe com desfoque e sai com fade
+  function entraSai(el, t, ini, fim, { dy = 60, dx = 0, s0 = 1, sx = 0, sy = -30, ease = outExpo, durIn = 0.6, durOut = 0.25 } = {}) {
+    const a = ease(prog(t, ini, durIn));
+    const b = inCubic(prog(t, fim - durOut, durOut));
+    estilo(el, {
+      op: Math.min(prog(t, ini, durIn * 0.6), 1 - b),
+      x: lerp(dx, 0, a) + sx * b,
+      y: lerp(dy, 0, a) + sy * b,
+      s: lerp(s0, 1, a),
+      blur: (1 - prog(t, ini, durIn * 0.8)) * 14 + b * 10,
+    });
+  }
+
+  function palavras(el, t, ini, fim, passo) {
+    el.style.opacity = 1;
+    const sair = inCubic(prog(t, fim - 0.25, 0.25));
+    el.style.transform = `translateX(${-140 * sair}px)`;
+    el.querySelectorAll(".palavra").forEach((p, i) => {
+      const a = prog(t, ini + i * passo, 0.5);
+      estilo(p, { op: Math.min(a * 2, 1) * (1 - sair), y: lerp(70, 0, outBack(a)), blur: (1 - a) * 10 });
+    });
+  }
+
+  function cortina(t, centro) {
+    // Painel laranja cobre a tela de baixo para cima e libera para cima
+    const d = 0.2;
+    if (t < centro - d || t > centro + d) return null;
+    if (t < centro) return 100 - 100 * outExpo(prog(t, centro - d, d));
+    return -100 * inCubic(prog(t, centro, d));
+  }
+
+  function render(t) {
+    // Fundo vivo
+    $("brilho").style.transform = `translate(${Math.sin(t * 0.55) * 260}px, ${Math.cos(t * 0.4) * 420}px)`;
+
+    // Batida de câmera nos impactos
+    let punch = 1;
+    [0.15, 13.6].forEach((b) => { const k = prog(t, b, 0.5); if (k > 0 && k < 1) punch += 0.035 * Math.sin(k * Math.PI) ; });
+    $("camera").style.transform = `scale(${punch})`;
+
+    // Cena 1 — 0 a 3 s
+    entraSai($("logo1"), t, 0.1, 3.0, { dy: 0, s0: 1.35, durIn: 0.7, sy: 0 });
+    entraSai($("data1"), t, 0.85, 3.0, { dy: 50, ease: outBack, durIn: 0.55 });
+    const fx = prog(t, 1.5, 0.9);
+    $("reflexo").style.opacity = fx > 0 && fx < 1 ? $("logo1").style.opacity : 0;
+    $("reflexo").style.webkitMaskPosition = $("reflexo").style.maskPosition = `${lerp(100, 0, fx)}% 0`;
+
+    // Cena 2 — 3 a 7 s
+    palavras($("frase-a"), t, 3.25, 7.0, 0.11);
+    const sub = outExpo(prog(t, 3.95, 0.5));
+    const subSai = inCubic(prog(t, 6.75, 0.25));
+    $("sublinhado").style.opacity = t > 3.95 ? 1 - subSai : 0;
+    $("sublinhado").style.transform = `translateX(${-140 * subSai}px) scaleX(${sub})`;
+    palavras($("frase-b"), t, 4.35, 7.0, 0.13);
+
+    // Cena 3 — 7 a 12 s
+    entraSai($("rotulo"), t, 7.2, 12.0, { dy: -40 });
+    ["c1", "c2", "c3", "c4"].forEach((id, i) => {
+      entraSai($(id), t, 7.5 + i * 0.6, 12.0 - (3 - i) * 0.05, { dy: 0, dx: 260, ease: outBack, durIn: 0.65, sy: 50 });
+    });
+    entraSai($("extra"), t, 10.1, 12.0, { dy: 50 });
+
+    // Cena 4 — 12 a 15 s
+    entraSai($("surreal"), t, 12.15, 15.0, { dy: 40, s0: 0.92, durIn: 0.8 });
+    entraSai($("comum"), t, 12.95, 15.0, { dy: 40 });
+    entraSai($("fartura"), t, 13.55, 15.0, { dy: 0, s0: 1.6, durIn: 0.45 });
+
+    // Cena 5 — 15 a 18 s (fica na tela até o fim)
+    entraSai($("retrato"), t, 15.15, 99, { dy: 0, s0: 0.6, ease: outBack, durIn: 0.6 });
+    entraSai($("logo5"), t, 15.45, 99, { dy: 50 });
+    entraSai($("data5"), t, 15.8, 99, { dy: 40, ease: outBack, durIn: 0.5 });
+    entraSai($("cta"), t, 16.1, 99, { dy: 60, ease: outBack, durIn: 0.55 });
+    if (t > 16.7) $("cta").style.transform = `scale(${1 + 0.03 * Math.sin((t - 16.7) * 2 * Math.PI * 1.2)})`;
+
+    // Transições laranja entre cenas
+    const c = cortina(t, 3.0) ?? cortina(t, 7.0) ?? cortina(t, 12.0) ?? cortina(t, 15.0);
+    $("cortina").style.transform = `translateY(${c ?? 100}%)`;
+  }
+
+  window.__render = render;
+
+  async function iniciar() {
+    render(-1);
+    await Promise.all([
+      document.fonts.load('800 96px "Sora"'), document.fonts.load('700 46px "Sora"'), document.fonts.load('600 46px "Sora"'),
+      document.fonts.load('italic 700 132px "Cormorant Garamond"'),
+      ...[...document.images].map((i) => i.decode().catch(() => {})),
+    ]);
+    await document.fonts.ready;
+    const congelado = /^#t(\d+(?:\.\d+)?)$/.exec(location.hash);
+    if (congelado) { render(parseFloat(congelado[1])); window.__pronto = true; return; }
+    const inicio = performance.now();
+    window.__pronto = true;
+    const quadro = () => {
+      const t = Math.min((performance.now() - inicio) / 1000, DURACAO);
+      render(t);
+      if (t < DURACAO) requestAnimationFrame(quadro);
+    };
+    requestAnimationFrame(quadro);
+  }
+  iniciar();
+</script>
+</body>
+</html>
