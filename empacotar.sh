@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Gera dist/videos-opus-v1.zip: pasta videos-opus/ completa (programas portáteis inclusos) + LEIA-PRIMEIRO.txt.
+# Gera dist/videos-opus.zip: pasta videos-opus/ completa (programas portáteis inclusos) + LEIA-PRIMEIRO.txt.
 set -euo pipefail
 cd "$(dirname "$0")"
 V=vendor-cache
@@ -51,12 +51,12 @@ rm -rf build/tmp
 for f in SKILL.md scripts/video.mjs scripts/ferramentas.mjs scripts/correcoes.mjs bin/ffmpeg.exe bin/ffprobe.exe bin/node.exe bin/whisper/whisper-cli.exe modelos/ggml-small-q5_1.bin fontes/BebasNeue-Regular.ttf acervo/data/videos.json node_modules/playwright-core/package.json scripts/viral.html scripts/viral.mjs scripts/som.mjs scripts/navegador.mjs scripts/legenda.mjs fontes/EBGaramond-Italic.ttf exemplos/oferta-animada.html scripts/kit.mjs modelos/ggml-silero-v5.1.2.bin modelos/rvm_mobilenetv3_fp32.onnx kit/node_modules/hyperframes/dist/cli.js kit/node_modules/onnxruntime-node/bin/napi-v3/win32/x64/onnxruntime_binding.node kit/scripts/new-video.mjs kit/.claude/skills/editar/SKILL.md kit/.claude/skills/_motor/transcrever.mjs kit/.claude/skills/estilo-colagem/scripts/matte-pessoa.mjs kit/examples/starter/index.html; do
   [ -f "$OUT/$f" ] || { echo "FALTA $f"; exit 1; }
 done
-rm -f dist/videos-opus-v1.zip
+rm -f dist/videos-opus.zip
 python3 -c "import zipfile,os,sys
-z=zipfile.ZipFile('dist/videos-opus-v1.zip','w',zipfile.ZIP_DEFLATED,compresslevel=9)
+z=zipfile.ZipFile('dist/videos-opus.zip','w',zipfile.ZIP_DEFLATED,compresslevel=9)
 for raiz in ('videos-opus','LEIA-PRIMEIRO.txt'):
   p=os.path.join('build',raiz)
   arqs=[p] if os.path.isfile(p) else [os.path.join(d,f) for d,_,fs in os.walk(p) for f in fs]
   for a in sorted(arqs): z.write(a,os.path.relpath(a,'build'))
 z.close()"
-ls -la dist/videos-opus-v1.zip; du -sh build/videos-opus
+ls -la dist/videos-opus.zip; du -sh build/videos-opus

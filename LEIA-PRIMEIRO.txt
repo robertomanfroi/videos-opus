@@ -17,13 +17,16 @@ ANTES DE COMEÇAR
 
 INSTALAR (uma vez só, uns 2 minutos)
 ------------------------------------
-  1. Deixe este arquivo .zip na pasta Downloads (não precisa descompactar).
-  2. Abra o app do Claude > aba Code > escolha a pasta Downloads.
+  1. Abra o app do Claude > aba Code.
+  2. No seletor Environment da caixa de mensagem, escolha Local (não Cloud).
   3. Escreva para o Claude:
 
-       Instala a skill do arquivo videos-opus-v1.zip que está nesta pasta,
-       seguindo o LEIA-PRIMEIRO.txt que está dentro dele.
+       Instala a skill videos-opus seguindo as instruções de
+       https://github.com/robertomanfroi/videos-opus
 
+     (Se você já baixou este zip, pode escrever: Instala a skill do arquivo
+     videos-opus.zip que está em Downloads, seguindo o LEIA-PRIMEIRO.txt
+     que está dentro dele.)
   4. Quando o Claude pedir permissão, clique em Permitir.
   5. Quando ele disser que deu certo, abra uma conversa nova.
 
