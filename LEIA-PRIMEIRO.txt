@@ -19,22 +19,30 @@ INSTALAR (uma vez só, uns 2 minutos)
 ------------------------------------
   1. Deixe este arquivo .zip na pasta Downloads (não precisa descompactar).
   2. Abra o app do Claude > aba Code > escolha a pasta Downloads.
-  3. Copie a mensagem abaixo, cole no Claude e envie:
+  3. Escreva para o Claude:
 
-  ---------------------------------------------------------------------
-  Instale a skill videos-opus que está no arquivo videos-opus-v1.zip
-  desta pasta. Use o tar do Windows, que é rápido (o Expand-Archive leva
-  mais de meia hora com este arquivo): crie a pasta .claude\skills dentro
-  da minha pasta de usuário se ela não existir e rode
-  tar -xf videos-opus-v1.zip -C "<minha pasta de usuário>\.claude\skills" videos-opus
-  Se já existir uma pasta videos-opus antiga ali, apague-a antes.
-  Depois rode o diagnóstico:
-  "<pasta da skill>\bin\node.exe" "<pasta da skill>\scripts\video.mjs" diagnostico
-  e me diga se deu tudo certo. Não altere nenhum arquivo do pacote.
-  ---------------------------------------------------------------------
+       Instala a skill do arquivo videos-opus-v1.zip que está nesta pasta,
+       seguindo o LEIA-PRIMEIRO.txt que está dentro dele.
 
   4. Quando o Claude pedir permissão, clique em Permitir.
   5. Quando ele disser que deu certo, abra uma conversa nova.
+
+
+PARA O CLAUDE (como instalar este pacote)
+-----------------------------------------
+Se a pessoa pediu para instalar este arquivo, faça exatamente isto:
+  1. Destino: a pasta .claude\skills dentro da pasta do usuário
+     (%USERPROFILE%\.claude\skills). Crie se não existir.
+  2. Se já existir uma pasta videos-opus ali (versão antiga), apague-a.
+  3. Descompacte com o tar do Windows, que leva segundos
+     (NÃO use Expand-Archive nem "Extrair tudo": com os 7.500 arquivos
+     deste pacote eles levam mais de meia hora):
+       tar -xf videos-opus-v1.zip -C "%USERPROFILE%\.claude\skills" videos-opus
+  4. Rode o diagnóstico:
+       "%USERPROFILE%\.claude\skills\videos-opus\bin\node.exe" "%USERPROFILE%\.claude\skills\videos-opus\scripts\video.mjs" diagnostico
+     Todos os itens devem dizer ok.
+  5. Diga à pessoa, em português simples, que deu certo e que ela deve
+     abrir uma conversa nova para usar. Não altere nenhum arquivo do pacote.
 
 
 COMO USAR
