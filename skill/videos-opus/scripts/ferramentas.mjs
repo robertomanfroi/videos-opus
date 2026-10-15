@@ -1,7 +1,7 @@
 // Caminhos dos programas portáteis que vêm dentro da skill e utilidades comuns.
 // No Windows usa bin/*.exe da própria skill; fora dele (desenvolvimento) cai para o que estiver no PATH.
 import { existsSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
-import { join, dirname, basename, extname } from "node:path";
+import { join, dirname, basename, extname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
 import { spawnSync, execFileSync } from "node:child_process";
@@ -27,6 +27,17 @@ export function rodar(cmd, args, opts = {}) {
     throw new Error(`${basename(cmd)} falhou (código ${r.status}):\n${fim}`);
   }
   return r;
+}
+
+// O whisper.cpp (fopen do C) não abre caminhos com acento no Windows (ex.: C:\\Users\\Conceição\\…) e trava com 0xC0000409.
+// Por isso roda a partir da pasta do modelo e recebe caminhos RELATIVOS, que não carregam o nome da usuária.
+// arquivos: { f: wav, of: base de saída, vm?: modelo do VAD }; extra: demais argumentos.
+export function rodarWhisper(arquivos, extra = [], opts = {}) {
+  const cwd = dirname(MODELO);
+  const rel = (p) => relative(cwd, p) || ".";
+  const args = ["-m", basename(MODELO), "-f", rel(arquivos.f), "-of", rel(arquivos.of)];
+  if (arquivos.vm) args.push("--vad", "-vm", rel(arquivos.vm));
+  return rodar(WHISPER, [...args, ...extra], { ...opts, cwd });
 }
 
 export function ffmpeg(args, opts = {}) {

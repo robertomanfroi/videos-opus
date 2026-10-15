@@ -1,0 +1,33 @@
+schema: 1
+story: "1.4"
+gate: CONCERNS
+reviewer: "Quinn (@qa)"
+updated: "2026-10-15"
+top_issues:
+  - id: INST-001
+    severity: high
+    status: corrigido
+    finding: "whisper-cli.exe trava (0xC0000409) quando o caminho tem acento (ex.: C:\\Users\\Conceição). Transcrição e legenda quebravam para usuárias com acento no nome."
+    fix: "rodarWhisper com cwd = pasta do modelo e caminhos relativos (skill/video.mjs e kit/_motor/transcrever.mjs). Pacote da Release v1.0.0 já atualizado."
+  - id: INST-002
+    severity: medium
+    status: aberto
+    finding: "Avisos do navegador (download de .cmd) e do Windows SmartScreen no caminho 'baixar e 2 cliques' não foram verificados: exigem clique humano numa máquina real."
+  - id: INST-003
+    severity: medium
+    status: aberto
+    finding: "Instalação pelo pedido direto ao Claude (sem README com instruções para IA) foi aceita no teste com claude -p (modo plano): ele lê o instalador e pede ok antes de rodar. Comportamento do modelo pode variar; validar no app Desktop, sessão Local."
+  - id: INST-004
+    severity: low
+    status: monitorar
+    finding: "Pastas bin sumiram uma vez em cópias na pasta Temp; não se repetiu, e instalações fora da Temp ficaram íntegras após 1 h."
+evidence:
+  - "Instalador público via linha do Executar: PRONTO em 38-40 s, diagnóstico ok (perfil real)."
+  - "Perfil simulado 'Maria Conceição Silva': antes da correção whisper FALHOU; depois, whisper ok, transcrição, kit e recorte (onnxruntime) ok."
+  - "Reinstalação por cima: versão antiga removida e substituída."
+  - "Release v1.0.0: videos-opus.zip (387 MB) + instalar.cmd; README sem instruções dirigidas à IA."
+recommendations:
+  must_fix: []
+  should_fix:
+    - "Commitar a correção INST-001 no repositório (hoje está só na Release) — via @dev, push via @devops."
+    - "Teste manual numa máquina real dos dois caminhos: (a) pedir ao Claude no app Desktop, Local; (b) baixar o instalador e dar 2 cliques, fotografando os avisos para o guia."

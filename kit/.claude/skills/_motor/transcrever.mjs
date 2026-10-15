@@ -11,7 +11,7 @@
 // JSON: {"language_code", "audio_duration_secs", "text", "words": [{text,start,end}]}
 import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, mkdtempSync, statfsSync } from "node:fs";
-import { join, dirname, resolve } from "node:path";
+import { join, dirname, resolve, relative, basename } from "node:path";
 import { tmpdir, cpus } from "node:os";
 import { binarios } from "./binarios.mjs";
 
@@ -42,11 +42,14 @@ function paraWav(inicio, dur) {
   return wav;
 }
 
+// O whisper.cpp não abre caminhos com acento no Windows (C:\\Users\\Conceição\\… trava com 0xC0000409):
+// roda a partir da pasta do modelo, com caminhos relativos, que não carregam o nome da usuária.
 function rodarWhisper(wav, extra, base) {
-  const a = ["-m", modelo, "-f", wav, "-l", idioma, "-t", threads, "-np", "-oj", "-of", base, ...extra];
+  const cwd = dirname(modelo), rel = (p) => relative(cwd, p) || ".";
+  const a = ["-m", basename(modelo), "-f", rel(wav), "-l", idioma, "-t", threads, "-np", "-oj", "-of", rel(base), ...extra];
   if (nomes) a.push("--prompt", nomes);
-  if (vad && existsSync(vad)) a.push("--vad", "-vm", vad);
-  const r = spawnSync(whisper, a, { encoding: "utf8", maxBuffer: 1 << 26 });
+  if (vad && existsSync(vad)) a.push("--vad", "-vm", rel(vad));
+  const r = spawnSync(whisper, a, { encoding: "utf8", maxBuffer: 1 << 26, cwd });
   if (r.status !== 0 || !existsSync(`${base}.json`)) {
     console.error(`ERRO: a transcrição falhou: ${(r.stderr || "").trim().split("\n").slice(-3).join(" | ")}`);
     process.exit(1);

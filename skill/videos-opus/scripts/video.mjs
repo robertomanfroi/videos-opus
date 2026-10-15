@@ -12,10 +12,10 @@
 //   entregar <arquivo> [--nome saida]
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, mkdirSync, copyFileSync } from "node:fs";
 import { join, basename, extname, resolve, dirname } from "node:path";
-import { homedir, cpus } from "node:os";
+import { homedir, cpus, tmpdir } from "node:os";
 import {
   ffmpeg, probe, filtroHDR, encoderRapido, ENCODER_FINAL, FORMATOS, pastaTrabalho, entregar, lerArgs,
-  areaDeTrabalho, WHISPER, MODELO, FONTES, SKILL, rodar, tempo,
+  areaDeTrabalho, WHISPER, MODELO, FONTES, SKILL, rodar, rodarWhisper, tempo,
 } from "./ferramentas.mjs";
 import { montarLegenda } from "./legenda.mjs";
 
@@ -166,8 +166,7 @@ function cmdTranscrever() {
   ffmpeg([...(pulo ? ["-ss", String(pulo)] : []), "-i", arquivo, "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav]);
   const threads = String(Math.max(2, Math.min(8, cpus().length)));
   const vad = join(dirname(MODELO), "ggml-silero-v5.1.2.bin"); // detector de voz: tempos certos mesmo com silêncio longo
-  rodar(WHISPER, ["-m", MODELO, "-f", wav, "-l", op.idioma || "pt", "-ml", "1", "-sow", "-oj", "-of", join(pasta, "whisper"), "-t", threads, "-np",
-    ...(existsSync(vad) ? ["--vad", "-vm", vad] : [])]);
+  rodarWhisper({ f: wav, of: join(pasta, "whisper"), vm: existsSync(vad) ? vad : null }, ["-l", op.idioma || "pt", "-ml", "1", "-sow", "-oj", "-t", threads, "-np"]);
   const j = JSON.parse(readFileSync(join(pasta, "whisper.json"), "utf8"));
   const palavras = [];
   for (const s of j.transcription || []) {
@@ -310,7 +309,7 @@ function cmdDiagnostico() {
   const testa = (nome, fn) => { try { r.itens[nome] = fn() || "ok"; } catch (e) { r.ok = false; r.itens[nome] = `FALHOU: ${e.message.split("\n")[0]}`; } };
   testa("ffmpeg", () => { ffmpeg(["-f", "lavfi", "-i", "sine=d=0.3", "-f", "lavfi", "-i", "color=s=64x64:d=0.3", "-shortest", "-f", "null", "-"]); });
   testa("ffprobe", () => { probe(join(FONTES, "..", "scripts", "teste.wav")); });
-  testa("whisper", () => { if (!existsSync(MODELO)) throw new Error("modelo ausente"); rodar(WHISPER, ["-m", MODELO, "-f", join(FONTES, "..", "scripts", "teste.wav"), "-l", "pt", "-np", "-nt"]); });
+  testa("whisper", () => { if (!existsSync(MODELO)) throw new Error("modelo ausente"); rodarWhisper({ f: join(FONTES, "..", "scripts", "teste.wav"), of: join(tmpdir(), "videos-opus-teste") }, ["-l", "pt", "-np", "-nt"]); });
   testa("fontes", () => `${readdirSync(FONTES).filter((f) => /\.ttf$/i.test(f)).length} fontes`);
   testa("encoder", () => encoderRapido()[1]);
   testa("pasta de saída", () => join(areaDeTrabalho(), "Vídeos editados"));
