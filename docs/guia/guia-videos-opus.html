@@ -96,6 +96,17 @@
   .pagina-sbe li::before { content: "✦"; position: absolute; left: 4px; color: var(--terracota-lt); }
   .pagina-sbe .fartura { font-family: "EB Garamond"; font-style: italic; font-size: 26px; color: var(--bege); margin: 0 0 22px; }
   .pagina-sbe .url { font-size: 10px; letter-spacing: 2px; color: var(--bege-escuro); margin-top: 12px; }
+
+  .print-dl { position: relative; border: 1px solid var(--bege); border-radius: 8px; overflow: hidden; margin: 10px 0 12px; box-shadow: 0 6px 18px rgba(59,31,14,.12); }
+  .print-dl img { display: block; width: 100%; }
+  .print-dl .marca { position: absolute; left: 23.6%; top: 78.5%; width: 22.4%; height: 13%; border: 3px solid var(--terracota); border-radius: 10px;
+    box-shadow: 0 0 0 4px rgba(193,75,34,.25); }
+
+  /* ===== ritmo editorial nas páginas internas ===== */
+  .pagina:not(.capa):not(.pagina-sbe)::before { content: ""; position: absolute; left: 17mm; top: 0; width: 22mm; height: 4px; background: var(--terracota); }
+  .pagina:not(.capa) .rodape { border-top: 1px solid var(--bege); padding-top: 3mm; bottom: 8mm; }
+  .pagina-sbe .rodape { border-top: 1px solid rgba(196,168,130,.25); padding-top: 3mm; bottom: 8mm; }
+  .rotulo::before { content: ""; display: inline-block; width: 14px; height: 2px; background: var(--terracota); vertical-align: middle; margin: -2px 8px 0 0; }
 </style>
 </head>
 <body>
@@ -141,6 +152,25 @@
   <div class="rodape"><span>Vídeos Opus · Guia</span><span>2</span></div>
 </section>
 
+<!-- NAVEGADOR -->
+<section class="pagina">
+  <div class="rotulo">Usa o Claude no navegador?</div>
+  <h1>Baixe o app do Claude</h1>
+  <h2>Uma vez só. É a mesma conta que você já usa.</h2>
+  <p>No navegador, o Claude roda nos computadores da Anthropic e <b>não enxerga os vídeos do seu computador</b>. Para editar, ele precisa trabalhar na sua máquina, e isso só acontece pelo <b>app do Claude</b>. Você continua usando o navegador para todo o resto; o app é só para editar vídeo.</p>
+  <div class="print-dl">
+    <img src="print-download.png" alt="Página claude.ai/download com o botão Download for Windows">
+    <div class="marca"></div>
+  </div>
+  <div class="passo"><div class="num">1</div><div class="txt">No navegador, entre em <a href="https://claude.ai/download" style="color:var(--terracota);font-weight:700">claude.ai/download</a>.</div></div>
+  <div class="passo"><div class="num">2</div><div class="txt">Clique no botão preto <b>Download for Windows</b> (o destacado na imagem acima).</div></div>
+  <div class="passo"><div class="num">3</div><div class="txt">Abra o arquivo que baixou (ele fica na pasta <b>Downloads</b>). O Claude se instala sozinho e abre.</div></div>
+  <div class="passo"><div class="num">4</div><div class="txt">Entre com a <b>mesma conta</b> do navegador: o mesmo e-mail, ou "Continuar com Google" se é assim que você entra.</div></div>
+  <div class="passo"><div class="num">5</div><div class="txt">Pronto: no topo do app aparece a aba <b>Code</b>. Siga para a instalação da skill, na próxima página.</div></div>
+  <div class="atencao"><b>Não apareceu a aba Code?</b> Ela só existe nos planos pagos (Pro ou acima). Confira o seu plano em claude.ai, em Configurações.</div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>3</span></div>
+</section>
+
 <!-- 3. CHECKLIST + INSTALAÇÃO -->
 <section class="pagina">
   <div class="rotulo">Checklist</div>
@@ -148,7 +178,7 @@
   <ul class="check">
     <li>Computador com <b>Windows 10 ou 11</b></li>
     <li>Uns <b>3 GB livres</b> no disco</li>
-    <li>App do <b>Claude</b> instalado no computador (claude.ai/download), com login feito</li>
+    <li>App do <b>Claude</b> instalado no computador, com login feito (veja a página anterior)</li>
     <li>Plano <b>Pro, Max, Team ou Enterprise</b> (a aba <b>Code</b> aparece no topo do app)</li>
     <li>Internet para o Claude baixar o pacote (uns 390 MB, uma vez só)</li>
   </ul>
@@ -164,7 +194,7 @@
   <div class="passo"><div class="num">4</div><div class="txt">Quando ele disser que <b>deu tudo certo</b>, abra uma <b>conversa nova</b>. Pronto: a skill está instalada para sempre.</div></div>
   <div class="cartao pequeno"><b>Não anexe nenhum arquivo na conversa:</b> o chat só aceita anexos de até 30 MB, e não precisa. Prefere baixar você mesma?
     Baixe o <b>videos-opus.zip</b> em <a href="https://github.com/robertomanfroi/videos-opus/releases/latest" style="color:var(--terracota);font-weight:700">github.com/robertomanfroi/videos-opus/releases</a>, deixe em Downloads e escreva ao Claude: <i>"Instala a skill do arquivo videos-opus.zip que está em Downloads, seguindo o LEIA-PRIMEIRO.txt que está dentro dele."</i></div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>3</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>4</span></div>
 </section>
 
 <!-- 4. COMO USAR -->
@@ -188,7 +218,7 @@
   </table>
   <div class="escuro"><div class="aspa">“</div><p>Não precisa decorar nenhum comando. Fale com o Claude como falaria com uma editora: o que você quer, para onde vai o vídeo e o que não pode faltar.</p></div>
   <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Super Black <span>Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>4</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>5</span></div>
 </section>
 
 <section class="pagina pagina-sbe">
@@ -205,7 +235,7 @@
   <p class="fartura">Um valor surreal. Não é uma black comum. É fartura.</p>
   <div><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Black Friday →</a></div>
   <div class="url">suellenwarmling.com.br/super-black-eterna</div>
-  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>5</span></div>
+  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>6</span></div>
 </section>
 
 <!-- 5. MODELOS 1-3 -->
@@ -234,7 +264,7 @@
     <p class="pequeno">Parece que você editou no próprio Instagram: uma palavra de legenda por vez, prints acima da cabeça e cortes secos. Ótimo para bastidores e resultados.</p>
     <div class="prompt"><span class="etq">Copie</span>Edita meu último vídeo no estilo celular. Usa os prints que coloquei na pasta Meus prints quando eu falar dos resultados.</div>
   </div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>6</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>7</span></div>
 </section>
 
 <!-- 6. MODELOS 4-7 -->
@@ -269,7 +299,7 @@
     <div class="prompt"><span class="etq">Copie</span>Cria um vídeo animado de 15 segundos para Reels anunciando [o Planner 2027 por R$ 47, só esta semana]. Usa as cores da minha marca: [terracota e areia].</div>
     <div class="prompt"><span class="etq">Logo animada</span>Cria uma logo animada de 5 segundos com o nome "[Ateliê Bia]" para abrir meus vídeos.</div>
   </div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>7</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>8</span></div>
 </section>
 
 <!-- 7. FORMATOS + AJUSTES -->
@@ -293,7 +323,7 @@
 
   <div class="escuro"><div class="aspa">“</div><p>Dica de ouro: na primeira vez, o Claude pergunta seu nome, seu @ e os nomes que você fala muito (sua marca, seu produto). Responda com calma: é isso que deixa a legenda certa.</p></div>
   <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Quer ir além do vídeo? <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>8</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>9</span></div>
 </section>
 
 <!-- 8. PROBLEMAS -->
@@ -323,7 +353,7 @@
 
   <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Última chamada: <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
   <div class="cartao"><b>Suporte:</b> links.suellenwarmling.com.br/fale-com-suporte-aqui</div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>9</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>10</span></div>
 </section>
 
 <section class="pagina pagina-sbe">
@@ -340,7 +370,7 @@
   <p class="fartura">Um valor surreal. Não é uma black comum. É fartura.</p>
   <div><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Black Friday →</a></div>
   <div class="url">suellenwarmling.com.br/super-black-eterna</div>
-  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>10</span></div>
+  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>11</span></div>
 </section>
 
 </body>
