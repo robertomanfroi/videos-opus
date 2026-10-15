@@ -97,28 +97,33 @@
   .pagina-sbe .fartura { font-family: "EB Garamond"; font-style: italic; font-size: 26px; color: var(--bege); margin: 0 0 22px; }
   .pagina-sbe .url { font-size: 10px; letter-spacing: 2px; color: var(--bege-escuro); margin-top: 12px; }
 
-  /* capa da versão 2: a imagem ocupa a largura inteira na proporção original (1122x1402), sem recorte */
-  .capa2 { padding: 0; background: var(--chocolate); display: flex; flex-direction: column; }
-  .capa2 .poster { display: block; width: 210mm; height: auto; }
-  .capa2 .faixa-guia { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 14mm; border-top: 3px solid var(--terracota); }
-  .capa2 .topo { font-size: 9.5px; letter-spacing: 3.5px; text-transform: uppercase; font-weight: 600; color: var(--bege-escuro); }
-  .capa2 .titulo { white-space: nowrap; font-family: "Bebas Neue"; font-size: 36px; line-height: 1; letter-spacing: 1.5px; color: var(--branco-quente); margin-top: 4px; }
-  .capa2 .titulo span { color: var(--terracota-lt); }
-  .capa2 .btn-sbe { flex: 0 0 auto; font-size: 22px; }
+  /* capa da versão 2: foto da Suellen à direita, texto à esquerda */
+  .capa-foto { justify-content: space-between; }
+  .capa-foto .brilho { position: absolute; right: -45mm; bottom: 20mm; width: 220mm; height: 220mm; border-radius: 50%;
+    background: radial-gradient(circle, rgba(193,75,34,.55) 0%, rgba(193,75,34,.18) 45%, rgba(193,75,34,0) 70%); }
+  .capa-foto .suellen { position: absolute; right: -6mm; bottom: 0; height: 228mm; width: auto; }
+  .capa-foto .topo, .capa-foto .texto, .capa-foto .faixa { position: relative; z-index: 2; }
+  .capa-foto .texto { max-width: 100mm; margin-top: 4mm; }
+  .capa-foto h1 { font-size: 78px; margin-top: 0; text-shadow: 0 4px 24px rgba(0,0,0,.35); }
+  .capa-foto .sub { font-size: 21px; max-width: 86mm; }
+  .capa-foto .cta-capa { margin-top: 9mm; }
+  .capa-foto .btn-sbe { margin-top: 10px; font-size: 25px; }
+  .capa-foto .faixa { max-width: 92mm; flex-direction: column; gap: 4px; }
 </style>
 </head>
 <body>
 
-<!-- 1. CAPA (versão 2): pôster original da Super Black Eterna, sem corte nem filtro, + faixa do guia -->
-<section class="pagina capa2">
-  <a href="https://suellenwarmling.com.br/super-black-eterna/"><img class="poster" src="capa-super-black.png" alt="Super Black Eterna — Suellen Warmling"></a>
-  <div class="faixa-guia">
-    <div>
-      <div class="topo">Guia prático · skill Vídeos Opus</div>
-      <div class="titulo">Edite seus vídeos <span>com o Claude</span></div>
-    </div>
-    <a class="btn-sbe" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga →</a>
+<!-- 1. CAPA (versão 2): foto da Suellen recortada do fundo, sem outra alteração -->
+<section class="pagina capa capa-foto">
+  <div class="brilho"></div>
+  <img class="suellen" src="suellen-recorte.png" alt="Suellen Warmling">
+  <div class="topo">Suellen Warmling · Guia prático</div>
+  <div class="texto">
+    <h1>Edite seus vídeos<br><span>com o Claude</span></h1>
+    <p class="sub">Checklist de instalação e passo a passo da skill Vídeos Opus: cortes, legendas, edição viral, 5 estilos de edição e vídeos animados.</p>
+    <div class="cta-capa"><span class="data-sbe">Super Black Eterna · 28/10</span><br><a class="btn-sbe" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga →</a></div>
   </div>
+  <div class="faixa"><span>Instala <b>uma vez</b></span><span>Sem programas extras</span><span>Sem custo por vídeo</span></div>
 </section>
 
 <!-- 2. O QUE É -->
