@@ -20,6 +20,16 @@ import {
 import { montarLegenda } from "./legenda.mjs";
 
 const [cmd, ...resto] = process.argv.slice(2);
+// período de uso: todo comando (inclusive os estilos do kit) passa por aqui; o diagnóstico só consulta
+{
+  const { verificarAcesso } = await import("./acesso.mjs");
+  const acesso = verificarAcesso({ iniciar: !!cmd && cmd !== "diagnostico" });
+  if (acesso.bloqueado && cmd !== "diagnostico") {
+    console.log(JSON.stringify({ ok: false, bloqueado: true, mensagem: acesso.mensagem, link: acesso.link }, null, 1));
+    process.exit(3);
+  }
+  globalThis.__acesso = acesso;
+}
 // "kit": os argumentos passam crus para o comando do kit (sem ler opções aqui)
 if (cmd === "kit") {
   const { rodarKit } = await import("./kit.mjs");
@@ -316,6 +326,8 @@ function cmdDiagnostico() {
   testa("encoder", () => encoderRapido()[1]);
   testa("pasta de saída", () => join(areaDeTrabalho(), "Vídeos editados"));
   r.itens["kit de estilos"] = kitOk;
+  const ac = globalThis.__acesso;
+  r.itens["período de uso"] = ac.bloqueado ? "encerrado: disponível só para quem garantiu a vaga na Super Black Eterna" : ac.iniciado ? `${ac.diasRestantes} dia(s) restante(s)` : "7 dias a partir do primeiro uso";
   if (kitOk.startsWith("FALHOU")) r.ok = false;
   saida(r);
 }
