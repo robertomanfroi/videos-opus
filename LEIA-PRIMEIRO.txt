@@ -27,6 +27,9 @@ INSTALAR (uma vez só, uns 2 minutos)
   4. Quando o Claude pedir permissão, clique em Permitir.
   5. Quando ele disser que deu certo, abra uma conversa nova.
 
+  Não anexe o zip na conversa: o chat só aceita anexos de até 30 MB, e
+  não precisa. Na aba Code o Claude abre o arquivo direto da pasta.
+
 
 PARA O CLAUDE (como instalar este pacote)
 -----------------------------------------
@@ -36,8 +39,9 @@ Se a pessoa pediu para instalar este arquivo, faça exatamente isto:
   2. Se já existir uma pasta videos-opus ali (versão antiga), apague-a.
   3. Descompacte com o tar do Windows, que leva segundos
      (NÃO use Expand-Archive nem "Extrair tudo": com os 7.500 arquivos
-     deste pacote eles levam mais de meia hora):
-       tar -xf videos-opus-v1.zip -C "%USERPROFILE%\.claude\skills" videos-opus
+     deste pacote eles levam mais de meia hora), usando o caminho
+     completo do zip (normalmente em Downloads):
+       tar -xf "<caminho do zip>" -C "%USERPROFILE%\.claude\skills" videos-opus
   4. Rode o diagnóstico:
        "%USERPROFILE%\.claude\skills\videos-opus\bin\node.exe" "%USERPROFILE%\.claude\skills\videos-opus\scripts\video.mjs" diagnostico
      Todos os itens devem dizer ok.

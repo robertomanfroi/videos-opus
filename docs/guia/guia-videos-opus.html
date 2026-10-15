@@ -130,7 +130,8 @@
   <h3>Onde funciona</h3>
   <table>
     <tr><th>Onde você usa o Claude</th><th>Funciona?</th><th>Por quê</th></tr>
-    <tr><td><b>App do Claude no computador, aba Code</b></td><td><span class="sim">SIM</span></td><td>É aqui que a skill roda: ela usa os programas que vêm dentro dela, no seu computador.</td></tr>
+    <tr><td><b>App do Claude no computador, aba Code, ambiente Local</b></td><td><span class="sim">SIM</span></td><td>É aqui que a skill roda: ela usa os programas que vêm dentro dela, no seu computador.</td></tr>
+    <tr><td>Aba Code com ambiente <b>Cloud</b> (nuvem)</td><td><span class="nao">NÃO</span></td><td>Roda num computador da Anthropic, que não vê seus vídeos nem suas pastas e é apagado no fim.</td></tr>
     <tr><td>Claude Code no terminal</td><td><span class="sim">SIM</span></td><td>É o mesmo Claude Code, só que numa janela de texto.</td></tr>
     <tr><td>Chat normal do Claude (site ou app)</td><td><span class="nao">NÃO</span></td><td>O chat não tem acesso aos programas de vídeo do seu computador.</td></tr>
     <tr><td>Claude no celular</td><td><span class="nao">NÃO</span></td><td>A edição precisa do computador.</td></tr>
@@ -154,15 +155,15 @@
 
   <div class="rotulo" style="margin-top:22px">Passo a passo</div>
   <h1>Instalação</h1>
-  <h2>Uma vez só, em 5 passos.</h2>
+  <h2>Uma vez só, em 4 passos.</h2>
 
-  <div class="passo"><div class="num">1</div><div class="txt"><b>Baixe a skill.</b> Clique no botão abaixo, depois no arquivo <b>videos-opus-v1.zip</b> e na setinha de download.<br><a class="link" href="https://drive.google.com/drive/folders/1lKlR0siPnzQBDsEG2ZeJcic3ORo1qURa?usp=sharing" style="text-decoration:none">Baixar a skill no Google Drive</a></div></div>
-  <div class="atencao" style="margin-left:46px">O Google vai mostrar <b>"Não é possível verificar se há vírus neste arquivo"</b>. É normal: acontece com todo arquivo grande. Clique em <b>"Fazer o download assim mesmo"</b>. O arquivo (uns 390 MB) vai para a pasta <b>Downloads</b>. Não precisa descompactar.</div>
-  <div class="passo"><div class="num">2</div><div class="txt">Abra o <b>app do Claude</b>, clique na aba <b>Code</b> e escolha a pasta <b>Downloads</b> como pasta de trabalho.</div></div>
-  <div class="passo"><div class="num">3</div><div class="txt">Escreva para o Claude:
-    <div class="prompt"><span class="etq">Mensagem para copiar</span>Instala a skill do arquivo videos-opus-v1.zip que está nesta pasta, seguindo o LEIA-PRIMEIRO.txt que está dentro dele.</div></div></div>
-  <div class="passo"><div class="num">4</div><div class="txt">Quando o Claude pedir permissão, clique em <b>Permitir</b>. Ele descompacta, instala e testa tudo sozinho em uns 2 minutos.</div></div>
-  <div class="passo"><div class="num">5</div><div class="txt">Quando ele disser que <b>deu tudo certo</b>, abra uma <b>conversa nova</b>. Pronto: a skill está instalada para sempre.</div></div>
+  <div class="passo"><div class="num">1</div><div class="txt">Abra o <b>app do Claude</b> e clique na aba <b>Code</b>. Na caixa de mensagem, no seletor <b>Environment</b> (ambiente), escolha <b>Local</b>, e não Cloud. Se ele pedir uma pasta, escolha <b>Downloads</b>.</div></div>
+  <div class="passo"><div class="num">2</div><div class="txt">Copie a mensagem abaixo <b>inteira</b>, cole no Claude e envie. O link já está dentro dela: o Claude baixa o arquivo sozinho.
+    <div class="prompt" style="word-break:break-all"><span class="etq">Mensagem para copiar</span>Instala a skill videos-opus para mim. Baixe o arquivo deste link para a minha pasta Downloads usando o curl.exe do Windows e depois siga as instruções do LEIA-PRIMEIRO.txt que está dentro do zip: https://drive.usercontent.google.com/download?id=1SXIfbZIDtnmxHryhGkInw6A1nKOQIEoA&amp;export=download&amp;confirm=t</div></div></div>
+  <div class="passo"><div class="num">3</div><div class="txt">Quando o Claude pedir permissão, clique em <b>Permitir</b>. Ele baixa (uns 390 MB), instala e testa tudo sozinho em poucos minutos.</div></div>
+  <div class="passo"><div class="num">4</div><div class="txt">Quando ele disser que <b>deu tudo certo</b>, abra uma <b>conversa nova</b>. Pronto: a skill está instalada para sempre.</div></div>
+  <div class="cartao pequeno"><b>Não anexe o arquivo na conversa:</b> o chat só aceita anexos de até 30 MB, e não precisa. Prefere baixar você mesma?
+    <a href="https://drive.google.com/drive/folders/1lKlR0siPnzQBDsEG2ZeJcic3ORo1qURa?usp=sharing" style="color:var(--terracota);font-weight:700">Abra a pasta no Google Drive</a>, baixe o <b>videos-opus-v1.zip</b> (no aviso "não é possível verificar se há vírus", clique em <b>Fazer o download assim mesmo</b>), deixe em Downloads e escreva ao Claude: <i>"Instala a skill do arquivo videos-opus-v1.zip que está em Downloads, seguindo o LEIA-PRIMEIRO.txt que está dentro dele."</i></div>
   <div class="rodape"><span>Vídeos Opus · Guia</span><span>3</span></div>
 </section>
 
@@ -301,6 +302,7 @@
   <h1>Perguntas e problemas</h1>
   <table>
     <tr><th style="width:36%">Aconteceu</th><th>O que fazer</th></tr>
+    <tr><td>O Claude disse que está "na nuvem", "num container" ou que a rede bloqueou o download</td><td>A sessão foi aberta no ambiente <b>Cloud</b>. Comece uma sessão nova na aba Code com o seletor <b>Environment</b> em <b>Local</b> e mande a mensagem de novo.</td></tr>
     <tr><td>Não aparece a aba <b>Code</b> no app</td><td>A aba Code é dos planos pagos. Confira seu plano em claude.ai, em Configurações. Atualize o app do Claude.</td></tr>
     <tr><td>O Claude disse que não conhece a skill</td><td>Abra uma <b>conversa nova</b> depois de instalar. Se continuar, peça: "roda o diagnóstico da skill videos-opus".</td></tr>
     <tr><td>O Claude pede permissão toda hora</td><td>Clique em <b>Permitir</b>. Se o app oferecer "permitir sempre" para esse tipo de comando, pode usar.</td></tr>
@@ -309,7 +311,6 @@
     <tr><td>Cortou fala demais ou de menos</td><td>Peça "deixa mais respiro" ou "corta mais as pausas". Ambientes com barulho atrapalham o corte.</td></tr>
     <tr><td>Demorou muito</td><td>Computador sem placa de vídeo é mais lento, principalmente no estilo colagem. Prefira vídeos de até 90 segundos.</td></tr>
     <tr><td>Quero atualizar para uma versão nova</td><td>Baixe o zip novo e mande a mesma mensagem de instalação. Seus vídeos e seu perfil não são apagados.</td></tr>
-    <tr><td>Funciona no Mac ou no celular?</td><td>Ainda não. Esta versão é para Windows, no app do Claude no computador.</td></tr>
   </table>
 
   <h3>O que a skill nunca faz</h3>
