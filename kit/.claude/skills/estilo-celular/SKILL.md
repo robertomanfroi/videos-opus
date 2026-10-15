@@ -20,7 +20,7 @@ Antes de começar leia `../perfil-criadora.md` e carregue (ou crie) o `perfil.js
 | Sombra | Só quando a parede atrás é clara (`.sh`). Nunca caixa, fundo ou vidro atrás do texto. |
 | Movimento | **Nenhum.** Elementos entram e saem em corte seco (`show()`/`hide()`). Sem fade, slide, zoom, quique. |
 | Emojis | Caracteres reais no template (✅ ❌ 🔥 ❤️ 👇 🚨 …); `montar.mjs` troca por arte Twemoji. Nunca desenhe ícones. |
-| Legenda | **Uma palavra por vez**, 54 px, branca com contorno preto grosso. Centralizada no peito, logo abaixo do queixo (`capTop` em `reel.json`). Corte seco palavra a palavra. |
+| Legenda | **Uma palavra por vez**, 54 px, branca com sombra suave (nunca contorno). Centralizada no peito, logo abaixo do queixo (`capTop` em `reel.json`). Corte seco palavra a palavra. |
 | Título persistente | Um título de assunto pode ficar na tela por longos trechos enquanto os prints trocam acima dele. |
 | Listas | Checklists de emoji + palavra (✅ Legenda / ❌ Título), reveladas item a item na palavra falada. |
 | Mockups | Evite. Use print real. Só desenhe um mockup se não existir print E a aluna pedir. |

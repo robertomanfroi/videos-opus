@@ -24,10 +24,10 @@ html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000;co
 .print{position:absolute;display:block;opacity:0}
 /* Emoji (Twemoji) — tamanho acompanha a fonte */
 img.emo{height:1em;width:auto;vertical-align:-.12em}
-/* Legenda: UMA palavra por vez, branca com contorno preto grosso, no peito logo abaixo do queixo */
+/* Legenda: UMA palavra por vez, branca com sombra suave (sem contorno), no peito logo abaixo do queixo */
 #cap{position:absolute;left:0;top:__CAP_TOP__px;width:1080px;height:80px}
 .w{position:absolute;left:0;top:0;width:1080px;text-align:center;font-family:"__FONT_TITLE__","Titulo",sans-serif;font-weight:700;font-size:54px;line-height:80px;
-  -webkit-text-stroke:8px #000;paint-order:stroke fill}
+  ;text-shadow:0 3px 18px rgba(0,0,0,.6),0 0 6px rgba(0,0,0,.5)}
 </style></head><body>
 <div id="reel" data-composition-id="reel" data-start="0" data-duration="__DUR__" data-width="1080" data-height="1920">
   <video id="cam" src="assets/clean.mp4" data-start="0" data-duration="__DUR__" data-track-index="0" muted playsinline></video>

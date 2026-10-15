@@ -4,7 +4,7 @@
 //     caixa escura opaca (1–2 linhas). Quebra na pontuação, numa pausa > 0,28 s, ou antes de passar de MAX caracteres.
 //     assets/caption-fixes.json  {"errado": "certo", "apaga-me": ""} (sem ligar para maiúscula/pontuação) ou [{"at": 36.0, "text": "certo"}]
 //     assets/captions.json       {"hide": [[a,b]], "max": 44}   hide → trechos sem legenda (raro; ex.: diagrama cheio)
-//   reel.json {"captions": "words"} → UMA palavra por vez, Archivo Black, branca, contorno preto (classe .w).
+//   reel.json {"captions": "words"} → UMA palavra por vez, Archivo Black, branca, sombra suave (classe .w).
 // - __DUR__ : duração do clean.mp4;  __CAP_TOP__ / __CFG__ : reel.json
 //     {"capTop": 1545, "punch": 1.18, "split": {"y": 668, "scale": 1, "origin": "50% 0%"}}
 // - __ACCENT__ : perfil.json cor_destaque → senão verde #1f7a63 (o amarelo some no fundo claro do diagrama)

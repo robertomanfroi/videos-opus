@@ -85,6 +85,15 @@ export function encoderRapido() {
 // Encoder do arquivo final que a aluna posta: qualidade alta e compatível com Instagram e WhatsApp.
 export const ENCODER_FINAL = ["-c:v", "libx264", "-preset", "medium", "-crf", "19", "-pix_fmt", "yuv420p", "-profile:v", "high", "-movflags", "+faststart"];
 
+// Véu em degradê escuro atrás da legenda (padrão premium: legibilidade sem contorno nas letras).
+// Devolve um trecho de filtro que recebe [entrada] e entrega [saida].
+export function filtroVeu(W, H, posicao, entrada, saida) {
+  const a = posicao === "cima" ? `if(lt(Y,H*0.42),(H*0.42-Y)/(H*0.42)*150,0)`
+    : posicao === "meio" ? `if(lt(abs(Y-H*0.5),H*0.2),(1-abs(Y-H*0.5)/(H*0.2))*120,0)`
+    : `if(gt(Y,H*0.5),(Y-H*0.5)/(H*0.5)*165,0)`;
+  return `color=c=0x140a05:s=${W}x${H}:d=1,format=rgba,geq=r='r(X,Y)':g='g(X,Y)':b='b(X,Y)':a='${a}'[veu];${entrada}[veu]overlay=0:0:eof_action=repeat${saida}`;
+}
+
 export const FORMATOS = {
   reels: [1080, 1920], stories: [1080, 1920], tiktok: [1080, 1920],
   feed: [1080, 1350], retrato: [1080, 1350],

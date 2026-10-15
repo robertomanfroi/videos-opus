@@ -20,7 +20,7 @@ o mecanismo é desenhado em UM plano claro cujos elementos mudam no lugar, passo
 ## Tipografia
 - Só Inter (OFL). Legenda SemiBold 46 px, 1–2 linhas. Nós do diagrama SemiBold 88 px, espaçamento apertado;
   rótulos de relação Medium 34 px; rótulo do passo Medium 38 px em caixa alta, espaçado .2em; subtítulos Regular 32 px.
-- Modo palavra (`reel.json {"captions":"words"}`): Archivo Black 86 px, branca, contorno preto.
+- Modo palavra (`reel.json {"captions":"words"}`): Archivo Black 86 px, branca, sombra suave (nunca contorno).
 
 ## Layout (1080 × 1920)
 - Faixa de apoio: y 0–668 (16:9 + margem). Apresentadora abaixo dela. Etiqueta no canto superior esquerdo (56, 52). Crédito no canto inferior direito.

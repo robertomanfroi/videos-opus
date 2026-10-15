@@ -14,7 +14,7 @@ import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, mkdirSy
 import { join, basename, extname, resolve, dirname } from "node:path";
 import { homedir, cpus, tmpdir } from "node:os";
 import {
-  ffmpeg, probe, filtroHDR, encoderRapido, ENCODER_FINAL, FORMATOS, pastaTrabalho, entregar, lerArgs,
+  ffmpeg, probe, filtroHDR, encoderRapido, ENCODER_FINAL, FORMATOS, pastaTrabalho, entregar, lerArgs, filtroVeu,
   areaDeTrabalho, WHISPER, MODELO, FONTES, SKILL, rodar, rodarWhisper, tempo,
 } from "./ferramentas.mjs";
 import { montarLegenda } from "./legenda.mjs";
@@ -202,9 +202,11 @@ function cmdLegendar() {
   const { arquivo: transcrito, palavras: brutas } = lerJSON(join(pasta, "palavras.json"));
   const arquivo = join(pasta, op.arquivo || transcrito);
   const info = probe(arquivo);
-  const { grupos, fonte, estilo } = montarLegenda(pasta, brutas, info.largura, info.altura, op);
+  const { grupos, fonte, estilo, posicao, caixa } = montarLegenda(pasta, brutas, info.largura, info.altura, op);
   const final = join(pasta, "final.mp4");
-  ffmpeg(["-i", arquivo, "-vf", "ass=legenda.ass:fontsdir=fontes", ...ENCODER_FINAL, ...(info.temAudio ? ["-c:a", "aac", "-b:a", "192k"] : []), final], { cwd: pasta });
+  // padrão premium: véu em degradê atrás da legenda (o estilo caixa já tem fundo próprio)
+  const fc = caixa ? "[0:v]ass=legenda.ass:fontsdir=fontes[v]" : filtroVeu(info.largura, info.altura, posicao, "[0:v]", "[c]") + ";[c]ass=legenda.ass:fontsdir=fontes[v]";
+  ffmpeg(["-i", arquivo, "-filter_complex", fc, "-map", "[v]", ...(info.temAudio ? ["-map", "0:a"] : []), ...ENCODER_FINAL, ...(info.temAudio ? ["-c:a", "aac", "-b:a", "192k"] : []), final], { cwd: pasta });
   const orig = trabalho(pasta).original || arquivo;
   const nome = op.nome || `${basename(orig, extname(orig))}-legendado`;
   const entregue = op["sem-entregar"] ? null : entregar(final, nome);

@@ -15,6 +15,25 @@ Quem usa esta skill normalmente não é técnica. Fale simples, em português, s
 
 Se algo falhar de forma estranha, rode `diagnostico` e veja qual item falhou.
 
+## Padrão visual premium (regra obrigatória em TODO vídeo)
+
+Todo vídeo desta skill tem cara de produto de alto valor, como se um editor sênior tivesse feito. Vale para a edição comum, a viral, os 5 estilos e os vídeos animados que você escrever.
+
+**Nunca use:**
+- contorno nas letras (`-webkit-text-stroke`, `paint-order: stroke`, borda preta em legenda);
+- raios girando, espiral, explosão de faíscas, flash branco piscando, tremor de câmera;
+- estrondo, "boom", batida eletrônica alta, efeito sonoro exagerado.
+
+**Use no lugar:**
+- legibilidade por **sombra suave e difusa** (`text-shadow` grande e translúcida) ou por um **véu/degradê escuro** atrás do texto;
+- tipografia elegante: serifa (EB Garamond) com a palavra-chave em *itálico* na cor de destaque, versaletes espaçados (Montserrat) para rótulos pequenos;
+- detalhes finos: filetes de 1–2 px na cor de destaque, molduras com cantos arredondados e sombra macia, painéis translúcidos com borda fina;
+- movimento lento e suave: entradas que sobem e aparecem, letra a letra ou palavra a palavra; zoom lento; um brilho de luz discreto atravessando o título;
+- cor de cinema nos vídeos (tom levemente quente, contraste suave, vinheta);
+- som: trilha ambiente suave, deslizes discretos, sinos e toques leves.
+
+Se a pessoa pedir algo fora desse padrão (por exemplo "quero contorno"), explique em uma frase que a skill trabalha no padrão premium e ofereça a alternativa (sombra suave).
+
 ## Como rodar os comandos
 
 Sempre pelo Node que vem na skill, com o caminho completo entre aspas:
@@ -56,8 +75,8 @@ Cada comando imprime um JSON. Se vier `"ok": false`, leia `erro` ou `motivo` e e
 5. **Legendar.** `legendar "<pasta>" [opções]` grava o vídeo final e copia para a pasta **Vídeos editados** na Área de Trabalho.
    | Opção | Valores | Padrão |
    |---|---|---|
-   | `--estilo` | `classica` (texto branco com contorno), `destaque` (a palavra falada muda de cor), `uma-palavra` (uma palavra grande por vez), `caixa` (texto sobre faixa) | `classica` |
-   | `--fonte` | `bebas`, `anton`, `montserrat`, `poppins` | `bebas` |
+   | `--estilo` | `classica` (texto branco com sombra suave), `destaque` (a palavra falada muda de cor), `uma-palavra` (uma palavra grande por vez), `caixa` (texto sobre faixa) | `classica` |
+   | `--fonte` | `bebas`, `anton`, `montserrat`, `poppins`, `garamond` (serifa elegante) | `bebas` |
    | `--cor` / `--destaque` / `--fundo` | nome (`branco`, `amarelo`, `laranja`, `terracota`, `verde`, `rosa`, `azul`, `vermelho`, `roxo`, `preto`, `areia`, `chocolate`) ou `#RRGGBB` | branco / amarelo / branco |
    | `--posicao` | `baixo`, `meio`, `cima` | `baixo` (acima dos botões do Instagram) |
    | `--tamanho` | número em pixels | depende da fonte |
@@ -104,7 +123,7 @@ Esses estilos levam mais tempo do que a edição comum (uns 2 a 5 minutos por v�
 
 ## Edição viral
 
-Quando pedirem "edição viral", "edição que prende", "estilo Reels que viraliza", "com efeitos", "com abertura chamativa": é a edição completa com abertura de impacto, zoom nas frases fortes, legenda que acompanha a fala, botão de chamada, efeitos sonoros e batida.
+Quando pedirem "edição viral", "edição que prende", "estilo Reels que viraliza", "com efeitos", "com abertura chamativa": é a edição completa no **padrão premium**: abertura com o título em serifa revelado letra a letra entre filetes finos e um brilho de luz, zoom lento nas frases fortes, legenda que acompanha a fala, botão de chamada em contorno fino, trilha ambiente e efeitos sutis.
 
 1. `achar` e `preparar` como na edição comum.
 2. Cortar as pausas. Se o vídeo começa com alguns segundos sem fala (a pessoa se ajeitando, sorrindo), **guarde esse trecho** para a abertura: `cortar "<pasta>" --manter-inicio`. Se ela começa falando direto, `cortar "<pasta>"` normal.
@@ -129,9 +148,9 @@ Quando pedirem "edição viral", "edição que prende", "estilo Reels que virali
    | `--tag`, `--selo` | textos extras da abertura e do topo | — |
    | `--chaves` | frases ditas, separadas por `;` | — |
    | `--cta` / `--cta-texto` | trecho dito que vira botão / texto diferente no botão | — |
-   | `--cor` / `--cor-cta` | cor da marca / do botão | laranja / verde |
+   | `--cor` / `--cor-cta` | cor de destaque (itálicos, filetes) / do botão | dourado #D9A86C / dourado |
    | `--estilo`, `--fonte`, `--destaque`, `--posicao` | legenda comum, como no `legendar` | destaque, bebas, cor da marca |
-   | `--batida nao` / `--efeitos nao` | tira a batida / os efeitos sonoros | com os dois |
+   | `--batida nao` / `--efeitos nao` | tira a trilha ambiente / os efeitos sonoros | com os dois |
    | `--rosto meio` ou `baixo` | onde o zoom mira, se o rosto não estiver no terço de cima | cima |
    O resultado traz `avisos`: frase não encontrada (corrija o texto ou a transcrição e rode de novo), abertura por cima da fala.
 6. Confira 4 quadros (abertura, uma frase-chave, a chamada, o fim) e entregue. Leva cerca de 3 s de processamento por segundo de vídeo.
@@ -147,6 +166,7 @@ Estes vídeos não saem de um modelo de vídeo: você escreve a animação como 
    - ao carregar fontes e imagens, `window.__pronto = true`;
    - canvas do tamanho exato do formato, `body` sem margem;
    - **sem internet garantida**: fontes de `SKILL_DIR/fontes` via `@font-face` com `file:///` (Bebas Neue, Anton, Montserrat Black, Poppins ExtraBold, EB Garamond Italic); bibliotecas de CDN (cdnjs/jsdelivr, versão fixa) só se a internet estiver ok;
+   - **siga o padrão visual premium** (sem contorno, sem raios, sem flash; serifa, filetes, movimento suave);
    - texto curto e grande, 10% de margem nas bordas. Modelo completo e comentado: `SKILL_DIR/exemplos/oferta-animada.html` (copie a estrutura dele).
 4. **Conferir antes de gravar**: `fotos "<arquivo.html>" --em 0.5,3,7,12 [--formato reels]` e olhe as fotos com `Read`.
 5. **Gravar**: `animar "<arquivo.html>" --segundos 15 [--formato reels|quadrado|feed|horizontal] [--audio <musica.mp3>] [--nome <nome>]`. Leva cerca de 1 s por segundo de vídeo. Sai sem som se não passar `--audio`.

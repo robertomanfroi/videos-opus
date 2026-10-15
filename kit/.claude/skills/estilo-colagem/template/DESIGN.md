@@ -19,7 +19,7 @@ só fundos passam. Topo: y 280 → topo da cabeça. Cenas por cima: y 280–1080
 
 ## Tipografia (todas OFL)
 - Títulos, chips, carimbos e legenda: fonte de título (Archivo Black ou `fonte_titulo` do perfil), MAIÚSCULAS nos títulos
-- Legenda: 58 px, contorno fino `rgba(0,0,0,.55)`; bloco grande 96 px com brilho
+- Legenda: 58 px, sombra suave (nunca contorno); bloco grande 96 px com brilho
 - Etiquetas (`.tag`), subitens: Inter 600
 
 ## Movimento

@@ -39,9 +39,9 @@ html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000;co
 .dia path.dot{stroke-dasharray:3 11;stroke-width:5}
 .dia .k{opacity:0}                                           /* todo elemento começa escondido; a linha do tempo revela */
 
-/* Legenda modo palavra (reel.json "captions": "words"): uma palavra por vez, branca, contorno preto. */
+/* Legenda modo palavra (reel.json "captions": "words"): uma palavra por vez, branca, sombra suave (sem contorno). */
 .w{position:absolute;left:0;top:__CAP_TOP__px;width:1080px;text-align:center;font-family:"Titulo",sans-serif;font-weight:700;
-  font-size:86px;line-height:120px;color:#fff;-webkit-text-stroke:14px #000;paint-order:stroke fill}
+  font-size:86px;line-height:120px;color:#fff;text-shadow:0 3px 18px rgba(0,0,0,.6),0 0 6px rgba(0,0,0,.5)}
 /* Legenda padrão: FRASES de 1–2 linhas em UMA caixa escura opaca, no mesmo lugar em todo plano (terço inferior). */
 .ph{position:absolute;left:90px;width:900px;top:__CAP_TOP__px;text-align:center}
 .ph span{display:inline-block;background:var(--box);color:#fff;font:600 46px/1.24 "ExSans",sans-serif;letter-spacing:-.01em;padding:16px 28px;border-radius:9px;max-width:780px}

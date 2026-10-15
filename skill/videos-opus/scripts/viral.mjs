@@ -1,4 +1,4 @@
-// Edição viral: abertura com título explodindo, zoom e tremor nas frases-chave, legenda que acompanha a fala,
+// Edição viral no PADRÃO PREMIUM: abertura com título em serifa revelado letra a letra, zoom lento nas frases-chave, legenda que acompanha a fala,
 // botão de chamada, efeitos sonoros e batida. Tudo num encode só: vídeo + legenda (libass) + camada HTML (Edge) + som.
 import { readFileSync, writeFileSync, existsSync, mkdirSync, copyFileSync } from "node:fs";
 import { join } from "node:path";
@@ -24,24 +24,17 @@ function acharFrase(palavras, frase, depoisDe = -1) {
   return null;
 }
 
-// Expressão do FFmpeg para o zoom: degraus com transição de 0,12 s + impulsos que decaem.
-function exprZoom(degraus, impulsos) {
-  // monta de trás para frente: if(t<a1, z0, if(t<a2, seg1, ... segN))
+// Zoom do padrão premium: degraus pequenos com transição lenta e suave (smoothstep em 0,6 s). Sem impulsos.
+function exprZoom(degraus) {
   let expr = "";
   for (let k = degraus.length - 1; k >= 0; k--) {
     const [a, z] = degraus[k];
-    const seg = k === 0 ? String(z) : `${degraus[k - 1][1]}+(${(z - degraus[k - 1][1]).toFixed(3)})*min(1,(t-${a.toFixed(3)})/0.12)`;
+    const x = `min(1,(t-${a.toFixed(3)})/0.6)`;
+    const seg = k === 0 ? String(z) : `${degraus[k - 1][1]}+(${(z - degraus[k - 1][1]).toFixed(3)})*(${x})*(${x})*(3-2*${x})`;
     expr = k === degraus.length - 1 ? seg : `if(lt(t,${degraus[k + 1][0].toFixed(3)}),${seg},${expr})`;
   }
-  const imp = impulsos.map(([t0, amp, d]) => `${amp}*if(between(t,${t0.toFixed(3)},${(t0 + d).toFixed(3)}),pow(1-(t-${t0.toFixed(3)})/${d},2),0)`).join("+");
-  return imp ? `(${expr})+${imp}` : expr;
+  return expr;
 }
-function exprTremor(tremores, eixo) {
-  if (!tremores.length) return "0";
-  const amp = tremores.map(([t0, a, d]) => `${a}*if(between(t,${t0.toFixed(3)},${(t0 + d).toFixed(3)}),pow(1-(t-${t0.toFixed(3)})/${d},2),0)`).join("+");
-  return `(${amp})*${eixo === "x" ? "sin(t*91)" : "cos(t*77)"}`;
-}
-
 export async function viral(pasta, op) {
   const { arquivo: transcrito, palavras: brutas } = JSON.parse(readFileSync(join(pasta, "palavras.json"), "utf8"));
   // as correções da aluna valem também para achar as frases-chave
@@ -51,7 +44,7 @@ export async function viral(pasta, op) {
   const info = probe(arquivo);
   const W = info.largura, H = info.altura, dur = info.duracao, fps = 30;
   const avisos = [];
-  const cor = hex(op.cor, "F74502"), corCta = hex(op["cor-cta"], "19C23A");
+  const cor = hex(op.cor, "D9A86C"), corCta = hex(op["cor-cta"], "D9A86C");
   const primeira = palavras[0]?.ini ?? 0;
 
   // ---- abertura
@@ -72,12 +65,12 @@ export async function viral(pasta, op) {
   for (const frase of String(op.chaves || "").split(";").map((s) => s.trim()).filter(Boolean)) {
     const r = acharFrase(palavras, frase, depois);
     if (!r) { avisos.push(`não achei "${frase}" na fala`); continue; }
-    chaves.push({ ini: r.ini, fim: Math.max(r.fim + 0.35, r.ini + 1.2), texto: frase.toLocaleUpperCase("pt-BR") });
+    chaves.push({ ini: r.ini, fim: Math.max(r.fim + 0.5, r.ini + 1.6), texto: frase });
   }
   let cta = null;
   if (op.cta) {
     const r = acharFrase(palavras, op.cta, fimA - 0.05);
-    if (r) cta = { ini: r.ini, fim: Math.max(r.fim + 0.6, r.ini + 1.3), texto: String(op["cta-texto"] || op.cta).toLocaleUpperCase("pt-BR") };
+    if (r) cta = { ini: r.ini, fim: Math.max(r.fim + 0.6, r.ini + 1.3), texto: String(op["cta-texto"] || op.cta) };
     else avisos.push(`não achei a chamada "${op.cta}" na fala`);
   }
   // uma frase-chave não invade a seguinte
@@ -91,13 +84,15 @@ export async function viral(pasta, op) {
 
   // ---- camada HTML
   const cfg = { W, H, cor, corCta, abertura, selo: op.selo || null, chaves, cta };
-  const fontes = `<style>@font-face{font-family:"Display";src:url("${pathToFileURL(join(FONTES, fonte.arq)).href}")}` +
-    `@font-face{font-family:"Serif";src:url("${pathToFileURL(join(FONTES, "EBGaramond-Italic.ttf")).href}");font-style:italic;font-weight:400 800}</style>`;
+  const url = (f) => pathToFileURL(join(FONTES, f)).href;
+  const fontes = `<style>@font-face{font-family:"Serif";src:url("${url("EBGaramond-Regular.ttf")}");font-weight:400 800}` +
+    `@font-face{font-family:"Serif";src:url("${url("EBGaramond-Italic.ttf")}");font-style:italic;font-weight:400 800}` +
+    `@font-face{font-family:"Caps";src:url("${url("Montserrat-Variable.ttf")}");font-weight:100 900}</style>`;
   const modelo = readFileSync(join(SKILL, "scripts", "viral.html"), "utf8");
   const html = join(pasta, "viral.html");
   writeFileSync(html, modelo.replace("<!--CFG-->", `${fontes}<script>window.CFG=${JSON.stringify(cfg)};</script>`));
 
-  // ---- zoom e tremor
+  // ---- zoom lento (sem tremor)
   const rosto = op.rosto === "meio" ? 0.45 : op.rosto === "baixo" ? 0.6 : 0.29;
   const degraus = [[0, 1.0]];
   if (abertura) degraus.push([fimA, 1.0]);
@@ -107,22 +102,18 @@ export async function viral(pasta, op) {
     const anterior = palavras[i - 1];
     if (p.ini < fimA || (anterior && !/[.?!,]$/.test(anterior.t) && p.ini - anterior.fim < 0.35)) return;
     if (p.ini - ultimo < 1.6 || blocos.some((b) => p.ini >= b.ini - 0.05 && p.ini < b.fim)) return;
-    degraus.push([p.ini, perto ? 1.12 : 1.0]); perto = !perto; ultimo = p.ini;
+    degraus.push([p.ini, perto ? 1.06 : 1.0]); perto = !perto; ultimo = p.ini;
   });
-  for (const k of chaves) { degraus.push([k.ini, 1.24]); degraus.push([k.fim, perto ? 1.12 : 1.0]); }
-  if (cta) { degraus.push([cta.ini, 1.0]); degraus.push([cta.fim, 1.1]); }
+  for (const k of chaves) { degraus.push([k.ini, 1.1]); degraus.push([k.fim, perto ? 1.06 : 1.0]); }
+  if (cta) { degraus.push([cta.ini, 1.0]); degraus.push([cta.fim, 1.04]); }
   degraus.sort((a, b) => a[0] - b[0]);
   const limpos = [];
   for (const d of degraus) { if (limpos.length && d[0] - limpos.at(-1)[0] < 0.05) limpos[limpos.length - 1] = [limpos.at(-1)[0], d[1]]; else limpos.push(d); }
-  const impulsos = [...slams.map((t, i) => [t, i === slams.length - 1 ? 0.1 : 0.06, 0.4]), ...(abertura ? [[fimA - 0.2, 0.15, 0.4]] : [])];
-  const tremores = [...slams.map((t, i) => [t, i === slams.length - 1 ? 40 : 24, 0.4]), ...(abertura ? [[fimA - 0.2, 46, 0.45]] : []),
-    ...chaves.map((k) => [k.ini, 22, 0.3]), ...(cta ? [[cta.ini, 18, 0.3]] : [])];
-  const Z = exprZoom(limpos, impulsos);
-  const fz = (W / 1080).toFixed(3);
+  const Z = exprZoom(limpos);
   const vf = `scale=w='trunc(${W}*(${Z})/2)*2':h='trunc(${H}*(${Z})/2)*2':eval=frame:flags=bicubic,` +
-    `crop=${W}:${H}:x='clip((iw-${W})*0.5+${fz}*${exprTremor(tremores, "x")},0,iw-${W})':y='clip((ih-${H})*${rosto}+${fz}*${exprTremor(tremores, "y")},0,ih-${H})',` +
-    `ass=legenda.ass:fontsdir=fontes`;
-  writeFileSync(join(pasta, "viral-filtro.txt"), `[0:v]${vf}[b];[1:v]format=rgba[o];[b][o]overlay=0:0:format=auto,format=yuv420p[v]`);
+    `crop=${W}:${H}:x='(iw-${W})*0.5':y='(ih-${H})*${rosto}'`;
+  // ordem: vídeo com zoom → camada HTML (véu, título, frases-chave) → legenda por cima de tudo
+  writeFileSync(join(pasta, "viral-filtro.txt"), `[0:v]${vf}[b];[1:v]format=rgba[o];[b][o]overlay=0:0:format=auto,ass=legenda.ass:fontsdir=fontes,format=yuv420p[v]`);
 
   // ---- som
   let voz = new Float32Array(0);

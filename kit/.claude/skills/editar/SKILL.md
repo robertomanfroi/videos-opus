@@ -15,6 +15,10 @@ portáteis no caminho e roda tudo na **pasta de trabalho do kit** (`$K pasta` mo
 (`video-projects/…`, `prontos/…`, `perfil.json`) são relativos a ela: para ler ou editar um arquivo, junte com essa pasta.
 `$K --em <subpasta> …` roda dentro de uma subpasta. Nada de `npx`, Python ou `node` solto: tudo passa pelo `$K`.
 
+**Padrão visual premium (obrigatório, vale para todos os estilos):** nunca contorno nas letras, nunca raios/espiral,
+faíscas, flash branco ou tremor; legibilidade por sombra suave ou véu escuro; movimento lento e suave; som discreto.
+Detalhes na seção "Padrão visual premium" do `SKILL.md` da skill videos-opus. Isso vale acima do que um guia de estilo disser.
+
 ## Passo 0 — retomar ou ajustar?
 
 Antes de procurar vídeo novo, olhe o estado:

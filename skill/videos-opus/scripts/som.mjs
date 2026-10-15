@@ -1,4 +1,6 @@
-// Efeitos sonoros e batida sintetizados na hora (sem arquivos de áudio de terceiros), mixados com a voz.
+// Trilha e efeitos sintetizados na hora (sem arquivos de áudio de terceiros), mixados com a voz.
+// PADRÃO PREMIUM (regra da skill): nada de estrondo, flash sonoro ou batida eletrônica; trilha ambiente,
+// deslizes discretos, sinos e toques leves.
 import { writeFileSync } from "node:fs";
 
 const SR = 48000;
@@ -19,12 +21,6 @@ function env(n, ataque, decai) {
 function passaBaixa(x, a) { const y = new Float32Array(x.length); let acc = 0; for (let i = 0; i < x.length; i++) { acc += a * (x[i] - acc); y[i] = acc; } return y; }
 function ruido(n) { const x = new Float32Array(n); for (let i = 0; i < n; i++) x[i] = gauss(); return x; }
 
-function estrondo(d = 1.4) {
-  const n = Math.floor(SR * d), e = env(n, 0.001, 0.55), en = env(n, 0.001, 0.08), x = new Float32Array(n);
-  let fase = 0;
-  for (let i = 0; i < n; i++) { const t = i / SR; fase += 2 * Math.PI * (110 * Math.exp(-t * 3) + 38) / SR; x[i] = Math.tanh(1.8 * (Math.sin(fase) * e[i] + 0.5 * gauss() * en[i])); }
-  return x;
-}
 function whoosh(d = 0.45, sobe = true) {
   const n = Math.floor(SR * d), x = ruido(n), y = new Float32Array(n);
   let acc = 0;
@@ -40,28 +36,32 @@ function pop() {
   for (let i = 0; i < n; i++) { const t = i / SR; x[i] = Math.sin(2 * Math.PI * (900 * Math.exp(-t * 40) + 300) * t) * e[i]; }
   return x;
 }
-function bumbo() {
-  const n = Math.floor(SR * 0.35), e = env(n, 0.001, 0.12), x = new Float32Array(n);
-  let fase = 0;
-  for (let i = 0; i < n; i++) { const t = i / SR; fase += 2 * Math.PI * (150 * Math.exp(-t * 25) + 48) / SR; x[i] = Math.tanh(2 * Math.sin(fase) * e[i]); }
-  return x;
-}
-function chimbal() {
-  const n = Math.floor(SR * 0.05), x = ruido(n), lp = passaBaixa(x, 0.5), e = env(n, 0.0005, 0.012);
-  for (let i = 0; i < n; i++) x[i] = (x[i] - lp[i]) * e[i];
-  return x;
-}
-function palma() {
-  const n = Math.floor(SR * 0.18), x = ruido(n), lp = passaBaixa(x, 0.15), e = env(n, 0.001, 0.05);
-  for (let i = 0; i < n; i++) x[i] = (x[i] - lp[i]) * e[i];
-  return x;
-}
-function baixo(f, d) {
+
+function sino(d = 1.6) {
   const n = Math.floor(SR * d), x = new Float32Array(n);
-  for (let i = 0; i < n; i++) { const s = Math.sin(2 * Math.PI * f * i / SR); x[i] = Math.sign(s) * 0.5 + s; }
-  const y = passaBaixa(x, 0.04), e = env(n, 0.005, d * 0.6);
-  for (let i = 0; i < n; i++) y[i] *= e[i];
-  return y;
+  for (let i = 0; i < n; i++) { const t = i / SR; x[i] = (Math.sin(2 * Math.PI * 1318.5 * t) + 0.5 * Math.sin(2 * Math.PI * 1975.5 * t)) * Math.exp(-t * 3) * Math.min(1, i / 60); }
+  return x;
+}
+function toque() { const n = Math.floor(SR * 0.03), x = ruido(n), e = env(n, 0.0005, 0.004); for (let i = 0; i < n; i++) x[i] *= e[i]; return x; }
+// trilha ambiente: acordes longos (Lá m, Fá, Dó, Sol a 76 bpm), dedilhado e pulso grave discreto
+function trilhaAmbiente(buf, ini, dur) {
+  const BEAT = 60 / 76, BAR = BEAT * 4, hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
+  const AC = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]];
+  for (let b = 0; ini + b * BAR < dur; b++) {
+    const t0 = ini + b * BAR, notas = AC[b % 4], len = Math.floor((BAR + 1.2) * SR), i0 = Math.floor(t0 * SR);
+    for (const m of [...notas, notas[0] - 12]) for (const det of [-0.0025, 0.0025]) {
+      const f = hz(m) * (1 + det);
+      for (let k = 0; k < len && i0 + k < buf.length; k++) { const t = k / SR, e = Math.min(1, t / 0.9) * Math.min(1, (BAR + 1.2 - t) / 1.2), ph = 2 * Math.PI * f * t; buf[i0 + k] += (Math.sin(ph) + 0.35 * Math.sin(2 * ph) + 0.12 * Math.sin(3 * ph)) * e * 0.05; }
+    }
+  }
+  for (let t = ini + BAR, k = 0; t < dur; t += BEAT / 2, k++) {
+    const b = Math.floor((t - ini) / BAR), f = hz(AC[b % 4][k % 3] + 12), i0 = Math.floor(t * SR);
+    for (let j = 0; j < SR * 0.9 && i0 + j < buf.length; j++) { const tt = j / SR; buf[i0 + j] += Math.sin(2 * Math.PI * f * tt) * Math.exp(-tt * 5) * 0.08 * Math.min(1, j / 80); }
+  }
+  for (let t = ini + BAR; t < dur; t += BEAT * 2) {
+    const i0 = Math.floor(t * SR);
+    for (let j = 0; j < SR * 0.5 && i0 + j < buf.length; j++) { const tt = j / SR; buf[i0 + j] += Math.sin(2 * Math.PI * (52 + 30 * Math.exp(-tt * 18)) * tt) * Math.exp(-tt * 6) * 0.5; }
+  }
 }
 
 function por(buf, x, t0, g = 1) {
@@ -75,30 +75,13 @@ export function mixar(voz, duracao, eventos, { batida = true, efeitos = true, in
   const N = Math.floor(SR * duracao), sfx = new Float32Array(N), bat = new Float32Array(N);
   if (efeitos) {
     const { slams = [], saidaAbertura = null, chaves = [], cta = null, pops = [] } = eventos;
-    if (slams.length) por(sfx, whoosh(0.16), 0, 0.6);
-    slams.forEach((t, i) => por(sfx, estrondo(), t, i === slams.length - 1 ? 1.0 : 0.75));
-    if (saidaAbertura != null) {
-      const sub = Math.max(0.8, saidaAbertura - (slams.at(-1) ?? 0) - 0.4);
-      const r = whoosh(sub, true);
-      for (let i = 0; i < r.length; i++) r[i] *= 0.2 + 0.8 * (i / r.length);
-      por(sfx, r, saidaAbertura - sub, 0.35);
-      por(sfx, estrondo(1.8), saidaAbertura, 1.0);
-      por(sfx, whoosh(0.5, false), saidaAbertura, 0.6);
-    }
-    for (const t of chaves) { por(sfx, whoosh(0.35), t - 0.3, 0.45); por(sfx, estrondo(0.9), t, 0.4); }
-    if (cta != null) { por(sfx, whoosh(0.35), cta - 0.3, 0.45); por(sfx, pop(), cta, 0.6); }
-    for (const t of pops) por(sfx, pop(), t, 0.3);
+    if (slams.length) { por(sfx, whoosh(0.8), Math.max(0, slams[0] - 0.4), 0.25); por(sfx, sino(), slams.at(-1) + 0.3, 0.35); }
+    if (saidaAbertura != null) por(sfx, whoosh(0.7, false), saidaAbertura, 0.25);
+    for (const t of chaves) { por(sfx, whoosh(0.6), t - 0.45, 0.2); por(sfx, sino(1.2), t, 0.18); }
+    if (cta != null) { por(sfx, whoosh(0.6), cta - 0.45, 0.2); por(sfx, sino(), cta, 0.3); }
+    for (const t of pops) por(sfx, toque(), t, 0.25);
   }
-  if (batida) {
-    const b = 60 / 124, notas = [55, 55, 65.4, 49];
-    for (let k = 0, t = inicioFala; t < duracao; k++, t += b) {
-      por(bat, bumbo(), t, 0.9);
-      por(bat, chimbal(), t + b / 2, 0.35);
-      if (k % 2 === 1) por(bat, palma(), t, 0.45);
-      if (k % 2 === 0) por(bat, baixo(notas[(k >> 2) % 4], b * 2), t, 0.35);
-    }
-    if (inicioFala > 2) for (let t = inicioFala * 0.45; t < inicioFala - 0.4; t += b / 2) por(bat, bumbo(), t, 0.25 * (t - inicioFala * 0.45) / (inicioFala * 0.5));
-  }
+  if (batida) trilhaAmbiente(bat, inicioFala > 2 ? 0 : inicioFala, duracao);
   // voz normalizada; antes da fala (abertura sobre trecho mudo) fica baixa
   const v = new Float32Array(N);
   for (let i = 0; i < N && i < voz.length; i++) v[i] = voz[i];
@@ -117,7 +100,7 @@ export function mixar(voz, duracao, eventos, { batida = true, efeitos = true, in
   for (let i = 0; i < N; i++) {
     soma += Math.abs(v[Math.min(N - 1, i + janela / 2)]) - (i - janela / 2 - 1 >= 0 ? Math.abs(v[i - janela / 2 - 1]) : 0);
     const duck = 1 / (1 + (soma / janela) * 6);
-    const m = Math.tanh((v[i] + sfx[i] * 0.55 + bat[i] * 0.16 * duck) * 1.1) * 0.93;
+    const m = Math.tanh((v[i] + sfx[i] * 0.55 + bat[i] * 0.22 * duck) * 1.1) * 0.93;
     const s = Math.max(-32768, Math.min(32767, Math.round(m * 32767)));
     out.writeInt16LE(s, i * 4); out.writeInt16LE(s, i * 4 + 2);
   }

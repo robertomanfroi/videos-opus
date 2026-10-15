@@ -84,7 +84,7 @@ A legenda (80 px de altura) tem de terminar até y 1248.
 | Kit de esquemas | painéis `rgba(16,16,19,.92)` raio 22 com borda clara de 1 px; cards de celular 160×284 (9:16) com quadros reais; nó redondo da IA na cor `cor_ia`; setas tracejadas com ponto na cor de destaque andando; carimbos redondos ✕ vermelho `#ff453a` e ✓ verde `#30d158` que estouram na palavra; textos de interface em Inter. Decoração repetida (barras da onda, clipes da linha do tempo) usa o `rnd()` com semente do template — **nunca** `Math.random` nem `from:"random"` do GSAP. |
 | Tipografia | fonte de título (Archivo Black ou `fonte_titulo` do perfil) na headline, rótulos e legenda. Branco; destaque na cor `cor_destaque` (padrão amarelo `#FFD21F`). |
 | Movimento | entradas curtas: sobe + aparece em 0,45–0,6 s (`power3.out` / `expo.out`); carimbos com `back.out`; contadores correndo; barras enchendo; setas crescendo. Saídas em 0,28 s. Esquemas trocam na palavra falada. |
-| Legenda | uma palavra por vez, 46 px, branca com contorno escuro, logo abaixo do queixo (`capTop` em `reel.json`). |
+| Legenda | uma palavra por vez, 46 px, branca com sombra suave (nunca contorno), logo abaixo do queixo (`capTop` em `reel.json`). |
 | CTA | caixa de comentário digitando a palavra + card de direct, ou barra branca "Saiba mais ›". |
 
 Cores, tamanhos e proibições: `template/DESIGN.md` (copiado para cada projeto).
