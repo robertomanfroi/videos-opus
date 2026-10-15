@@ -118,13 +118,15 @@ export function entregar(arquivo, nomeBase) {
   }
 }
 
+// Opções que nunca levam valor (o que vier depois delas é argumento comum).
+const SEM_VALOR = new Set(["ultimo", "encaixar", "leve", "sem-entregar", "completos", "com-refacao", "manter-inicio"]);
 export function lerArgs(argv) {
   const pos = [], op = {};
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a.startsWith("--")) {
       const k = a.slice(2), prox = argv[i + 1];
-      if (prox === undefined || prox.startsWith("--")) op[k] = true; else { op[k] = prox; i++; }
+      if (SEM_VALOR.has(k) || prox === undefined || prox.startsWith("--")) op[k] = true; else { op[k] = prox; i++; }
     } else pos.push(a.trim().replace(/^["']|["']$/g, ""));
   }
   return { pos, op };

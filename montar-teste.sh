@@ -5,8 +5,10 @@ cd "$(dirname "$0")"
 DEST="${1:-/mnt/c/Users/Usuario/AppData/Local/Temp/vop-teste/videos-opus}"
 mkdir -p "$DEST"/{bin/whisper,modelos,fontes}
 rsync -a --delete skill/videos-opus/scripts/ "$DEST/scripts/"
+mkdir -p "$DEST/node_modules" && rsync -a --delete vendor-cache/pw/package/ "$DEST/node_modules/playwright-core/"
 cp skill/videos-opus/SKILL.md "$DEST/" 2>/dev/null || true
-cp vendor-cache/fontes/* "$DEST/fontes/"
+rsync -a --delete skill/videos-opus/exemplos/ "$DEST/exemplos/"
+cp vendor-cache/fontes/*.ttf "$DEST/fontes/"
 [ -f "$DEST/bin/ffmpeg.exe" ] || unzip -qjo vendor-cache/ffmpeg.zip '*/bin/ffmpeg.exe' '*/bin/ffprobe.exe' -d "$DEST/bin"
 [ -f "$DEST/bin/node.exe" ] || unzip -qjo vendor-cache/node.zip '*/node.exe' -d "$DEST/bin"
 [ -f "$DEST/bin/whisper/whisper-cli.exe" ] || unzip -qjo vendor-cache/whisper-bin-x64.zip 'Release/whisper-cli.exe' 'Release/*.dll' -d "$DEST/bin/whisper" 2>/dev/null || unzip -qjo vendor-cache/whisper-bin-x64.zip '*whisper-cli.exe' '*.dll' -d "$DEST/bin/whisper"

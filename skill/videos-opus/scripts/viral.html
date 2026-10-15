@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Camada viral</title>
+<!--CFG-->
+<style>
+  html, body { margin: 0; overflow: hidden; background: transparent; }
+  #palco { position: relative; width: 1080px; overflow: hidden; transform-origin: 0 0; color: #fff; font-family: "Display", sans-serif; }
+  .el { position: absolute; opacity: 0; will-change: transform, opacity, filter; }
+  #veu { inset: 0; }
+  #raios { left: -460px; width: 2000px; height: 2000px;
+    -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0,0,0,.6) 30%, transparent 62%);
+    mask-image: radial-gradient(circle, #000 0%, rgba(0,0,0,.6) 30%, transparent 62%); }
+  #faiscas { position: absolute; left: 0; top: 0; }
+  .linha { left: 0; right: 0; text-align: center; line-height: .9; letter-spacing: 2px; text-transform: uppercase;
+    -webkit-text-stroke: 5px #000; paint-order: stroke fill; text-shadow: 0 10px 30px rgba(0,0,0,.6); }
+  .linha.serif { font-family: "Serif", Georgia, serif; font-style: italic; font-weight: 600; text-transform: none; letter-spacing: 0;
+    -webkit-text-stroke: 10px #120705; }
+  .pilula { display: inline-block; border-radius: 100px; font-family: "Display"; font-size: 64px; letter-spacing: 3px; padding: 14px 52px 10px; }
+  #tag, #selo { left: 0; right: 0; text-align: center; }
+  #selo span { display: inline-block; background: rgba(11,6,5,.82); border: 3px solid; border-radius: 100px; font-size: 44px; letter-spacing: 4px; padding: 10px 34px 6px; }
+  .chave { left: 50px; right: 50px; text-align: center; line-height: .95; text-transform: uppercase; letter-spacing: 1px;
+    -webkit-text-stroke: 16px #000; paint-order: stroke fill; text-shadow: 0 14px 36px rgba(0,0,0,.55); }
+  .chave .p { display: inline-block; margin: 0 14px; }
+  #botao { left: 140px; width: 800px; height: 150px; border-radius: 80px; text-align: center; line-height: 158px;
+    font-size: 78px; letter-spacing: 3px; }
+  #seta { left: 470px; width: 140px; }
+  #flash { inset: 0; background: #fff; }
+</style>
+</head>
+<body>
+<div id="palco">
+  <div id="veu" class="el"></div>
+  <div id="raios" class="el"></div>
+  <canvas id="faiscas" width="1080" height="1920"></canvas>
+  <div id="linhas"></div>
+  <div id="tag" class="el"><span class="pilula"></span></div>
+  <div id="selo" class="el"><span></span></div>
+  <div id="chaves"></div>
+  <div id="botao" class="el"></div>
+  <svg id="seta" class="el" viewBox="0 0 100 100"><path d="M50 8 L50 70 M22 44 L50 74 L78 44" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div id="flash" class="el"></div>
+</div>
+<script>
+  // CFG vem do comando viral: { W, H, cor, corCta, abertura: {fim, linhas[], tag}, selo, chaves: [{ini, fim, texto}], cta: {ini, fim, texto} }
+  const C = window.CFG;
+  const H0 = Math.round(C.H * 1080 / C.W);          // altura do palco em coordenadas de 1080 de largura
+  const Y = (f) => Math.round(H0 * f);               // posição vertical proporcional
+  const $ = (id) => document.getElementById(id);
+  const palco = $("palco");
+  palco.style.height = H0 + "px";
+  palco.style.transform = `scale(${C.W / 1080})`;
+  $("faiscas").height = H0;
+
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const prog = (t, a, b) => clamp((t - a) / (b - a));
+  const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+  const easeIn = (x) => x * x * x;
+  const backOut = (x) => { const c = 2.2; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+  const set = (el, o, tr = "", f = "") => { el.style.opacity = o; el.style.transform = tr; el.style.filter = f; };
+  const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+
+  // ---- montagem
+  $("veu").style.background = "radial-gradient(ellipse at 50% 50%, rgba(11,6,5,.30) 0%, rgba(11,6,5,.62) 80%)";
+  $("raios").style.background = `repeating-conic-gradient(from 0deg, ${rgba(C.cor, .38)} 0deg 6deg, ${rgba(C.cor, 0)} 6deg 18deg)`;
+  $("raios").style.top = (Y(.52) - 1000) + "px";
+
+  const A = C.abertura;
+  const linhas = [];
+  if (A) {
+    const n = A.linhas.length;
+    const tamanhos = A.linhas.map((l, i) => {
+      const serif = i === n - 1 && n > 1;
+      const base = serif ? 300 : 230;
+      return Math.min(base, Math.floor(980 / Math.max(1, l.length) * (serif ? 2.2 : 1.9)));
+    });
+    const altura = tamanhos.reduce((s, x) => s + x * .92, 0);
+    let y = Y(.52) - altura / 2;
+    A.linhas.forEach((txt, i) => {
+      const d = document.createElement("div");
+      const serif = i === n - 1 && n > 1;
+      d.className = "el linha" + (serif ? " serif" : "");
+      d.textContent = txt;
+      d.style.fontSize = tamanhos[i] + "px";
+      d.style.top = y + "px";
+      if (serif) { d.style.color = C.cor; d.style.textShadow = `0 0 50px rgba(0,0,0,.7), 0 0 120px ${rgba(C.cor, .5)}`; }
+      y += tamanhos[i] * .92;
+      $("linhas").appendChild(d);
+      linhas.push({ d, t0: 0.16 + i * Math.min(0.34, (A.fim * 0.35) / n), rot: i % 2 ? 2 : -3 });
+    });
+    $("tag").style.top = (y + 40) + "px";
+    $("tag").firstChild.textContent = A.tag || "";
+    $("tag").firstChild.style.background = C.cor;
+    $("tag").firstChild.style.boxShadow = `0 20px 60px ${rgba(C.cor, .5)}`;
+  }
+  const ultimoSlam = linhas.length ? linhas[linhas.length - 1].t0 : 0;
+
+  $("selo").style.top = Y(.10) + "px";
+  $("selo").firstChild.textContent = C.selo || "";
+  $("selo").firstChild.style.borderColor = C.cor;
+
+  const chaves = (C.chaves || []).map((k) => {
+    const d = document.createElement("div");
+    d.className = "el chave";
+    const palavras = k.texto.split(/\s+/);
+    const tam = Math.min(190, Math.floor(1900 / Math.max(6, k.texto.length)) + 40);
+    d.style.fontSize = tam + "px";
+    d.style.top = Y(.60) + "px";
+    palavras.forEach((w, j) => {
+      const s = document.createElement("span");
+      s.className = "p";
+      s.textContent = w;
+      s.style.color = C.cor;
+      d.appendChild(s);
+    });
+    $("chaves").appendChild(d);
+    return { ...k, d, spans: [...d.children] };
+  });
+
+  if (C.cta) {
+    $("botao").textContent = C.cta.texto;
+    $("botao").style.top = Y(.72) + "px";
+    $("botao").style.background = `linear-gradient(180deg, ${rgba(C.corCta, 1)}, ${rgba(C.corCta, .85)})`;
+    $("botao").style.boxShadow = `0 0 70px ${rgba(C.corCta, .6)}`;
+    $("seta").style.top = (Y(.72) + 180) + "px";
+  }
+
+  // ---- faíscas determinísticas
+  const ctx = $("faiscas").getContext("2d");
+  const rnd = (s) => { const x = Math.sin(s * 127.1) * 43758.5453; return x - Math.floor(x); };
+  function explosao(t, t0, n, cx, cy, vel, seed) {
+    const dt = t - t0;
+    if (dt < 0 || dt > 1.6) return;
+    for (let i = 0; i < n; i++) {
+      const ang = rnd(seed + i) * Math.PI * 2, v = vel * (0.35 + rnd(seed + i * 3.1) * 0.9);
+      const x = cx + Math.cos(ang) * v * dt, y = cy + Math.sin(ang) * v * dt + 420 * dt * dt;
+      const vida = 1 - dt / (0.7 + rnd(seed + i * 7.3) * 0.9);
+      if (vida <= 0) continue;
+      ctx.globalAlpha = vida;
+      ctx.fillStyle = rnd(seed + i * 2.2) > 0.35 ? C.cor : "#fff3c4";
+      ctx.beginPath(); ctx.arc(x, y, (3 + rnd(seed + i * 5.7) * 7) * (0.5 + vida * 0.5), 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  const batida = (t, t0, dur) => { const x = (t - t0) / dur; return x < 0 || x > 1 ? 0 : 1 - x; };
+
+  function render(t) {
+    // ---- abertura
+    const fimA = A ? A.fim : 0;
+    const saida = A ? prog(t, fimA - 0.45, fimA) : 1, saidaE = easeIn(saida);
+    const emAbertura = A && t < fimA + 0.05;
+    set($("veu"), emAbertura ? (1 - prog(t, fimA - 0.4, fimA + 0.05)) * easeOut(prog(t, 0, 0.12)) : 0);
+    const raio = prog(t, ultimoSlam, ultimoSlam + 0.3);
+    set($("raios"), emAbertura ? easeOut(raio) * (1 - saida) * 0.9 : 0, `rotate(${t * 22}deg) scale(${0.4 + easeOut(raio) * 0.6 + saidaE * 0.8})`);
+    for (const l of linhas) {
+      const p = prog(t, l.t0, l.t0 + 0.22);
+      if (t < l.t0 || !emAbertura) { set(l.d, 0); continue; }
+      const s = 3.2 - 2.2 * easeOut(p) + saidaE * 1.4;
+      const pulso = 1 + 0.025 * Math.sin((t - l.t0) * 9) * prog(t, l.t0 + 0.3, l.t0 + 0.6);
+      set(l.d, (0.2 + 0.8 * easeOut(p)) * (1 - saida), `scale(${s * pulso}) rotate(${l.rot}deg)`, `blur(${(1 - easeOut(p)) * 18 + saidaE * 24}px)`);
+    }
+    const tg0 = ultimoSlam + 0.6, tg = prog(t, tg0, tg0 + 0.3);
+    set($("tag"), emAbertura && A.tag ? easeOut(tg) * (1 - saida) : 0, `translateY(${(1 - easeOut(tg)) * 80}px) scale(${0.85 + 0.15 * backOut(tg)})`);
+
+    ctx.clearRect(0, 0, 1080, H0);
+    if (A) {
+      linhas.forEach((l, i) => explosao(t, l.t0, i === linhas.length - 1 ? 120 : 40, 540, parseFloat(l.d.style.top) + 120, i === linhas.length - 1 ? 1500 : 900, 11 + i * 17));
+      explosao(t, fimA - 0.2, 140, 540, Y(.5), 1900, 31);
+    }
+    let fl = A ? Math.max(batida(t, 0, 0.25), batida(t, ultimoSlam, 0.3) * 0.85, batida(t, fimA - 0.2, 0.35)) : 0;
+
+    // ---- selo fixo
+    const s0 = fimA + 0.1, sl = prog(t, s0, s0 + 0.3);
+    set($("selo"), C.selo && t >= s0 ? easeOut(sl) : 0, `translateY(${(1 - easeOut(sl)) * -60}px)`);
+
+    // ---- frases-chave
+    chaves.forEach((k, i) => {
+      if (t < k.ini || t >= k.fim) { set(k.d, 0); return; }
+      const p = prog(t, k.ini, k.ini + 0.16);
+      set(k.d, 1, `scale(${1.6 - 0.6 * backOut(p)}) rotate(-2deg)`);
+      const passo = (k.fim - k.ini) / k.spans.length;
+      k.spans.forEach((sp, j) => { const ativa = t >= k.ini + j * Math.min(passo, 0.35); sp.style.opacity = ativa ? 1 : 0.22; });
+      explosao(t, k.ini, 70, 540, Y(.64), 1200, 53 + i * 7);
+      fl = Math.max(fl, batida(t, k.ini, 0.18) * 0.45);
+    });
+
+    // ---- chamada (CTA)
+    if (C.cta) {
+      const on = t >= C.cta.ini && t < C.cta.fim;
+      const pb = prog(t, C.cta.ini, C.cta.ini + 0.18);
+      set($("botao"), on ? 1 : 0, `scale(${(0.5 + 0.5 * backOut(pb)) * (1 + 0.05 * Math.sin((t - C.cta.ini) * 14))})`);
+      set($("seta"), on ? 1 : 0, `translateY(${Math.abs(Math.sin((t - C.cta.ini) * 9)) * 40}px)`);
+      explosao(t, C.cta.ini, 60, 540, Y(.76), 1100, 91);
+      fl = Math.max(fl, batida(t, C.cta.ini, 0.18) * 0.35);
+    }
+    set($("flash"), fl);
+  }
+
+  window.__render = render;
+  const m = location.hash.match(/^#t([\d.]+)/);
+  Promise.all([document.fonts.load('100px "Display"'), document.fonts.load('italic 600 100px "Serif"')])
+    .then(() => { render(m ? parseFloat(m[1]) : 0); window.__pronto = true; });
+</script>
+</body>
+</html>

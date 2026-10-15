@@ -15,9 +15,9 @@ import { join, basename, extname, resolve } from "node:path";
 import { homedir, cpus } from "node:os";
 import {
   ffmpeg, probe, filtroHDR, encoderRapido, ENCODER_FINAL, FORMATOS, pastaTrabalho, entregar, lerArgs,
-  areaDeTrabalho, WHISPER, MODELO, FONTES, rodar, tempo,
+  areaDeTrabalho, WHISPER, MODELO, FONTES, SKILL, rodar, tempo,
 } from "./ferramentas.mjs";
-import { corrige } from "./correcoes.mjs";
+import { montarLegenda } from "./legenda.mjs";
 
 const [cmd, ...resto] = process.argv.slice(2);
 const { pos, op } = lerArgs(resto);
@@ -100,6 +100,16 @@ function silencios(arquivo, limiar, minimo) {
   const fim = [...txt.matchAll(/silence_end: ([\d.]+)/g)].map((m) => +m[1]);
   return ini.map((a, i) => [a, fim[i] ?? Infinity]);
 }
+// Onde a fala começa: primeiro trecho com som por pelo menos 0,6 s (ruídos curtos do começo não contam).
+function inicioDaFala(arquivo) {
+  const sil = silencios(arquivo, -35, 0.3);
+  let cur = 0;
+  for (const [a, b] of sil) {
+    if (a - cur >= 0.6) return cur;
+    cur = b === Infinity ? cur : b;
+  }
+  return cur;
+}
 function intervalos(txt) {
   return String(txt || "").split(",").map((s) => s.trim()).filter(Boolean).map((s) => s.split("-").map(Number)).filter(([a, b]) => b > a);
 }
@@ -112,6 +122,8 @@ function cmdCortar() {
   const limiar = Number(op.limiar ?? -35), minimo = Number(op.pausa ?? 0.3), respiro = Number(op.respiro ?? 0.08);
   // trechos a jogar fora = silêncios (encolhidos pelo respiro) + o que a aluna pediu para tirar
   let fora = info.temAudio ? silencios(base, limiar, minimo).map(([a, b]) => [a === 0 ? 0 : a + respiro, b === Infinity ? dur : b - respiro]) : [];
+  // --manter-inicio: o trecho mudo do começo fica (serve de palco para a abertura do modo viral)
+  if (op["manter-inicio"]) { const fala = inicioDaFala(base); fora = fora.filter(([, b]) => b > fala + 0.2); }
   fora = fora.concat(intervalos(op.remover)).filter(([a, b]) => b - a > 0.05).sort((x, y) => x[0] - y[0]);
   const manter = [];
   let cur = 0;
@@ -144,7 +156,9 @@ function cmdTranscrever() {
   const arquivo = join(pasta, op.arquivo || (existsSync(join(pasta, "cortado.mp4")) ? "cortado.mp4" : "base.mp4"));
   if (!existsSync(MODELO)) throw new Error(`modelo de transcrição não encontrado em ${MODELO}`);
   const wav = join(pasta, "fala.wav");
-  ffmpeg(["-i", arquivo, "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav]);
+  const fala = inicioDaFala(arquivo);
+  const pulo = fala > 0.6 ? +(fala - 0.15).toFixed(2) : 0;
+  ffmpeg([...(pulo ? ["-ss", String(pulo)] : []), "-i", arquivo, "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav]);
   const threads = String(Math.max(2, Math.min(8, cpus().length)));
   rodar(WHISPER, ["-m", MODELO, "-f", wav, "-l", op.idioma || "pt", "-ml", "1", "-sow", "-oj", "-of", join(pasta, "whisper"), "-t", threads, "-np"]);
   const j = JSON.parse(readFileSync(join(pasta, "whisper.json"), "utf8"));
@@ -153,7 +167,7 @@ function cmdTranscrever() {
     const raw = s.text || "";
     const t = raw.trim();
     if (!t || /^\[.*\]$/.test(t)) continue;
-    const ini = s.offsets.from / 1000, fim = s.offsets.to / 1000;
+    const ini = s.offsets.from / 1000 + pulo, fim = s.offsets.to / 1000 + pulo;
     if (palavras.length && !/^\s/.test(raw) && !/^[-—]/.test(t)) { // pedaço colado na palavra anterior
       const p = palavras[palavras.length - 1]; p.t += t; p.fim = fim; continue;
     }
@@ -176,94 +190,13 @@ function cmdTranscrever() {
 }
 
 // ---------------------------------------------------------------- legendar
-const CORES = { branco: "FFFFFF", preto: "000000", amarelo: "FFD400", laranja: "F74502", terracota: "C14B22", verde: "19C23A", rosa: "FF3EA5", azul: "2D9CFF", vermelho: "FF2D2D", areia: "F5EFE4", chocolate: "3B1F0E", roxo: "8B5CF6" };
-const FONTES_MAP = {
-  bebas: { arq: "BebasNeue-Regular.ttf", nome: "Bebas Neue", tam: 150, chars: 15 },
-  anton: { arq: "Anton-Regular.ttf", nome: "Anton", tam: 124, chars: 15 },
-  montserrat: { arq: "Montserrat-Black.ttf", nome: "Montserrat Black", tam: 98, chars: 14 },
-  poppins: { arq: "Poppins-ExtraBold.ttf", nome: "Poppins ExtraBold", tam: 100, chars: 14 },
-};
-function corASS(c, alfa = "00") {
-  const hex = (CORES[String(c).toLowerCase()] || String(c).replace(/^#/, "")).padStart(6, "0").slice(-6).toUpperCase();
-  return `&H${alfa}${hex.slice(4, 6)}${hex.slice(2, 4)}${hex.slice(0, 2)}`;
-}
-const tASS = (t) => { const cs = Math.max(0, Math.round(t * 100)); const h = Math.floor(cs / 360000), m = Math.floor(cs / 6000) % 60, s = Math.floor(cs / 100) % 60, c = cs % 100; return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}.${String(c).padStart(2, "0")}`; };
-const esc = (s) => s.replace(/\\/g, "\\\\").replace(/[{}]/g, "");
-
-function agrupar(palavras, maxPalavras, maxChars) {
-  const grupos = [];
-  let g = [];
-  palavras.forEach((p, i) => {
-    g.push(p);
-    const prox = palavras[i + 1];
-    const chars = g.map((x) => x.t).join(" ").length;
-    const proxChars = prox ? chars + 1 + prox.t.length : 0;
-    if (!prox || g.length >= maxPalavras || proxChars > maxChars * 2 || /[.?!]$/.test(p.t) || (/,$/.test(p.t) && g.length >= 2) || prox.ini - p.fim > 0.45) {
-      grupos.push(g); g = [];
-    }
-  });
-  // não termina legenda em palavrinha solta ("de", "a", "um"): ela passa para a legenda seguinte
-  const LIGA = /^(a|o|as|os|e|é|de|da|do|das|dos|em|no|na|nos|nas|um|uma|que|com|por|pra|para|se|ao|à|me|te|eu|tu|sua|seu|meu|minha|mais|mas|nem|ou)$/i;
-  for (let i = 0; i < grupos.length - 1; i++) {
-    const g = grupos[i], ult = g[g.length - 1];
-    if (g.length > 1 && LIGA.test(ult.t.replace(/[^\p{L}]/gu, "")) && !/[.,?!:;]$/.test(ult.t) && grupos[i + 1][0].ini - ult.fim < 0.45) {
-      grupos[i + 1].unshift(g.pop());
-    }
-  }
-  return grupos.map((g, i) => ({ palavras: g, ini: g[0].ini, fim: Math.min(grupos[i + 1]?.[0]?.ini ?? Infinity, g[g.length - 1].fim + 0.5) }))
-    .map((g, i, arr) => ({ ...g, fim: i + 1 < arr.length ? Math.min(g.fim, arr[i + 1].ini) : g.fim }));
-}
-
 function cmdLegendar() {
   const pasta = pos[0];
   if (!existsSync(join(pasta, "palavras.json"))) throw new Error("rode transcrever antes");
   const { arquivo: transcrito, palavras: brutas } = lerJSON(join(pasta, "palavras.json"));
   const arquivo = join(pasta, op.arquivo || transcrito);
   const info = probe(arquivo);
-  const W = info.largura, H = info.altura, fator = Math.min(W, H) / 1080;
-  const fix = existsSync(join(pasta, "correcoes.json")) ? lerJSON(join(pasta, "correcoes.json")) : null;
-  const maius = String(op.maiusculas ?? "sim") !== "nao";
-  const palavras = brutas.map((w) => ({ ...w, t: corrige({ text: w.t, start: w.ini }, fix) }))
-    .filter((w) => w.t).map((w) => ({ ...w, t: maius ? w.t.toLocaleUpperCase("pt-BR") : w.t }));
-  const limpa = (t) => (op.pontuacao === "sim" ? t : t.replace(/[.,;:]+$/u, "").replace(/\.{3}$/u, ""));
-  const estilo = op.estilo || "classica";
-  const fonte = FONTES_MAP[String(op.fonte || "bebas").toLowerCase()] || FONTES_MAP.bebas;
-  const umaPalavra = estilo === "uma-palavra";
-  const tam = Math.round(Number(op.tamanho || fonte.tam * (umaPalavra ? 1.35 : 1)) * fator);
-  const cor = corASS(op.cor || (estilo === "caixa" ? "preto" : "branco"));
-  const corDestaque = corASS(op.destaque || "amarelo");
-  const posicao = op.posicao || "baixo";
-  const alin = posicao === "meio" ? 5 : posicao === "cima" ? 8 : 2;
-  const margemV = Math.round(posicao === "cima" ? H * 0.16 : posicao === "meio" ? 0 : H * (H > W ? 0.27 : 0.12));
-  const caixa = estilo === "caixa";
-  const borda = caixa ? 3 : 1;
-  const contorno = caixa ? Math.round(14 * fator) : Math.round((fonte.nome === "Bebas Neue" ? 7 : 6) * fator);
-  const sombra = caixa ? 0 : Math.round(3 * fator);
-  const fundoCaixa = corASS(op.fundo || "branco");
-  const ass = [
-    "[Script Info]", "ScriptType: v4.00+", `PlayResX: ${W}`, `PlayResY: ${H}`, "WrapStyle: 0", "ScaledBorderAndShadow: yes", "",
-    "[V4+ Styles]",
-    "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-    `Style: L,${fonte.nome},${tam},${cor},${cor},${caixa ? fundoCaixa : "&H00000000"},${caixa ? fundoCaixa : "&H64000000"},0,0,0,0,100,100,${Math.round(fator)},0,${borda},${contorno},${sombra},${alin},${Math.round(70 * fator)},${Math.round(70 * fator)},${margemV},1`,
-    "", "[Events]", "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
-  ];
-  const pop = "{\\fscx82\\fscy82\\t(0,90,\\fscx106\\fscy106)\\t(90,160,\\fscx100\\fscy100)}";
-  const grupos = agrupar(palavras, umaPalavra ? 1 : Number(op["max-palavras"] || 3), fonte.chars);
-  for (const g of grupos) {
-    if (estilo === "destaque") {
-      g.palavras.forEach((p, k) => {
-        const ini = k === 0 ? g.ini : p.ini, fim = k + 1 < g.palavras.length ? g.palavras[k + 1].ini : g.fim;
-        if (fim <= ini) return;
-        const txt = g.palavras.map((x, j) => (j === k ? `{\\c${corDestaque}}${esc(limpa(x.t))}{\\c${cor}}` : esc(limpa(x.t)))).join(" ");
-        ass.push(`Dialogue: 0,${tASS(ini)},${tASS(fim)},L,,0,0,0,,${k === 0 ? pop : ""}${txt}`);
-      });
-    } else {
-      ass.push(`Dialogue: 0,${tASS(g.ini)},${tASS(g.fim)},L,,0,0,0,,${pop}${esc(g.palavras.map((x) => limpa(x.t)).join(" "))}`);
-    }
-  }
-  writeFileSync(join(pasta, "legenda.ass"), ass.join("\n"), "utf8");
-  mkdirSync(join(pasta, "fontes"), { recursive: true });
-  copyFileSync(join(FONTES, fonte.arq), join(pasta, "fontes", fonte.arq));
+  const { grupos, fonte, estilo } = montarLegenda(pasta, brutas, info.largura, info.altura, op);
   const final = join(pasta, "final.mp4");
   ffmpeg(["-i", arquivo, "-vf", "ass=legenda.ass:fontsdir=fontes", ...ENCODER_FINAL, ...(info.temAudio ? ["-c:a", "aac", "-b:a", "192k"] : []), final], { cwd: pasta });
   const orig = trabalho(pasta).original || arquivo;
@@ -298,9 +231,75 @@ function cmdEntregar() {
   saida({ ok: true, entregue: entregar(pos[0], op.nome || basename(pos[0])) });
 }
 
+// ---------------------------------------------------------------- animar (HTML → MP4)
+async function cmdAnimar() {
+  const html = pos[0];
+  if (!html || !existsSync(html)) throw new Error("diga o arquivo .html da animação");
+  const { gravar } = await import("./navegador.mjs");
+  const [W, H] = op.formato ? FORMATOS[op.formato] : [Number(op.largura || 1080), Number(op.altura || 1920)];
+  const pasta = pastaTrabalho(html);
+  const arq = join(pasta, "animacao.mp4");
+  const ini = Date.now();
+  await gravar(resolve(html), arq, { largura: W, altura: H, segundos: Number(op.segundos || 15), fps: Number(op.fps || 30), audio: op.audio || null });
+  const entregue = op["sem-entregar"] ? null : entregar(arq, op.nome || basename(html, extname(html)));
+  saida({ ok: true, arquivo: arq, entregue, segundosGravando: Math.round((Date.now() - ini) / 1000) });
+}
+
+async function cmdFotos() {
+  const html = pos[0];
+  if (!html || !existsSync(html)) throw new Error("diga o arquivo .html da animação");
+  const { fotos } = await import("./navegador.mjs");
+  const [W, H] = op.formato ? FORMATOS[op.formato] : [Number(op.largura || 1080), Number(op.altura || 1920)];
+  const instantes = String(op.em || "0.5,2,5,8").split(",").map(Number);
+  const prefixo = join(pastaTrabalho(html), "foto");
+  saida({ ok: true, fotos: await fotos(resolve(html), instantes, prefixo, { largura: W, altura: H }) });
+}
+
+// ---------------------------------------------------------------- viral
+async function cmdViral() {
+  const pasta = pos[0];
+  if (!pasta || !existsSync(join(pasta, "palavras.json"))) throw new Error("rode preparar, cortar e transcrever antes");
+  const { viral } = await import("./viral.mjs");
+  const ini = Date.now();
+  const r = await viral(pasta, op);
+  const orig = trabalho(pasta).original || r.final;
+  const entregue = op["sem-entregar"] ? null : entregar(r.final, op.nome || `${basename(orig, extname(orig))}-viral`);
+  saida({ ok: true, ...r, entregue, segundosGravando: Math.round((Date.now() - ini) / 1000) });
+}
+
+// ---------------------------------------------------------------- acervo de prompts de referência
+function cmdAcervo() {
+  const arq = join(SKILL, "acervo", "data", "videos.json");
+  if (!existsSync(arq)) throw new Error("acervo não encontrado na skill");
+  const videos = lerJSON(arq);
+  const link = (u) => (u || "").split("?")[0];
+  if (op.ver) {
+    const v = videos.find((x) => x.slug === op.ver);
+    if (!v) throw new Error(`não achei ${op.ver}`);
+    return saida({ ok: true, slug: v.slug, autor: v.author, categoria: v.category, tecnologias: v.tech_tags, incompleto: !!v.prompt_partial, video: v.has_remake ? link(v.skillry_url) : null, post: v.post_url, prompt: v.prompt || "(sem prompt publicado)" });
+  }
+  const termos = pos.map((t) => t.toLowerCase());
+  const res = [];
+  for (const v of videos) {
+    if (op.categoria && v.category !== op.categoria) continue;
+    if (op.tech && !(v.tech_tags || []).includes(op.tech)) continue;
+    if (op.completos && (v.prompt_partial || !v.prompt)) continue;
+    if (op["com-refacao"] && !v.has_remake) continue;
+    const texto = [v.prompt || "", v.category, ...(v.tech_tags || [])].join(" ").toLowerCase();
+    const pontos = termos.reduce((n, t) => n + texto.split(t).length - 1, 0);
+    if (termos.length && !pontos) continue;
+    res.push([pontos, v]);
+  }
+  res.sort((a, b) => b[0] - a[0] || (b[1].has_remake ? 1 : 0) - (a[1].has_remake ? 1 : 0));
+  const limite = Number(op.limite || 8);
+  saida({ ok: true, total: res.length, dica: res.length ? undefined : "nenhum resultado: os prompts estão em inglês, tente termos como explainer, launch, logo, product, kinetic, typography", itens: res.slice(0, limite).map(([, v]) => ({ slug: v.slug, categoria: v.category, tecnologias: v.tech_tags, video: v.has_remake ? link(v.skillry_url) : null, incompleto: !!v.prompt_partial, trecho: (v.prompt || "").replace(/\s+/g, " ").slice(0, 180) })) });
+}
+
 // ---------------------------------------------------------------- diagnostico
+let navegadorOk = null;
 function cmdDiagnostico() {
-  const r = { ok: true, itens: {} };
+  if (navegadorOk === null) return cmdDiagnosticoCompleto();
+  const r = { ok: !navegadorOk.startsWith("FALHOU"), itens: { navegador: navegadorOk } };
   const testa = (nome, fn) => { try { r.itens[nome] = fn() || "ok"; } catch (e) { r.ok = false; r.itens[nome] = `FALHOU: ${e.message.split("\n")[0]}`; } };
   testa("ffmpeg", () => { ffmpeg(["-f", "lavfi", "-i", "sine=d=0.3", "-f", "lavfi", "-i", "color=s=64x64:d=0.3", "-shortest", "-f", "null", "-"]); });
   testa("ffprobe", () => { probe(join(FONTES, "..", "scripts", "teste.wav")); });
@@ -310,11 +309,22 @@ function cmdDiagnostico() {
   testa("pasta de saída", () => join(areaDeTrabalho(), "Vídeos editados"));
   saida(r);
 }
+async function cmdDiagnosticoCompleto() {
+  const html = join(SKILL, "scripts", "teste-navegador.html");
+  try {
+    const { abrir } = await import("./navegador.mjs");
+    const p = await abrir(html, 320, 320);
+    await p.quadro(0.5);
+    await p.fechar();
+    navegadorOk = "ok";
+  } catch (e) { navegadorOk = `FALHOU: ${e.message.split("\n")[0]}`; }
+  cmdDiagnostico();
+}
 
-const COMANDOS = { diagnostico: cmdDiagnostico, achar: cmdAchar, preparar: cmdPreparar, cortar: cmdCortar, transcrever: cmdTranscrever, legendar: cmdLegendar, formato: cmdFormato, entregar: cmdEntregar };
+const COMANDOS = { diagnostico: cmdDiagnostico, acervo: cmdAcervo, animar: cmdAnimar, viral: cmdViral, fotos: cmdFotos, achar: cmdAchar, preparar: cmdPreparar, cortar: cmdCortar, transcrever: cmdTranscrever, legendar: cmdLegendar, formato: cmdFormato, entregar: cmdEntregar };
 try {
   if (!COMANDOS[cmd]) throw new Error(`comando desconhecido: ${cmd || "(nenhum)"}. Use: ${Object.keys(COMANDOS).join(", ")}`);
-  COMANDOS[cmd]();
+  await COMANDOS[cmd]();
 } catch (e) {
   saida({ ok: false, erro: e.message });
   process.exit(1);
