@@ -72,6 +72,30 @@
   .modelo h3 .n { font-size: 30px; color: var(--terracota); }
   .tempo { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--bege-escuro); margin-left: auto; }
   .pequeno { font-size: 11px; color: var(--marrom); margin-bottom: 4px; }
+
+  /* chamada Super Black Eterna */
+  a { color: inherit; }
+  .btn-sbe { display: inline-block; background: var(--terracota); color: var(--branco-quente) !important; text-decoration: none;
+    font-family: "Bebas Neue"; font-size: 24px; letter-spacing: 2px; padding: 12px 26px 9px; border-radius: 100px;
+    box-shadow: 0 8px 24px rgba(193,75,34,.45), inset 0 -3px 0 rgba(0,0,0,.18); }
+  .btn-sbe.grande { font-size: 32px; padding: 16px 38px 12px; }
+  .data-sbe { display: inline-block; border: 1.5px solid var(--terracota-lt); color: var(--terracota-lt); border-radius: 100px;
+    font-size: 10px; letter-spacing: 3px; font-weight: 700; padding: 4px 12px; text-transform: uppercase; }
+  .faixa-sbe { background: var(--chocolate); color: var(--bege-lt); border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+    display: flex; align-items: center; gap: 18px; border: 2px solid var(--terracota); text-decoration: none; }
+  .faixa-sbe .tit { font-family: "Bebas Neue"; font-size: 30px; line-height: .95; letter-spacing: 1.5px; color: var(--branco-quente); }
+  .faixa-sbe .tit span { color: var(--terracota-lt); }
+  .faixa-sbe p { font-size: 11px; margin: 4px 0 0; color: var(--bege); }
+  .faixa-sbe .btn-sbe { flex: 0 0 auto; font-size: 20px; padding: 10px 20px 7px; }
+  .pagina-sbe { background: var(--chocolate); color: var(--bege-lt); display: flex; flex-direction: column; justify-content: center; }
+  .pagina-sbe h1 { font-size: 92px; color: var(--branco-quente); line-height: .9; margin: 16px 0 10px; }
+  .pagina-sbe h1 span { color: var(--terracota-lt); }
+  .pagina-sbe h2 { color: var(--bege); font-size: 32px; }
+  .pagina-sbe ul { list-style: none; padding: 0; margin: 18px 0 22px; }
+  .pagina-sbe li { font-size: 15px; padding: 9px 0 9px 30px; border-bottom: 1px solid rgba(196,168,130,.25); position: relative; color: var(--branco-quente); }
+  .pagina-sbe li::before { content: "✦"; position: absolute; left: 4px; color: var(--terracota-lt); }
+  .pagina-sbe .fartura { font-family: "EB Garamond"; font-style: italic; font-size: 26px; color: var(--bege); margin: 0 0 22px; }
+  .pagina-sbe .url { font-size: 10px; letter-spacing: 2px; color: var(--bege-escuro); margin-top: 12px; }
 </style>
 </head>
 <body>
@@ -83,6 +107,7 @@
     <h1>Edite seus vídeos<br><span>com o Claude</span></h1>
     <p class="sub">Checklist de instalação e passo a passo da skill Vídeos Opus: cortes, legendas, edição viral, 5 estilos de edição e vídeos animados.</p>
   </div>
+  <div style="margin:-6mm 0 10mm"><span class="data-sbe">Super Black Eterna · 28/10</span><br><br><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Super Black Eterna →</a></div>
   <div class="faixa"><span>Instala <b>uma vez</b></span><span>Sem programas extras</span><span>Sem custo por vídeo</span></div>
 </section>
 
@@ -161,7 +186,25 @@
     <tr><td>Vídeo animado de 15 s</td><td>5 a 10 minutos</td></tr>
   </table>
   <div class="escuro"><div class="aspa">“</div><p>Não precisa decorar nenhum comando. Fale com o Claude como falaria com uma editora: o que você quer, para onde vai o vídeo e o que não pode faltar.</p></div>
+  <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Super Black <span>Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
   <div class="rodape"><span>Vídeos Opus · Guia</span><span>4</span></div>
+</section>
+
+<section class="pagina pagina-sbe">
+  <div><span class="data-sbe">28/10 · quarta</span></div>
+  <h1>Super Black<br><span>Eterna</span></h1>
+  <h2>Você nunca mais vai precisar comprar cursos de marketing e vendas na vida.</h2>
+  <ul>
+    <li>Cursos com <b>acesso vitalício</b></li>
+    <li><b>Clone do cérebro Suellen</b> para sempre, como uma consultoria personalizada eterna</li>
+    <li>Seu <b>conteúdo pronto</b> por muitos meses</li>
+    <li>Seu <b>perfil analisado</b></li>
+    <li>E muito mais</li>
+  </ul>
+  <p class="fartura">Um valor surreal. Não é uma black comum. É fartura.</p>
+  <div><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Black Friday →</a></div>
+  <div class="url">suellenwarmling.com.br/super-black-eterna</div>
+  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>5</span></div>
 </section>
 
 <!-- 5. MODELOS 1-3 -->
@@ -190,7 +233,7 @@
     <p class="pequeno">Parece que você editou no próprio Instagram: uma palavra de legenda por vez, prints acima da cabeça e cortes secos. Ótimo para bastidores e resultados.</p>
     <div class="prompt"><span class="etq">Copie</span>Edita meu último vídeo no estilo celular. Usa os prints que coloquei na pasta Meus prints quando eu falar dos resultados.</div>
   </div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>5</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>6</span></div>
 </section>
 
 <!-- 6. MODELOS 4-7 -->
@@ -225,7 +268,7 @@
     <div class="prompt"><span class="etq">Copie</span>Cria um vídeo animado de 15 segundos para Reels anunciando [o Planner 2027 por R$ 47, só esta semana]. Usa as cores da minha marca: [terracota e areia].</div>
     <div class="prompt"><span class="etq">Logo animada</span>Cria uma logo animada de 5 segundos com o nome "[Ateliê Bia]" para abrir meus vídeos.</div>
   </div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>6</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>7</span></div>
 </section>
 
 <!-- 7. FORMATOS + AJUSTES -->
@@ -248,7 +291,8 @@
   <div class="prompt"><span class="etq">Outro visual</span>Gostei, mas faz outra versão no estilo editorial.</div>
 
   <div class="escuro"><div class="aspa">“</div><p>Dica de ouro: na primeira vez, o Claude pergunta seu nome, seu @ e os nomes que você fala muito (sua marca, seu produto). Responda com calma: é isso que deixa a legenda certa.</p></div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>7</span></div>
+  <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Quer ir além do vídeo? <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>8</span></div>
 </section>
 
 <!-- 8. PROBLEMAS -->
@@ -276,8 +320,26 @@
     <li>Mandar seu vídeo para sites de edição (tudo fica no seu computador)</li>
   </ul>
 
+  <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Última chamada: <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
   <div class="cartao"><b>Suporte:</b> links.suellenwarmling.com.br/fale-com-suporte-aqui</div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>8</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>9</span></div>
+</section>
+
+<section class="pagina pagina-sbe">
+  <div><span class="data-sbe">28/10 · quarta</span></div>
+  <h1>Super Black<br><span>Eterna</span></h1>
+  <h2>Você nunca mais vai precisar comprar cursos de marketing e vendas na vida.</h2>
+  <ul>
+    <li>Cursos com <b>acesso vitalício</b></li>
+    <li><b>Clone do cérebro Suellen</b> para sempre, como uma consultoria personalizada eterna</li>
+    <li>Seu <b>conteúdo pronto</b> por muitos meses</li>
+    <li>Seu <b>perfil analisado</b></li>
+    <li>E muito mais</li>
+  </ul>
+  <p class="fartura">Um valor surreal. Não é uma black comum. É fartura.</p>
+  <div><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Black Friday →</a></div>
+  <div class="url">suellenwarmling.com.br/super-black-eterna</div>
+  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>10</span></div>
 </section>
 
 </body>
