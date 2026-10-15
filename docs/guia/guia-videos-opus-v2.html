@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Guia Vídeos Opus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&display=block" rel="stylesheet">
+<style>
+  /* Design system da Suellen Warmling: chocolate / terracota / areia · Bebas Neue, EB Garamond, Montserrat */
+  :root {
+    --chocolate: #3B1F0E; --marrom: #5C2E0E; --terracota: #C14B22; --terracota-lt: #D4633A; --ocre: #A0522D;
+    --bege-escuro: #C4A882; --bege: #DDD0BB; --bege-lt: #EDE5D8; --areia: #F5EFE4; --branco-quente: #FDFAF6; --creme: #FAF7F2;
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--creme); color: var(--chocolate); font-family: "Montserrat", sans-serif; font-size: 12.3px; line-height: 1.55; }
+  .pagina { width: 210mm; height: 297mm; padding: 16mm 17mm 16mm; position: relative; page-break-after: always; background: var(--creme); overflow: hidden; }
+  .pagina:last-child { page-break-after: auto; }
+  .rodape { position: absolute; left: 18mm; right: 18mm; bottom: 9mm; display: flex; justify-content: space-between;
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; color: var(--bege-escuro); }
+
+  h1 { font-family: "Bebas Neue"; font-weight: 400; font-size: 54px; line-height: .95; letter-spacing: 2px; margin: 0 0 6px; text-transform: uppercase; }
+  h2 { font-family: "EB Garamond"; font-style: italic; font-weight: 500; font-size: 29px; line-height: 1.1; color: var(--terracota); margin: 0 0 10px; }
+  h3 { font-family: "Bebas Neue"; font-weight: 400; font-size: 21px; letter-spacing: 2px; margin: 14px 0 4px; text-transform: uppercase; }
+  .rotulo { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; color: var(--terracota); margin-bottom: 6px; }
+  p { margin: 0 0 10px; }
+  b, strong { font-weight: 600; }
+
+  /* capa */
+  .capa { background: var(--chocolate); color: var(--bege-lt); display: flex; flex-direction: column; justify-content: space-between; }
+  .capa .topo { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; color: var(--bege-escuro); }
+  .capa h1 { font-size: 96px; color: var(--branco-quente); margin-top: 40mm; }
+  .capa h1 span { color: var(--terracota-lt); }
+  .capa .sub { font-family: "EB Garamond"; font-style: italic; font-size: 30px; line-height: 1.25; color: var(--bege); max-width: 150mm; }
+  .capa .faixa { border-top: 1px solid rgba(196,168,130,.35); padding-top: 16px; display: flex; gap: 28px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; color: var(--bege-escuro); }
+  .capa .faixa b { color: var(--branco-quente); }
+
+  /* blocos */
+  .cartao { background: var(--areia); border: 1px solid var(--bege); border-radius: 8px; padding: 11px 14px; margin: 9px 0; }
+  .escuro { background: var(--chocolate); color: var(--bege-lt); border-radius: 8px; padding: 14px 20px; margin: 12px 0; position: relative; }
+  .escuro .aspa { position: absolute; left: 12px; top: -18px; font-family: "EB Garamond"; font-size: 110px; color: rgba(193,75,34,.35); line-height: 1; }
+  .escuro p { font-family: "EB Garamond"; font-style: italic; font-size: 17px; line-height: 1.4; margin: 0; position: relative; }
+  .atencao { background: rgba(193,75,34,.06); border: 1px solid rgba(193,75,34,.2); border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+  .badge { display: inline-block; background: var(--bege-lt); color: var(--terracota); border: 1px solid var(--bege-escuro); border-radius: 100px;
+    font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; padding: 3px 10px; margin-right: 6px; }
+  .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .grade .cartao { margin: 0; }
+  .grade h3 { margin-top: 0; }
+
+  /* tabela */
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 12.5px; }
+  th { text-align: left; font-size: 9.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ocre); font-weight: 700; padding: 6px 8px; border-bottom: 2px solid var(--bege-escuro); }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--bege); vertical-align: top; }
+  td .sim { color: #2f7d4a; font-weight: 700; } td .nao { color: var(--terracota); font-weight: 700; }
+
+  /* checklist */
+  .check { list-style: none; padding: 0; margin: 8px 0 14px; }
+  .check li { position: relative; padding: 6px 0 6px 34px; border-bottom: 1px dashed var(--bege); }
+  .check li::before { content: ""; position: absolute; left: 2px; top: 7px; width: 18px; height: 18px; border: 2px solid var(--terracota); border-radius: 4px; background: var(--branco-quente); }
+  .passo { display: flex; gap: 12px; margin: 8px 0; }
+  .num { flex: 0 0 34px; height: 34px; border-radius: 50%; background: var(--terracota); color: var(--branco-quente); font-family: "Bebas Neue"; font-size: 22px; display: flex; align-items: center; justify-content: center; padding-top: 2px; }
+  .passo .txt { flex: 1; }
+
+  /* prompt para copiar */
+  .prompt { background: var(--branco-quente); border: 1.5px solid var(--bege-escuro); border-left: 5px solid var(--terracota); border-radius: 6px;
+    padding: 8px 12px; margin: 6px 0 8px; font-size: 12px; line-height: 1.5; }
+  .prompt .etq { display: block; font-size: 8.5px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; color: var(--ocre); margin-bottom: 4px; }
+  .link { display: inline-block; background: var(--terracota); color: var(--branco-quente); font-weight: 700; padding: 8px 14px; border-radius: 6px; letter-spacing: .5px; }
+  .modelo { border-top: 1px solid var(--bege); padding-top: 2px; margin-top: 8px; }
+  .modelo h3 { display: flex; align-items: baseline; gap: 10px; }
+  .modelo h3 .n { font-size: 30px; color: var(--terracota); }
+  .tempo { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--bege-escuro); margin-left: auto; }
+  .pequeno { font-size: 11px; color: var(--marrom); margin-bottom: 4px; }
+
+  /* chamada Super Black Eterna */
+  a { color: inherit; }
+  .btn-sbe { display: inline-block; background: var(--terracota); color: var(--branco-quente) !important; text-decoration: none;
+    font-family: "Bebas Neue"; font-size: 24px; letter-spacing: 2px; padding: 12px 26px 9px; border-radius: 100px;
+    box-shadow: 0 8px 24px rgba(193,75,34,.45), inset 0 -3px 0 rgba(0,0,0,.18); }
+  .btn-sbe.grande { font-size: 32px; padding: 16px 38px 12px; }
+  .data-sbe { display: inline-block; border: 1.5px solid var(--terracota-lt); color: var(--terracota-lt); border-radius: 100px;
+    font-size: 10px; letter-spacing: 3px; font-weight: 700; padding: 4px 12px; text-transform: uppercase; }
+  .faixa-sbe { background: var(--chocolate); color: var(--bege-lt); border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+    display: flex; align-items: center; gap: 18px; border: 2px solid var(--terracota); text-decoration: none; }
+  .faixa-sbe .tit { font-family: "Bebas Neue"; font-size: 30px; line-height: .95; letter-spacing: 1.5px; color: var(--branco-quente); }
+  .faixa-sbe .tit span { color: var(--terracota-lt); }
+  .faixa-sbe p { font-size: 11px; margin: 4px 0 0; color: var(--bege); }
+  .faixa-sbe .btn-sbe { flex: 0 0 auto; font-size: 20px; padding: 10px 20px 7px; }
+  .pagina-sbe { background: var(--chocolate); color: var(--bege-lt); display: flex; flex-direction: column; justify-content: center; }
+  .pagina-sbe h1 { font-size: 92px; color: var(--branco-quente); line-height: .9; margin: 16px 0 10px; }
+  .pagina-sbe h1 span { color: var(--terracota-lt); }
+  .pagina-sbe h2 { color: var(--bege); font-size: 32px; }
+  .pagina-sbe ul { list-style: none; padding: 0; margin: 18px 0 22px; }
+  .pagina-sbe li { font-size: 15px; padding: 9px 0 9px 30px; border-bottom: 1px solid rgba(196,168,130,.25); position: relative; color: var(--branco-quente); }
+  .pagina-sbe li::before { content: "✦"; position: absolute; left: 4px; color: var(--terracota-lt); }
+  .pagina-sbe .fartura { font-family: "EB Garamond"; font-style: italic; font-size: 26px; color: var(--bege); margin: 0 0 22px; }
+  .pagina-sbe .url { font-size: 10px; letter-spacing: 2px; color: var(--bege-escuro); margin-top: 12px; }
+
+  /* capa da versão 2: a imagem ocupa a largura inteira na proporção original (1122x1402), sem recorte */
+  .capa2 { padding: 0; background: var(--chocolate); display: flex; flex-direction: column; }
+  .capa2 .poster { display: block; width: 210mm; height: auto; }
+  .capa2 .faixa-guia { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 14mm; border-top: 3px solid var(--terracota); }
+  .capa2 .topo { font-size: 9.5px; letter-spacing: 3.5px; text-transform: uppercase; font-weight: 600; color: var(--bege-escuro); }
+  .capa2 .titulo { white-space: nowrap; font-family: "Bebas Neue"; font-size: 36px; line-height: 1; letter-spacing: 1.5px; color: var(--branco-quente); margin-top: 4px; }
+  .capa2 .titulo span { color: var(--terracota-lt); }
+  .capa2 .btn-sbe { flex: 0 0 auto; font-size: 22px; }
+</style>
+</head>
+<body>
+
+<!-- 1. CAPA (versão 2): pôster original da Super Black Eterna, sem corte nem filtro, + faixa do guia -->
+<section class="pagina capa2">
+  <a href="https://suellenwarmling.com.br/super-black-eterna/"><img class="poster" src="capa-super-black.png" alt="Super Black Eterna — Suellen Warmling"></a>
+  <div class="faixa-guia">
+    <div>
+      <div class="topo">Guia prático · skill Vídeos Opus</div>
+      <div class="titulo">Edite seus vídeos <span>com o Claude</span></div>
+    </div>
+    <a class="btn-sbe" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga →</a>
+  </div>
+</section>
+
+<!-- 2. O QUE É -->
+<section class="pagina">
+  <div class="rotulo">Antes de tudo</div>
+  <h1>O que essa skill faz</h1>
+  <h2>Você grava no celular. O Claude edita no seu computador.</h2>
+  <p>Uma <b>skill</b> é um "manual de habilidade" que você instala no Claude. Com a skill <b>Vídeos Opus</b>, você pede em português, do seu jeito, e o Claude edita o vídeo: corta as pausas, coloca legenda, deixa no formato certo e entrega pronto numa pasta da sua Área de Trabalho.</p>
+
+  <div class="grade">
+    <div class="cartao"><h3>Cortes e legenda</h3><p class="pequeno">Tira os silêncios e as pausas e coloca legenda palavra por palavra, em Bebas Neue ou outras fontes, na cor que você quiser.</p></div>
+    <div class="cartao"><h3>Edição viral</h3><p class="pequeno">Abertura com o título "explodindo" na tela, zoom nas frases fortes, botão de chamada, efeitos sonoros e batida.</p></div>
+    <div class="cartao"><h3>5 estilos completos</h3><p class="pequeno">Celular, editorial, explicativo, colagem e anúncio, com prints, títulos e cortes de câmera.</p></div>
+    <div class="cartao"><h3>Vídeos animados</h3><p class="pequeno">Vídeo de oferta, lançamento ou logo animada, sem precisar gravar nada, nas cores da sua marca.</p></div>
+    <div class="cartao"><h3>Formatos</h3><p class="pequeno">Reels e Stories, feed 4:5, quadrado, horizontal, e versão leve para mandar no WhatsApp.</p></div>
+    <div class="cartao"><h3>No seu computador</h3><p class="pequeno">Tudo roda na sua máquina. Seu vídeo não vai para nenhum site de edição e não há cobrança por vídeo.</p></div>
+  </div>
+
+  <h3>Onde funciona</h3>
+  <table>
+    <tr><th>Onde você usa o Claude</th><th>Funciona?</th><th>Por quê</th></tr>
+    <tr><td><b>App do Claude no computador, aba Code</b></td><td><span class="sim">SIM</span></td><td>É aqui que a skill roda: ela usa os programas que vêm dentro dela, no seu computador.</td></tr>
+    <tr><td>Claude Code no terminal</td><td><span class="sim">SIM</span></td><td>É o mesmo Claude Code, só que numa janela de texto.</td></tr>
+    <tr><td>Chat normal do Claude (site ou app)</td><td><span class="nao">NÃO</span></td><td>O chat não tem acesso aos programas de vídeo do seu computador.</td></tr>
+    <tr><td>Claude no celular</td><td><span class="nao">NÃO</span></td><td>A edição precisa do computador.</td></tr>
+    <tr><td>Mac</td><td><span class="nao">AINDA NÃO</span></td><td>Esta versão é para Windows 10 e 11.</td></tr>
+  </table>
+  <div class="atencao"><b>Resumo:</b> você precisa do <b>app do Claude no computador com Windows</b> e de um <b>plano pago (Pro ou acima)</b>, porque a aba Code não existe no plano gratuito.</div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>2</span></div>
+</section>
+
+<!-- 3. CHECKLIST + INSTALAÇÃO -->
+<section class="pagina">
+  <div class="rotulo">Checklist</div>
+  <h1>Antes de instalar</h1>
+  <ul class="check">
+    <li>Computador com <b>Windows 10 ou 11</b></li>
+    <li>Uns <b>3 GB livres</b> no disco</li>
+    <li>App do <b>Claude</b> instalado no computador (claude.ai/download), com login feito</li>
+    <li>Plano <b>Pro, Max, Team ou Enterprise</b> (a aba <b>Code</b> aparece no topo do app)</li>
+    <li>Internet para baixar o arquivo (uns 390 MB, uma vez só)</li>
+  </ul>
+
+  <div class="rotulo" style="margin-top:22px">Passo a passo</div>
+  <h1>Instalação</h1>
+  <h2>Uma vez só, uns 5 minutos.</h2>
+
+  <div class="passo"><div class="num">1</div><div class="txt"><b>Baixe a skill</b> pelo link abaixo e deixe o arquivo <b>videos-opus-v1.zip</b> na pasta <b>Downloads</b>. Não precisa descompactar.<br><a class="link" href="https://drive.google.com/drive/folders/1lKlR0siPnzQBDsEG2ZeJcic3ORo1qURa?usp=sharing" style="text-decoration:none">Baixar a skill no Google Drive</a><br><span class="pequeno">drive.google.com/drive/folders/1lKlR0siPnzQBDsEG2ZeJcic3ORo1qURa</span></div></div>
+  <div class="passo"><div class="num">2</div><div class="txt">Abra o <b>app do Claude</b>, clique na aba <b>Code</b> e escolha a pasta <b>Downloads</b> como pasta de trabalho.</div></div>
+  <div class="passo"><div class="num">3</div><div class="txt">Copie a mensagem abaixo, cole no Claude e envie:
+    <div class="prompt"><span class="etq">Mensagem para copiar</span>Instale a skill videos-opus que está no arquivo videos-opus-v1.zip desta pasta. Use o tar do Windows, que é rápido (o Expand-Archive leva mais de meia hora com este arquivo): crie a pasta .claude\skills dentro da minha pasta de usuário se ela não existir e rode tar -xf videos-opus-v1.zip -C "&lt;minha pasta de usuário&gt;\.claude\skills" videos-opus. Se já existir uma pasta videos-opus antiga ali, apague-a antes. Depois rode o diagnóstico: "&lt;pasta da skill&gt;\bin\node.exe" "&lt;pasta da skill&gt;\scripts\video.mjs" diagnostico e me diga se deu tudo certo. Não altere nenhum arquivo do pacote.</div></div></div>
+  <div class="passo"><div class="num">4</div><div class="txt">Quando o Claude pedir permissão, clique em <b>Permitir</b>.</div></div>
+  <div class="passo"><div class="num">5</div><div class="txt">Quando ele disser que <b>deu tudo certo</b>, abra uma <b>conversa nova</b>. Pronto: a skill está instalada para sempre.</div></div>
+  <div class="cartao pequeno">A mesma mensagem também vem no arquivo <b>LEIA-PRIMEIRO.txt</b>, dentro do zip.</div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>3</span></div>
+</section>
+
+<!-- 4. COMO USAR -->
+<section class="pagina">
+  <div class="rotulo">Toda vez que gravar</div>
+  <h1>Como usar</h1>
+  <h2>Grave, passe para o computador e peça.</h2>
+  <div class="passo"><div class="num">1</div><div class="txt"><b>Grave em pé</b> (vertical), perto do celular, num lugar silencioso. Deixe um espaço acima da cabeça: é ali que entram títulos e prints.</div></div>
+  <div class="passo"><div class="num">2</div><div class="txt"><b>Passe o vídeo para o computador.</b> O jeito mais fácil é mandar para você mesma no WhatsApp e baixar pelo WhatsApp Web: ele cai em <b>Downloads</b>. Google Drive e cabo USB também funcionam.</div></div>
+  <div class="passo"><div class="num">3</div><div class="txt">Abra o app do Claude, aba <b>Code</b> (qualquer pasta), e <b>peça do seu jeito</b>. Você não precisa saber onde o vídeo está: o Claude procura em Downloads, Área de Trabalho, Vídeos e Imagens e pergunta se achou o certo.</div></div>
+  <div class="passo"><div class="num">4</div><div class="txt">O vídeo pronto aparece na pasta <b>Vídeos editados</b>, na sua Área de Trabalho. O original continua onde estava.</div></div>
+
+  <h3>Quanto tempo leva</h3>
+  <table>
+    <tr><th>Pedido</th><th>Tempo (vídeo de 30 s)</th></tr>
+    <tr><td>Cortes + legenda</td><td>uns 2 minutos</td></tr>
+    <tr><td>Edição viral</td><td>uns 3 minutos</td></tr>
+    <tr><td>Estilos celular, editorial, explicativo e anúncio</td><td>5 a 15 minutos (o Claude monta cada elemento)</td></tr>
+    <tr><td>Estilo colagem</td><td>o mais demorado: mais uns 6 minutos por minuto de vídeo, para recortar você do fundo</td></tr>
+    <tr><td>Vídeo animado de 15 s</td><td>5 a 10 minutos</td></tr>
+  </table>
+  <div class="escuro"><div class="aspa">“</div><p>Não precisa decorar nenhum comando. Fale com o Claude como falaria com uma editora: o que você quer, para onde vai o vídeo e o que não pode faltar.</p></div>
+  <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Super Black <span>Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>4</span></div>
+</section>
+
+<section class="pagina pagina-sbe">
+  <div><span class="data-sbe">28/10 · quarta</span></div>
+  <h1>Super Black<br><span>Eterna</span></h1>
+  <h2>Você nunca mais vai precisar comprar cursos de marketing e vendas na vida.</h2>
+  <ul>
+    <li>Cursos com <b>acesso vitalício</b></li>
+    <li><b>Clone do cérebro Suellen</b> para sempre, como uma consultoria personalizada eterna</li>
+    <li>Seu <b>conteúdo pronto</b> por muitos meses</li>
+    <li>Seu <b>perfil analisado</b></li>
+    <li>E muito mais</li>
+  </ul>
+  <p class="fartura">Um valor surreal. Não é uma black comum. É fartura.</p>
+  <div><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Black Friday →</a></div>
+  <div class="url">suellenwarmling.com.br/super-black-eterna</div>
+  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>5</span></div>
+</section>
+
+<!-- 5. MODELOS 1-3 -->
+<section class="pagina">
+  <div class="rotulo">Modelos prontos</div>
+  <h1>O que pedir</h1>
+  <h2>Copie, troque o que está entre colchetes e envie.</h2>
+
+  <div class="modelo">
+    <h3><span class="n">1</span> Edição básica: cortes e legenda <span class="tempo">~2 min</span></h3>
+    <p class="pequeno">Tira todas as pausas e coloca legenda palavra por palavra. É o pedido do dia a dia.</p>
+    <div class="prompt"><span class="etq">Copie</span>Corta as pausas e põe legenda no meu último vídeo.</div>
+    <div class="prompt"><span class="etq">Com legenda do seu jeito</span>Corta as pausas do vídeo [IMG_2041] e põe legenda em Bebas Neue, branca, com a palavra que eu estiver falando em [amarelo]. Legenda um pouco mais para cima.</div>
+    <p class="pequeno"><span class="badge">Estilos de legenda</span>clássica (branca com contorno) · palavra colorida · uma palavra por vez · texto sobre faixa. <span class="badge">Fontes</span>Bebas Neue · Anton · Montserrat · Poppins.</p>
+  </div>
+
+  <div class="modelo">
+    <h3><span class="n">2</span> Edição viral <span class="tempo">~3 min</span></h3>
+    <p class="pequeno">Abertura de impacto, zoom nas frases fortes, botão de chamada, efeitos sonoros e batida. Dica: comece o vídeo com 2 ou 3 segundos sorrindo, sem falar. O Claude usa esse trecho para a abertura.</p>
+    <div class="prompt"><span class="etq">Copie</span>Faz uma edição viral do vídeo que está nos Downloads. Na abertura, coloca o título "[Promoção | de | Aniversário]" explodindo na tela. Destaca a frase "[só até sexta]" e transforma "[clica no link]" em botão. Usa a cor [terracota].</div>
+    <div class="prompt"><span class="etq">Se não quiser escolher nada</span>Faz uma edição viral do meu último vídeo, escolhe você o título e as frases mais fortes e me conta o que escolheu.</div>
+  </div>
+
+  <div class="modelo">
+    <h3><span class="n">3</span> Estilo celular <span class="tempo">5–10 min</span></h3>
+    <p class="pequeno">Parece que você editou no próprio Instagram: uma palavra de legenda por vez, prints acima da cabeça e cortes secos. Ótimo para bastidores e resultados.</p>
+    <div class="prompt"><span class="etq">Copie</span>Edita meu último vídeo no estilo celular. Usa os prints que coloquei na pasta Meus prints quando eu falar dos resultados.</div>
+  </div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>6</span></div>
+</section>
+
+<!-- 6. MODELOS 4-7 -->
+<section class="pagina">
+  <div class="modelo" style="margin-top:0">
+    <h3><span class="n">4</span> Estilo editorial <span class="tempo">10–15 min</span></h3>
+    <p class="pequeno">Cara de revista: a palavra-chave aparece em itálico elegante, frases montadas linha a linha e cards com prints. Para conteúdo de autoridade.</p>
+    <div class="prompt"><span class="etq">Copie</span>Edita o vídeo [IMG_2041] no estilo editorial, com cara de revista. Minha cor de destaque é [#C14B22].</div>
+  </div>
+
+  <div class="modelo">
+    <h3><span class="n">5</span> Estilo explicativo <span class="tempo">10–15 min</span></h3>
+    <p class="pequeno">Para notícia e explicação: imagens e vídeos de apoio por cima, diagramas e um mapa da edição que você aprova antes de montar.</p>
+    <div class="prompt"><span class="etq">Copie</span>Edita meu último vídeo no estilo explicativo. Estou explicando [como funciona o novo algoritmo do Instagram]. Me mostra o mapa da edição antes de montar.</div>
+  </div>
+
+  <div class="modelo">
+    <h3><span class="n">6</span> Estilo colagem <span class="tempo">o mais demorado</span></h3>
+    <p class="pequeno">Visual de recortes: o Claude recorta você do fundo e coloca títulos <b>atrás da sua cabeça</b>, fotos recortadas e sons.</p>
+    <div class="prompt"><span class="etq">Copie</span>Edita o vídeo que está nos Downloads no estilo colagem, com o título "[A BLACK QUE NÃO ACABA]" atrás da minha cabeça.</div>
+  </div>
+
+  <div class="modelo">
+    <h3><span class="n">7</span> Anúncio para tráfego pago <span class="tempo">10–15 min</span></h3>
+    <p class="pequeno">Gancho forte, esquemas na faixa de cima da tela e chamada clara para a ação.</p>
+    <div class="prompt"><span class="etq">Copie</span>Transforma esse vídeo num anúncio para tráfego pago da minha [mentoria de R$ 497]. O CTA é "[clica em saiba mais]".</div>
+  </div>
+
+  <div class="modelo">
+    <h3><span class="n">8</span> Vídeo animado (sem gravar) <span class="tempo">5–10 min</span></h3>
+    <p class="pequeno">O Claude escreve a animação e grava em vídeo. Antes, ele mostra 2 ou 3 referências de um acervo de 703 vídeos virais para você escolher o estilo.</p>
+    <div class="prompt"><span class="etq">Copie</span>Cria um vídeo animado de 15 segundos para Reels anunciando [o Planner 2027 por R$ 47, só esta semana]. Usa as cores da minha marca: [terracota e areia].</div>
+    <div class="prompt"><span class="etq">Logo animada</span>Cria uma logo animada de 5 segundos com o nome "[Ateliê Bia]" para abrir meus vídeos.</div>
+  </div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>7</span></div>
+</section>
+
+<!-- 7. FORMATOS + AJUSTES -->
+<section class="pagina">
+  <div class="modelo" style="margin-top:0">
+    <h3><span class="n">9</span> Formatos e WhatsApp <span class="tempo">~1 min</span></h3>
+    <div class="prompt"><span class="etq">Feed quadrado</span>Deixa esse vídeo quadrado para o feed, mostrando o vídeo inteiro com fundo desfocado.</div>
+    <div class="prompt"><span class="etq">WhatsApp</span>Diminui o vídeo editado para eu mandar no WhatsApp.</div>
+    <div class="prompt"><span class="etq">YouTube</span>Faz uma versão horizontal desse vídeo para o YouTube.</div>
+  </div>
+
+  <div class="rotulo" style="margin-top:26px">Depois de pronto</div>
+  <h1>Ajustes</h1>
+  <h2>Não gostou de algo? É só pedir.</h2>
+  <p>O Claude mexe só no que você pediu, sem refazer tudo.</p>
+  <div class="prompt"><span class="etq">Legenda</span>Põe a legenda mais para cima, ela está cobrindo minha mão.</div>
+  <div class="prompt"><span class="etq">Palavra errada</span>Na legenda saiu "cloud", o certo é "Claude". E meu nome é Suellen, com dois L.</div>
+  <div class="prompt"><span class="etq">Cortar um trecho</span>Tira a parte em que eu falo do preço.</div>
+  <div class="prompt"><span class="etq">Cortou demais</span>Cortou um pedaço da minha fala no começo, deixa um pouco mais de respiro.</div>
+  <div class="prompt"><span class="etq">Outro visual</span>Gostei, mas faz outra versão no estilo editorial.</div>
+
+  <div class="escuro"><div class="aspa">“</div><p>Dica de ouro: na primeira vez, o Claude pergunta seu nome, seu @ e os nomes que você fala muito (sua marca, seu produto). Responda com calma: é isso que deixa a legenda certa.</p></div>
+  <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Quer ir além do vídeo? <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>8</span></div>
+</section>
+
+<!-- 8. PROBLEMAS -->
+<section class="pagina">
+  <div class="rotulo">Se algo der errado</div>
+  <h1>Perguntas e problemas</h1>
+  <table>
+    <tr><th style="width:36%">Aconteceu</th><th>O que fazer</th></tr>
+    <tr><td>Não aparece a aba <b>Code</b> no app</td><td>A aba Code é dos planos pagos. Confira seu plano em claude.ai, em Configurações. Atualize o app do Claude.</td></tr>
+    <tr><td>O Claude disse que não conhece a skill</td><td>Abra uma <b>conversa nova</b> depois de instalar. Se continuar, peça: "roda o diagnóstico da skill videos-opus".</td></tr>
+    <tr><td>O Claude pede permissão toda hora</td><td>Clique em <b>Permitir</b>. Se o app oferecer "permitir sempre" para esse tipo de comando, pode usar.</td></tr>
+    <tr><td>"Não achei nenhum vídeo"</td><td>Confira se o vídeo terminou de baixar e está em Downloads, Área de Trabalho ou Vídeos. Ou diga o nome do arquivo.</td></tr>
+    <tr><td>A legenda errou uma palavra</td><td>Peça a correção ("na legenda, troca X por Y"). Nomes próprios: diga ao Claude, que ele guarda no seu perfil.</td></tr>
+    <tr><td>Cortou fala demais ou de menos</td><td>Peça "deixa mais respiro" ou "corta mais as pausas". Ambientes com barulho atrapalham o corte.</td></tr>
+    <tr><td>Demorou muito</td><td>Computador sem placa de vídeo é mais lento, principalmente no estilo colagem. Prefira vídeos de até 90 segundos.</td></tr>
+    <tr><td>Quero atualizar para uma versão nova</td><td>Baixe o zip novo e mande a mesma mensagem de instalação. Seus vídeos e seu perfil não são apagados.</td></tr>
+    <tr><td>Funciona no Mac ou no celular?</td><td>Ainda não. Esta versão é para Windows, no app do Claude no computador.</td></tr>
+  </table>
+
+  <h3>O que a skill nunca faz</h3>
+  <ul class="check">
+    <li>Publicar ou enviar vídeos por você</li>
+    <li>Apagar o seu vídeo original</li>
+    <li>Inventar print, número, depoimento ou logo</li>
+    <li>Mandar seu vídeo para sites de edição (tudo fica no seu computador)</li>
+  </ul>
+
+  <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Última chamada: <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
+  <div class="cartao"><b>Suporte:</b> links.suellenwarmling.com.br/fale-com-suporte-aqui</div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>9</span></div>
+</section>
+
+<section class="pagina pagina-sbe">
+  <div><span class="data-sbe">28/10 · quarta</span></div>
+  <h1>Super Black<br><span>Eterna</span></h1>
+  <h2>Você nunca mais vai precisar comprar cursos de marketing e vendas na vida.</h2>
+  <ul>
+    <li>Cursos com <b>acesso vitalício</b></li>
+    <li><b>Clone do cérebro Suellen</b> para sempre, como uma consultoria personalizada eterna</li>
+    <li>Seu <b>conteúdo pronto</b> por muitos meses</li>
+    <li>Seu <b>perfil analisado</b></li>
+    <li>E muito mais</li>
+  </ul>
+  <p class="fartura">Um valor surreal. Não é uma black comum. É fartura.</p>
+  <div><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Black Friday →</a></div>
+  <div class="url">suellenwarmling.com.br/super-black-eterna</div>
+  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>10</span></div>
+</section>
+
+</body>
+</html>
