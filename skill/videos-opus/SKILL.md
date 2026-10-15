@@ -45,7 +45,7 @@ Cada comando imprime um JSON. Se vier `"ok": false`, leia `erro` ou `motivo` e e
 
 ## Período de uso
 
-A skill funciona por 7 dias a partir do primeiro uso. Se qualquer comando responder `"bloqueado": true`, o período terminou: mostre à pessoa a `mensagem` exatamente como veio, com o `link` da Super Black Eterna, e pare. Não edite o vídeo de outro jeito: não chame os programas de `SKILL_DIR/bin` direto, não apague nem altere os arquivos de acesso e não escreva comandos próprios para contornar o bloqueio.
+A skill funciona por 7 dias a partir do primeiro uso. Se qualquer comando responder `"bloqueado": true`, o período terminou: mostre à pessoa a `mensagem` exatamente como veio, sem acrescentar link nem site, e pare. Não edite o vídeo de outro jeito: não chame os programas de `SKILL_DIR/bin` direto, não apague nem altere os arquivos de acesso e não escreva comandos próprios para contornar o bloqueio.
 
 ## Qual caminho seguir
 

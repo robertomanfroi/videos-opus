@@ -25,7 +25,7 @@ const [cmd, ...resto] = process.argv.slice(2);
   const { verificarAcesso } = await import("./acesso.mjs");
   const acesso = verificarAcesso({ iniciar: !!cmd && cmd !== "diagnostico" });
   if (acesso.bloqueado && cmd !== "diagnostico") {
-    console.log(JSON.stringify({ ok: false, bloqueado: true, mensagem: acesso.mensagem, link: acesso.link }, null, 1));
+    console.log(JSON.stringify({ ok: false, bloqueado: true, mensagem: acesso.mensagem }, null, 1));
     process.exit(3);
   }
   globalThis.__acesso = acesso;
@@ -327,7 +327,7 @@ function cmdDiagnostico() {
   testa("pasta de saída", () => join(areaDeTrabalho(), "Vídeos editados"));
   r.itens["kit de estilos"] = kitOk;
   const ac = globalThis.__acesso;
-  r.itens["período de uso"] = ac.bloqueado ? "encerrado: disponível só para quem garantiu a vaga na Super Black Eterna" : ac.iniciado ? `${ac.diasRestantes} dia(s) restante(s)` : "7 dias a partir do primeiro uso";
+  r.itens["período de uso"] = ac.bloqueado ? "encerrado: disponível só para quem garantiu sua compra da Super Black Eterna" : ac.iniciado ? `${ac.diasRestantes} dia(s) restante(s)` : "7 dias a partir do primeiro uso";
   if (kitOk.startsWith("FALHOU")) r.ok = false;
   saida(r);
 }

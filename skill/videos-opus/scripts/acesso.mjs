@@ -1,5 +1,5 @@
 // Período de uso: a skill funciona por PRAZO_DIAS a partir do primeiro uso (o diagnóstico da instalação não conta).
-// Depois disso, fica disponível somente para quem garantiu a vaga na Super Black Eterna.
+// Depois disso, fica disponível somente para quem garantiu sua compra da Super Black Eterna.
 // A data do primeiro uso fica guardada fora da pasta da skill, em dois lugares, para não zerar ao reinstalar.
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -7,10 +7,9 @@ import { homedir } from "node:os";
 import { createHash } from "node:crypto";
 
 export const PRAZO_DIAS = 7;
-export const LINK = "https://suellenwarmling.com.br/super-black-eterna/";
 export const MENSAGEM =
   `O período de uso do Vídeos Opus terminou (${PRAZO_DIAS} dias a partir do primeiro uso). ` +
-  `Agora ele está disponível somente para quem garantiu sua vaga na Super Black Eterna: ${LINK}`;
+  "Agora ele está disponível somente para quem garantiu sua compra da Super Black Eterna.";
 
 const DIA = 24 * 60 * 60 * 1000;
 const SAL = "vop-sbe-2026";
@@ -46,7 +45,7 @@ export function verificarAcesso({ iniciar = true } = {}) {
   const validos = lidos.filter((d) => d && d !== "invalido");
   if (!validos.length) {
     // arquivo existia mas foi alterado à mão: trata como período encerrado
-    if (lidos.includes("invalido")) return { bloqueado: true, mensagem: MENSAGEM, link: LINK };
+    if (lidos.includes("invalido")) return { bloqueado: true, mensagem: MENSAGEM };
     if (!iniciar) return { bloqueado: false, diasRestantes: PRAZO_DIAS, iniciado: false };
     gravar(agora, agora);
     return { bloqueado: false, diasRestantes: PRAZO_DIAS, iniciado: true };
@@ -56,6 +55,6 @@ export function verificarAcesso({ iniciar = true } = {}) {
   const ultimo = Math.max(agora, ...validos.map((d) => d.ultimo));
   if (iniciar) gravar(inicio, ultimo);
   const usados = (ultimo - inicio) / DIA;
-  if (usados >= PRAZO_DIAS) return { bloqueado: true, mensagem: MENSAGEM, link: LINK };
+  if (usados >= PRAZO_DIAS) return { bloqueado: true, mensagem: MENSAGEM };
   return { bloqueado: false, diasRestantes: Math.max(1, Math.ceil(PRAZO_DIAS - usados)), iniciado: true };
 }
