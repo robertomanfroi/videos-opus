@@ -11,32 +11,20 @@ Tudo roda no seu computador. Você instala uma vez e não precisa instalar mais 
 
 ## Como instalar (uma vez só, uns 3 minutos)
 
-### Jeito 1: pedindo ao Claude (recomendado)
-
-1. Abra o app do Claude, aba **Code**. No seletor **Environment**, escolha **Local** (não Cloud).
-2. Copie esta mensagem, cole no Claude e envie:
-
-   ```
-   Quero instalar a skill de edição de vídeo Vídeos Opus. Baixa o instalador oficial https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar.cmd, lê o que ele faz e roda pra mim.
-   ```
-
-3. O Claude lê o instalador e explica o que ele faz. Quando ele perguntar se pode rodar, responda **"pode"**.
-4. Quando ele disser que deu certo, abra uma conversa nova.
-
-### Jeito 2: se o Claude não quiser instalar
-
 1. [**Baixe o instalador**](https://github.com/robertomanfroi/videos-opus/releases/latest/download/Instalar-Videos-Opus.cmd). Se o navegador perguntar, clique em **Manter**.
-2. Na pasta Downloads, dê dois cliques em **Instalar-Videos-Opus**.
+2. Na pasta **Downloads**, dê dois cliques em **Instalar-Videos-Opus**.
 3. Se aparecer a tela azul "O Windows protegeu o computador", clique em **Mais informações** → **Executar assim mesmo**.
-4. Espere a janela preta mostrar **PRONTO!**.
+4. Espere a janela preta mostrar **PRONTO!**. Está instalado.
 
-Para atualizar no futuro, é só repetir a instalação.
+Depois de instalar, não precisa adicionar, ativar nem configurar nada: é só abrir o app do Claude, aba **Code** (ambiente **Local**), e pedir o vídeo.
+
+Para atualizar no futuro, é só baixar e abrir o instalador de novo.
 
 **O que o instalador faz** ([instalar.cmd](instalar.cmd), texto simples, dá para ler antes): baixa o pacote `videos-opus.zip` da página de [Releases](https://github.com/robertomanfroi/videos-opus/releases) deste repositório, descompacta em `%USERPROFILE%\.claude\skills\videos-opus` (substituindo a versão anterior), apaga o zip e roda um teste. Não pede senha de administrador e não mexe em mais nada do computador.
 
 ## Como usar
 
-Abra o app do Claude, aba **Code**, com o seletor **Environment** em **Local**, e peça do seu jeito:
+Abra o app do Claude, aba **Code**, com o seletor **Environment** em **Local**, e peça do seu jeito (não precisa adicionar nada):
 
 - *Corta as pausas e põe legenda no meu último vídeo*
 - *Faz uma edição viral do vídeo que está nos Downloads*
