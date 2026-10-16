@@ -354,7 +354,7 @@ function cmdDiagnostico() {
   testa("pasta de saída", () => join(areaDeTrabalho(), "Vídeos editados"));
   r.itens["kit de estilos"] = kitOk;
   const ac = globalThis.__acesso;
-  r.itens["período de uso"] = ac.bloqueado ? "encerrado: disponível só para quem garantiu sua compra da Super Black Eterna" : ac.iniciado ? `${ac.diasRestantes} dia(s) restante(s)` : "7 dias a partir do primeiro uso";
+  r.itens["período de uso"] = ac.bloqueado ? "encerrado: disponível para quem se tornar aluna da Super Black Eterna (28/10)" : ac.iniciado ? `${ac.diasRestantes} dia(s) restante(s)` : "7 dias a partir do primeiro uso";
   if (kitOk.startsWith("FALHOU")) r.ok = false;
   saida(r);
 }
