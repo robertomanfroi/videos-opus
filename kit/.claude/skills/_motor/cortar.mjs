@@ -2,7 +2,9 @@
 // Rodar dentro de <projeto>/assets:  node ../../../.claude/skills/_motor/cortar.mjs [--jl 4] [--no-jl]
 // Entradas: raw.mp4, keeps.json ({fps, keeps:[{from,to,why}]}), silences.txt (gerado aqui se faltar).
 // Saídas: clean.mp4, edit-decisions.json (linha do tempo do áudio = linha do tempo da legenda).
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { execFileSync, spawnSync } from "node:child_process";
 import { videoEncoder } from "./encoder.mjs";
 import { marcarEtapa } from "./projeto.mjs";
@@ -55,19 +57,35 @@ const decisoes = segs.map((g, i) => {
   return r;
 });
 
-// Vídeo numa passada só (select) e áudio lido de uma segunda abertura do arquivo. Um trim por trecho
-// sobre a mesma entrada fazia o ffmpeg guardar quadros crus na memória: 6 GB num vídeo de 2 min,
-// o que esgotava a RAM do WSL e derrubava tudo junto (inclusive o Claude Code).
-const meio = 0.5 / fps;
-const janela = vsegs.map((v) => `gte(t,${(v.s - meio).toFixed(4)})*lt(t,${(v.e - meio).toFixed(4)})`).join("+");
-const f = `[0:v]select='${janela}',setpts=N/(${fps}*TB)[v];` + segs.map((g, i) => {
-  const dur = g.e - g.s;
-  return `[1:a]atrim=${g.s}:${g.e},asetpts=PTS-STARTPTS,afade=t=in:d=0.012,afade=t=out:st=${(dur - 0.012).toFixed(3)}:d=0.012[a${i}];`;
-}).join("") + segs.map((_, i) => `[a${i}]`).join("") + `concat=n=${segs.length}:v=0:a=1[a]`;
-writeFileSync("cut-filter.txt", f);
-execFileSync("ffmpeg", ["-y", "-v", "error", "-i", "raw.mp4", "-i", "raw.mp4", "-/filter_complex", "cut-filter.txt",
-  "-map", "[v]", "-map", "[a]", ...videoEncoder(), "-r", String(fps),
-  "-c:a", "aac", "-b:a", "192k", "-shortest", "clean.mp4"], { stdio: "inherit" });
+// Vídeo: cada trecho é codificado sozinho num arquivo temporário e no fim os arquivos são emendados sem
+// recodificar. Cada ffmpeg pula direto para perto do trecho (-ss antes do -i) e, com -copyts, o trim corta pelo
+// horário original do arquivo: mesmos quadros do método antigo, na ordem do keeps.json (o gancho pode vir do fim).
+// O método antigo (um trim por trecho na mesma entrada) guardava quadros crus na memória: 6 GB num vídeo de 2 min,
+// e crescia com o tamanho do vídeo. Assim o ffmpeg só segura um trecho por vez (~500 MB).
+const tmp = mkdtempSync(join(tmpdir(), "corte-"));
+try {
+  const lista = vsegs.map((v, i) => {
+    const arq = join(tmp, `v${String(i).padStart(3, "0")}.mp4`);
+    // Limites no meio do intervalo entre dois quadros: o quadro da borda nunca fica em dúvida por arredondamento.
+    const ini = (Math.round(v.s * fps) - 0.5) / fps, fim = (Math.round(v.e * fps) - 0.5) / fps;
+    execFileSync("ffmpeg", ["-y", "-v", "error", "-ss", Math.max(0, v.s - 1).toFixed(4), "-copyts", "-i", "raw.mp4",
+      "-vf", `trim=${Math.max(0, ini).toFixed(5)}:${fim.toFixed(5)},setpts=PTS-STARTPTS`, "-an", ...videoEncoder(), "-r", String(fps), arq],
+      { stdio: "inherit" });
+    return `file '${arq.replace(/\\/g, "/")}'`; // barra normal: a barra invertida do Windows seria lida como escape na lista
+  });
+  writeFileSync(join(tmp, "lista.txt"), lista.join("\n"));
+  // Áudio numa passada só: amostras de som são pequenas, juntar 13 trechos fora de ordem custa poucos MB.
+  const f = segs.map((g, i) => {
+    const dur = g.e - g.s;
+    return `[1:a]atrim=${g.s}:${g.e},asetpts=PTS-STARTPTS,afade=t=in:d=0.012,afade=t=out:st=${(dur - 0.012).toFixed(3)}:d=0.012[a${i}];`;
+  }).join("") + segs.map((_, i) => `[a${i}]`).join("") + `concat=n=${segs.length}:v=0:a=1[a]`;
+  writeFileSync("cut-filter.txt", f);
+  execFileSync("ffmpeg", ["-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", join(tmp, "lista.txt"), "-i", "raw.mp4",
+    "-/filter_complex", "cut-filter.txt", "-map", "0:v", "-map", "[a]", "-c:v", "copy",
+    "-c:a", "aac", "-b:a", "192k", "-shortest", "clean.mp4"], { stdio: "inherit" });
+} finally {
+  rmSync(tmp, { recursive: true, force: true });
+}
 writeFileSync("edit-decisions.json", JSON.stringify({ source: "assets/raw.mp4", fps, jl_frames: JL, duration: +out.toFixed(3), segments: decisoes }, null, 1));
 if (existsSync("../projeto.json")) marcarEtapa("..", "cortado", { corte: { trechos: segs.length, duracao: +out.toFixed(3) } });
 console.log(`trechos=${segs.length} emendas_jl=${flip} duração=${out.toFixed(2)}s`);
