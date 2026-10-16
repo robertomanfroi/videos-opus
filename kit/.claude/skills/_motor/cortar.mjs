@@ -55,13 +55,17 @@ const decisoes = segs.map((g, i) => {
   return r;
 });
 
-const f = segs.map((g, i) => {
-  const v = vsegs[i], dur = g.e - g.s;
-  return `[0:v]trim=${v.s.toFixed(4)}:${v.e.toFixed(4)},setpts=PTS-STARTPTS[v${i}];` +
-    `[0:a]atrim=${g.s}:${g.e},asetpts=PTS-STARTPTS,afade=t=in:d=0.012,afade=t=out:st=${(dur - 0.012).toFixed(3)}:d=0.012[a${i}];`;
-}).join("") + segs.map((_, i) => `[v${i}]`).join("") + `concat=n=${segs.length}:v=1:a=0[v];` + segs.map((_, i) => `[a${i}]`).join("") + `concat=n=${segs.length}:v=0:a=1[a]`;
+// Vídeo numa passada só (select) e áudio lido de uma segunda abertura do arquivo. Um trim por trecho
+// sobre a mesma entrada fazia o ffmpeg guardar quadros crus na memória: 6 GB num vídeo de 2 min,
+// o que esgotava a RAM do WSL e derrubava tudo junto (inclusive o Claude Code).
+const meio = 0.5 / fps;
+const janela = vsegs.map((v) => `gte(t,${(v.s - meio).toFixed(4)})*lt(t,${(v.e - meio).toFixed(4)})`).join("+");
+const f = `[0:v]select='${janela}',setpts=N/(${fps}*TB)[v];` + segs.map((g, i) => {
+  const dur = g.e - g.s;
+  return `[1:a]atrim=${g.s}:${g.e},asetpts=PTS-STARTPTS,afade=t=in:d=0.012,afade=t=out:st=${(dur - 0.012).toFixed(3)}:d=0.012[a${i}];`;
+}).join("") + segs.map((_, i) => `[a${i}]`).join("") + `concat=n=${segs.length}:v=0:a=1[a]`;
 writeFileSync("cut-filter.txt", f);
-execFileSync("ffmpeg", ["-y", "-v", "error", "-i", "raw.mp4", "-/filter_complex", "cut-filter.txt",
+execFileSync("ffmpeg", ["-y", "-v", "error", "-i", "raw.mp4", "-i", "raw.mp4", "-/filter_complex", "cut-filter.txt",
   "-map", "[v]", "-map", "[a]", ...videoEncoder(), "-r", String(fps),
   "-c:a", "aac", "-b:a", "192k", "-shortest", "clean.mp4"], { stdio: "inherit" });
 writeFileSync("edit-decisions.json", JSON.stringify({ source: "assets/raw.mp4", fps, jl_frames: JL, duration: +out.toFixed(3), segments: decisoes }, null, 1));

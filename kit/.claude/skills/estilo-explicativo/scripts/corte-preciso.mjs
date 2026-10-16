@@ -61,17 +61,18 @@ const final = [];
 for (const [s, e] of segs) { if (final.length && s - final.at(-1)[1] < 0.08) final.at(-1)[1] = Math.max(final.at(-1)[1], e); else final.push([s, e]); }
 if (!final.length) { console.error("nenhum trecho sobrou: confira keeps.json"); process.exit(1); }
 
-let fc = "";
-const labels = [];
+// Vídeo numa passada só (select) e áudio de uma segunda abertura do arquivo: um trim por trecho sobre
+// a mesma entrada fazia o ffmpeg acumular quadros crus na memória e esgotar a RAM do WSL.
+// raw.mp4 é sempre 30 fps fixo (novo-projeto.mjs), por isso o setpts conta quadros.
+const janela = final.map(([s, e]) => `gte(t,${s.toFixed(3)})*lt(t,${e.toFixed(3)})`).join("+");
+let fc = `[0:v]select='${janela}',setpts=N/(30*TB)[v];`;
 final.forEach(([s, e], i) => {
   const d = e - s;
-  fc += `[0:v]trim=${s.toFixed(3)}:${e.toFixed(3)},setpts=PTS-STARTPTS[v${i}];` +
-    `[0:a]atrim=${s.toFixed(3)}:${e.toFixed(3)},asetpts=PTS-STARTPTS,afade=t=in:d=0.008,afade=t=out:st=${Math.max(0, d - 0.012).toFixed(3)}:d=0.012[a${i}];`;
-  labels.push(`[v${i}][a${i}]`);
+  fc += `[1:a]atrim=${s.toFixed(3)}:${e.toFixed(3)},asetpts=PTS-STARTPTS,afade=t=in:d=0.008,afade=t=out:st=${Math.max(0, d - 0.012).toFixed(3)}:d=0.012[a${i}];`;
 });
-fc += labels.join("") + `concat=n=${final.length}:v=1:a=1[v][a]`;
+fc += final.map((_, i) => `[a${i}]`).join("") + `concat=n=${final.length}:v=0:a=1[a]`;
 writeFileSync("tight-filter.txt", fc);
-execFileSync(ffmpeg, ["-v", "error", "-y", "-i", "raw.mp4", "-/filter_complex", "tight-filter.txt", "-map", "[v]", "-map", "[a]",
+execFileSync(ffmpeg, ["-v", "error", "-y", "-i", "raw.mp4", "-i", "raw.mp4", "-/filter_complex", "tight-filter.txt", "-map", "[v]", "-map", "[a]",
   ...videoEncoder(), "-r", "30", "-c:a", "aac", "-b:a", "192k", OUT], { stdio: "inherit" });
 writeFileSync("tight-segments.json", JSON.stringify(final.map(([s, e]) => ({ from: +s.toFixed(3), to: +e.toFixed(3) }))));
 console.log(`trechos=${final.length} duração=${final.reduce((t, [s, e]) => t + e - s, 0).toFixed(2)}s -> ${OUT}`);
