@@ -59,16 +59,22 @@ for (const k of keeps) {
 segs.sort((p, q) => p[0] - q[0]);
 const final = [];
 for (const [s, e] of segs) { if (final.length && s - final.at(-1)[1] < 0.08) final.at(-1)[1] = Math.max(final.at(-1)[1], e); else final.push([s, e]); }
+// Início e fim de cada trecho na grade de quadros (30 fps): o som de cada trecho dura exatamente os quadros que o
+// select escolhe. Sem isso cada trecho arredondava até meio quadro e a imagem ia se afastando do som ao longo do vídeo.
+const Q = 30;
+const grade = final.map(([s, e]) => [Math.round(s * Q) / Q, Math.round(e * Q) / Q]).filter(([s, e]) => e > s);
+final.length = 0; final.push(...grade);
 if (!final.length) { console.error("nenhum trecho sobrou: confira keeps.json"); process.exit(1); }
 
 // Vídeo numa passada só (select) e áudio de uma segunda abertura do arquivo: um trim por trecho sobre
 // a mesma entrada fazia o ffmpeg acumular quadros crus na memória e esgotar a RAM do WSL.
 // raw.mp4 é sempre 30 fps fixo (novo-projeto.mjs), por isso o setpts conta quadros.
-const janela = final.map(([s, e]) => `gte(t,${s.toFixed(3)})*lt(t,${e.toFixed(3)})`).join("+");
+const meio = 0.5 / Q; // limites no meio entre dois quadros: o quadro da borda nunca fica em dúvida
+const janela = final.map(([s, e]) => `gte(t,${(s - meio).toFixed(5)})*lt(t,${(e - meio).toFixed(5)})`).join("+");
 let fc = `[0:v]select='${janela}',setpts=N/(30*TB)[v];`;
 final.forEach(([s, e], i) => {
   const d = e - s;
-  fc += `[1:a]atrim=${s.toFixed(3)}:${e.toFixed(3)},asetpts=PTS-STARTPTS,afade=t=in:d=0.008,afade=t=out:st=${Math.max(0, d - 0.012).toFixed(3)}:d=0.012[a${i}];`;
+  fc += `[1:a]atrim=${s.toFixed(5)}:${e.toFixed(5)},asetpts=PTS-STARTPTS,afade=t=in:d=0.008,afade=t=out:st=${Math.max(0, d - 0.012).toFixed(3)}:d=0.012[a${i}];`;
 });
 fc += final.map((_, i) => `[a${i}]`).join("") + `concat=n=${final.length}:v=0:a=1[a]`;
 writeFileSync("tight-filter.txt", fc);

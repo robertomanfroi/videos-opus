@@ -46,9 +46,15 @@ let flip = 0;
 for (let i = 0; i < segs.length - 1 && d > 0; i++) {
   const gap = segs[i + 1].s - segs[i].e;
   if (gap < 0.25) continue; // não é uma emenda visível
-  if (flip++ % 2 === 0) { vsegs[i].e += d; vsegs[i + 1].s += d; }
-  else { vsegs[i].e -= d; vsegs[i + 1].s -= d; }
+  // O deslocamento encolhe um dos dois vizinhos: num pedaço curto (um "Mas" entre duas emendas) o trecho de
+  // vídeo ficaria vazio ou negativo e a emenda final cortaria o áudio. Nesse caso esta emenda fica reta.
+  const sinal = flip % 2 === 0 ? 1 : -1;
+  const ei = vsegs[i].e + sinal * d, si = vsegs[i + 1].s + sinal * d;
+  if (ei - vsegs[i].s < 2 / fps - 1e-6 || vsegs[i + 1].e - si < 2 / fps - 1e-6) continue;
+  vsegs[i].e = ei; vsegs[i + 1].s = si; flip++;
 }
+const vazio = vsegs.findIndex((v) => Math.round(v.e * fps) - Math.round(v.s * fps) < 1);
+if (vazio >= 0) { console.error(`trecho ${vazio} ficou sem nenhum quadro de vídeo: confira keeps.json`); process.exit(1); }
 
 let out = 0;
 const decisoes = segs.map((g, i) => {
