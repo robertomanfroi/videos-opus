@@ -77,7 +77,7 @@ try {
     execFileSync("ffmpeg", ["-y", "-v", "error", "-ss", Math.max(0, v.s - 1).toFixed(4), "-copyts", "-i", "raw.mp4",
       "-vf", `trim=${Math.max(0, ini).toFixed(5)}:${fim.toFixed(5)},setpts=PTS-STARTPTS`, "-an", ...videoEncoder(), "-r", String(fps), arq],
       { stdio: "inherit" });
-    return `file '${arq.replace(/\\/g, "/")}'`; // barra normal: a barra invertida do Windows seria lida como escape na lista
+    return `file 'v${String(i).padStart(3, "0")}.mp4'`; // só o nome: a lista fica na mesma pasta, e um apóstrofo no nome do usuário (D'Ávila) quebraria a lista
   });
   writeFileSync(join(tmp, "lista.txt"), lista.join("\n"));
   // Áudio numa passada só: amostras de som são pequenas, juntar 13 trechos fora de ordem custa poucos MB.
