@@ -36,6 +36,12 @@ O vídeo pronto aparece na pasta **Vídeos editados**, na sua Área de Trabalho.
 
 ---
 
+## Direitos
+
+O Vídeos Opus é propriedade de **Suellen Warmling**. © 2026, todos os direitos reservados. É proibido copiar, revender, redistribuir ou apresentar esta skill, no todo ou em parte, como sendo de outra pessoa, sem autorização por escrito. Termos completos em [`skill/videos-opus/DIREITOS.txt`](skill/videos-opus/DIREITOS.txt). Os programas de terceiros incluídos no pacote seguem as próprias licenças (pasta `licencas/`).
+
+---
+
 ## Para quem mantém o projeto
 
 - `skill/videos-opus/` — a skill (SKILL.md e scripts). `kit/` — motor dos 5 estilos (adaptado da Edição Automática de Vídeo).

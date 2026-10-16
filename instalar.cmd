@@ -3,6 +3,7 @@ chcp 65001 >nul
 setlocal
 title Instalando a skill Vídeos Opus
 rem Instalador da skill Vídeos Opus (https://github.com/robertomanfroi/videos-opus)
+rem Vídeos Opus (c) 2026 Suellen Warmling. Todos os direitos reservados. Proibido copiar, revender ou distribuir.
 rem O que ele faz: baixa o pacote da página de Releases do GitHub, descompacta em
 rem %USERPROFILE%\.claude\skills\videos-opus (substituindo a versão antiga) e testa.
 rem Não pede senha de administrador e não mexe em nada fora dessa pasta.
@@ -18,6 +19,8 @@ set "URL=https://github.com/robertomanfroi/videos-opus/releases/latest/download/
 echo.
 echo  ==============================================
 echo    VÍDEOS OPUS  -  edite seus vídeos com o Claude
+echo    Propriedade de Suellen Warmling. Todos os direitos reservados.
+echo    Proibido copiar, revender ou distribuir sem autorização.
 echo  ==============================================
 echo.
 echo  1/3  Baixando o pacote (uns 390 MB). Pode levar alguns minutos...
@@ -42,6 +45,7 @@ if errorlevel 1 goto erro_teste
 echo.
 echo  ==============================================
 echo    PRONTO! A skill Vídeos Opus está instalada.
+echo    Vídeos Opus é propriedade de Suellen Warmling.
 echo  ==============================================
 echo.
 echo  Agora abra o app do Claude, aba Code, com o ambiente Local,

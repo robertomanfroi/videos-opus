@@ -3,6 +3,7 @@ chcp 65001 >nul
 setlocal
 title Instalando a skill Vídeos Opus no Codex
 rem Instalador da skill Vídeos Opus PARA O CODEX (app do ChatGPT para tarefas no computador)
+rem Vídeos Opus (c) 2026 Suellen Warmling. Todos os direitos reservados. Proibido copiar, revender ou distribuir.
 rem (https://github.com/robertomanfroi/videos-opus). O instalador do Claude é outro arquivo e não é afetado.
 rem O que ele faz: baixa o pacote da página de Releases do GitHub, descompacta em
 rem %LOCALAPPDATA%\videos-opus\pacote e grava só o SKILL.md em %USERPROFILE%\.codex\skills\videos-opus
@@ -24,6 +25,8 @@ if defined VIDEOS_OPUS_URL set "URL=%VIDEOS_OPUS_URL%"
 echo.
 echo  ==============================================
 echo    VÍDEOS OPUS  -  edite seus vídeos com o Codex
+echo    Propriedade de Suellen Warmling. Todos os direitos reservados.
+echo    Proibido copiar, revender ou distribuir sem autorização.
 echo  ==============================================
 echo.
 echo  1/3  Baixando o pacote (uns 390 MB). Pode levar alguns minutos...
@@ -52,6 +55,7 @@ if errorlevel 1 goto erro_instalar
 echo.
 echo  ==============================================
 echo    PRONTO! A skill Vídeos Opus está instalada.
+echo    Vídeos Opus é propriedade de Suellen Warmling.
 echo  ==============================================
 echo.
 echo  Agora FECHE e abra de novo o app do Codex, escolha uma pasta (por exemplo, Downloads)

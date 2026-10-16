@@ -1,0 +1,17 @@
+VÍDEOS OPUS
+© 2026 Suellen Warmling. Todos os direitos reservados.
+
+Esta skill (instruções, roteiros, modelos, estilos, textos e scripts próprios) é propriedade de Suellen Warmling
+e é protegida pelas leis brasileiras de direito autoral e de software (Leis 9.610/98 e 9.609/98).
+
+É proibido, sem autorização por escrito de Suellen Warmling:
+- copiar, revender, alugar, redistribuir ou publicar esta skill, no todo ou em parte;
+- apresentar esta skill, ou uma cópia modificada dela, como se fosse de outra pessoa;
+- retirar ou alterar este aviso.
+
+O uso é pessoal, de quem recebeu o acesso.
+
+Programas e materiais de terceiros incluídos no pacote (FFmpeg, Node.js, whisper.cpp, fontes, HyperFrames,
+playwright-core e outros) não são de Suellen Warmling e seguem as próprias licenças, descritas na pasta "licencas".
+
+Suporte: links.suellenwarmling.com.br/fale-com-suporte-aqui

@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 V=vendor-cache
 OUT=build/videos-opus
 rm -rf build && mkdir -p "$OUT"/{bin/whisper,modelos,fontes,licencas} dist
-cp -r skill/videos-opus/{SKILL.md,scripts,exemplos,roteiro} "$OUT/"
+cp -r skill/videos-opus/{SKILL.md,DIREITOS.txt,scripts,exemplos,roteiro} "$OUT/"
 # versão das instruções para o Codex: o instalador do Codex grava esta na pasta de skills, apontando para o pacote
 mkdir -p "$OUT/codex" && python3 gerar-skill-codex.py skill/videos-opus/SKILL.md "$OUT/codex/SKILL.md"
 mkdir -p "$OUT/node_modules" && cp -r vendor-cache/pw/package "$OUT/node_modules/playwright-core"
@@ -25,6 +25,8 @@ cp kit/scripts/*.mjs "$OUT/kit/scripts/"
 find "$OUT/kit" -name "__pycache__" -prune -exec rm -rf {} + ; find "$OUT/kit" -name "*.py" -delete
 cp $V/fontes/*.ttf "$OUT/fontes/"; for f in $V/fontes/OFL-*.txt; do cp "$f" "$OUT/licencas/fonte-$(basename "$f")"; done
 cat > "$OUT/licencas/LEIA.txt" <<'TXT'
+Vídeos Opus © 2026 Suellen Warmling, todos os direitos reservados (ver DIREITOS.txt, na pasta da skill).
+
 Programas de terceiros incluídos, cada um com a sua licença (arquivos nesta pasta):
 - FFmpeg 9.0.2 (build "essentials" de Gyan Doshi, https://www.gyan.dev/ffmpeg/builds/) — GPLv3.
   Código-fonte: https://ffmpeg.org/download.html e https://github.com/GyanD/codexffmpeg/releases/tag/9.0.2
@@ -48,9 +50,9 @@ Programas de terceiros incluídos, cada um com a sua licença (arquivos nesta pa
 TXT
 # finais de linha do Windows nos textos que a aluna pode abrir
 cp LEIA-PRIMEIRO.txt build/LEIA-PRIMEIRO.txt
-sed -i 's/$/\r/' build/LEIA-PRIMEIRO.txt "$OUT/licencas/LEIA.txt"
+sed -i 's/$/\r/' build/LEIA-PRIMEIRO.txt "$OUT/licencas/LEIA.txt" "$OUT/DIREITOS.txt"
 rm -rf build/tmp
-for f in SKILL.md codex/SKILL.md scripts/instalar-codex.mjs roteiro/roteiro-viral.md scripts/video.mjs scripts/ferramentas.mjs scripts/correcoes.mjs bin/ffmpeg.exe bin/ffprobe.exe bin/node.exe bin/whisper/whisper-cli.exe modelos/ggml-small-q5_1.bin fontes/BebasNeue-Regular.ttf acervo/data/videos.json node_modules/playwright-core/package.json scripts/viral.html scripts/viral.mjs scripts/som.mjs scripts/navegador.mjs scripts/legenda.mjs fontes/EBGaramond-Italic.ttf exemplos/oferta-animada.html scripts/kit.mjs modelos/ggml-silero-v5.1.2.bin modelos/rvm_mobilenetv3_fp32.onnx kit/node_modules/hyperframes/dist/cli.js kit/node_modules/onnxruntime-node/bin/napi-v3/win32/x64/onnxruntime_binding.node kit/scripts/new-video.mjs kit/.claude/skills/editar/SKILL.md kit/.claude/skills/_motor/transcrever.mjs kit/.claude/skills/estilo-colagem/scripts/matte-pessoa.mjs kit/examples/starter/index.html; do
+for f in SKILL.md DIREITOS.txt codex/SKILL.md scripts/instalar-codex.mjs roteiro/roteiro-viral.md scripts/video.mjs scripts/ferramentas.mjs scripts/correcoes.mjs bin/ffmpeg.exe bin/ffprobe.exe bin/node.exe bin/whisper/whisper-cli.exe modelos/ggml-small-q5_1.bin fontes/BebasNeue-Regular.ttf acervo/data/videos.json node_modules/playwright-core/package.json scripts/viral.html scripts/viral.mjs scripts/som.mjs scripts/navegador.mjs scripts/legenda.mjs fontes/EBGaramond-Italic.ttf exemplos/oferta-animada.html scripts/kit.mjs modelos/ggml-silero-v5.1.2.bin modelos/rvm_mobilenetv3_fp32.onnx kit/node_modules/hyperframes/dist/cli.js kit/node_modules/onnxruntime-node/bin/napi-v3/win32/x64/onnxruntime_binding.node kit/scripts/new-video.mjs kit/.claude/skills/editar/SKILL.md kit/.claude/skills/_motor/transcrever.mjs kit/.claude/skills/estilo-colagem/scripts/matte-pessoa.mjs kit/examples/starter/index.html; do
   [ -f "$OUT/$f" ] || { echo "FALTA $f"; exit 1; }
 done
 rm -f dist/videos-opus.zip
