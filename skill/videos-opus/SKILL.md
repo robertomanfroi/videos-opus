@@ -1,6 +1,6 @@
 ---
 name: videos-opus
-description: Edita vídeos gravados no celular e cria vídeos animados. Corta as pausas, põe legenda palavra a palavra (Bebas Neue e outras fontes), edita nos 5 estilos completos (celular, editorial, explicativo, colagem e anúncio, com prints e títulos), faz edição viral (abertura de impacto, zoom, efeitos sonoros e batida), muda o formato (Reels, feed, quadrado, horizontal), deixa leve para WhatsApp e faz motion graphics. Use quando pedirem "edita meu vídeo", "edita no estilo celular/editorial/explicativo/colagem/anúncio", "faz um reel", "edição viral", "corta as pausas", "tira os silêncios", "põe legenda", "legenda no vídeo", "deixa no formato do Reels", "diminui o vídeo para o WhatsApp", "vídeo animado", "reel animado", "motion graphics", "logo animada" ou "vídeo de lançamento".
+description: Edita vídeos gravados no celular e cria vídeos animados no padrão premium. Corta as pausas, põe legenda palavra a palavra, edita nos 5 estilos completos (celular, editorial, explicativo, colagem e anúncio), analisa e sugere roteiro viral (gancho dos 3 primeiros segundos, estrutura e chamada, pelo método de ganchos de Alex Hormozi), faz edição viral (abertura em serifa, zoom lento, trilha ambiente), cria no estilo de um vídeo de referência, muda o formato (Reels, feed, quadrado, horizontal), deixa leve para WhatsApp e faz motion graphics. Use quando pedirem "edita meu vídeo", "edita no estilo celular/editorial/explicativo/colagem/anúncio", "faz um reel", "edição viral", "analisa meu roteiro", "melhora meu gancho", "escreve um roteiro viral", "quero um vídeo igual a este", "corta as pausas", "tira os silêncios", "põe legenda", "deixa no formato do Reels", "diminui o vídeo para o WhatsApp", "vídeo animado", "motion graphics", "logo animada" ou "vídeo de lançamento".
 argument-hint: "<o que fazer> [nome do vídeo]"
 allowed-tools: Bash, Read, Write, Edit, AskUserQuestion
 license: MIT
@@ -52,9 +52,11 @@ A skill funciona por 7 dias a partir do primeiro uso. Se qualquer comando respon
 | Ela pediu | Caminho |
 |---|---|
 | cortar pausas, pôr legenda, mudar formato, deixar leve | **Editar um vídeo gravado** (rápido, 1 a 2 min) |
-| "edição viral", "com efeitos", "abertura chamativa" | **Edição viral** |
+| "edição viral", "com efeitos", "abertura chamativa" | **Roteiro viral** (análise rápida do gancho) e depois **Edição viral** |
+| "analisa meu roteiro", "melhora meu gancho", "o que eu falo", "escreve um roteiro" (antes de gravar) | **Roteiro viral** |
 | um estilo pelo nome (celular, editorial, explicativo, colagem, anúncio), prints, títulos, "faz um reel completo" | **Estilos de edição completos** |
 | vídeo animado, motion graphics, logo animada, vídeo sem gravação | **Vídeos animados** |
+| "quero igual a este vídeo", "nesse estilo", mandou um vídeo ou print de referência | **Vídeo de referência** |
 | só "edita meu vídeo", sem mais nada | pergunte uma vez: "1. Rápida: cortes e legenda (1 min) · 2. Viral: abertura, zoom e efeitos (2 min) · 3. Estilo completo: celular, editorial, explicativo, colagem ou anúncio (5 min ou mais)" |
 
 ## Editar um vídeo gravado
@@ -125,6 +127,36 @@ Os guias chamam isso de `$K`. O lançador põe os programas portáteis no caminh
 
 Esses estilos levam mais tempo do que a edição comum (uns 2 a 5 minutos por vídeo curto; a colagem, com o recorte da pessoa, uns 6 minutos por minuto de vídeo a mais). Avise antes.
 
+## Roteiro viral (método de ganchos de Alex Hormozi)
+
+Antes de qualquer sugestão, **leia `SKILL_DIR/roteiro/roteiro-viral.md`** e siga as regras dele. Diga à pessoa que é o método de ganchos "inspirado em Alex Hormozi" (não é produto dele).
+
+**Vídeo já gravado** (ou antes da edição viral):
+1. `achar`, `preparar`, `cortar` e `transcrever` como na edição comum, para ter o texto do que ela falou.
+2. Analise o texto e responda curto, nesta ordem:
+   - **Nota do roteiro (0 a 10)** pela tabela do guia, com uma linha do porquê;
+   - **gancho atual**: as primeiras palavras ditas e o que falta (chamada, promessa ou tempo);
+   - **3 ganchos melhores** para o título da abertura (texto na tela, 6 a 8 palavras, tipos diferentes), marcando o recomendado;
+   - **trechos para cortar** (enrolação, repetição), com o tempo de cada um;
+   - **chamada final** sugerida, se faltar ou houver mais de uma.
+3. Pergunte uma vez qual gancho ela quer (ou "faz do seu jeito": use o recomendado). O gancho escolhido vira o `--titulo` da edição viral, quebrado em 2 ou 3 linhas com `|` e a palavra mais forte por último (sai em itálico dourado); os cortes viram `--remover` no `cortar`.
+4. Se a nota for abaixo de 5, sugira regravar e entregue o roteiro novo (abaixo) antes de editar; edite mesmo assim se ela quiser.
+
+**Antes de gravar** ("escreve um roteiro", "o que eu falo"):
+1. Pergunte numa frase só o que faltar: tema, público e o que ela quer que a pessoa faça no fim.
+2. Entregue 3 ganchos de tipos diferentes e o roteiro completo do recomendado, em blocos curtos para ler gravando: **Gancho (0–3 s)** · **Retenção** (lista, passos ou história) · **Recompensa** · **Chamada**. De 30 a 60 segundos falados (cerca de 80 a 150 palavras).
+3. Dê duas dicas de gravação: primeira frase já olhando para a câmera, sem "oi, gente"; um gesto ou objeto na primeira imagem. E avise que, depois de gravar, é só pedir a edição viral que o gancho vira a abertura.
+
+## Vídeo de referência ("quero um vídeo nesse estilo")
+
+A pessoa pode mostrar um vídeo de que gostou para você criar algo parecido com o vídeo dela.
+1. A referência precisa estar no computador: um Reels salvo, uma gravação de tela do celular ou prints. Se ela mandar só um link do Instagram ou TikTok, peça para salvar o vídeo (ou gravar a tela) e colocar em Downloads; você não consegue baixar de link.
+2. `achar "<nome>"` e depois `referencia "<video>"`. Ele devolve `folha` (12 quadros do vídeo inteiro), `inicio` (3 quadros dos primeiros segundos), o ritmo dos cortes (`segundosPorCorte`) e `fala.wav` (para `transcrever` o roteiro, se ela quiser também o texto). Abra as imagens e observe:
+   - **gancho visual** dos primeiros segundos; **texto na tela** (fonte serifada ou reta, tamanho, posição, cor de destaque); **legenda** (palavra a palavra, frase, caixa);
+   - **ritmo** (corte a cada X s, zoom, tela dividida, prints e imagens por cima); **cores e clima**; **estrutura do roteiro** (gancho, lista, história, chamada).
+3. Resuma em 4 a 6 linhas simples o que define aquele estilo e diga como vai reproduzir com o vídeo dela, escolhendo o caminho mais próximo: edição comum (opções de legenda), edição viral (título, frases-chave, chamada), um dos 5 estilos, ou um vídeo animado próprio para o que nenhum deles cobre.
+4. Crie algo **parecido no estilo**, nunca uma cópia: não reaproveite o texto, a marca, a música nem as imagens da referência. Mantenha o padrão premium: se a referência usa contorno nas letras ou efeitos agressivos, traduza para a versão elegante (sombra suave, véu, movimento lento) e avise em uma frase.
+
 ## Edição viral
 
 Quando pedirem "edição viral", "edição que prende", "estilo Reels que viraliza", "com efeitos", "com abertura chamativa": é a edição completa no **padrão premium**: abertura com o título em serifa revelado letra a letra entre filetes finos e um brilho de luz, zoom lento nas frases fortes, legenda que acompanha a fala, botão de chamada em contorno fino, trilha ambiente e efeitos sutis.
@@ -136,7 +168,7 @@ Quando pedirem "edição viral", "edição que prende", "estilo Reels que virali
    - **título da abertura** (2 ou 3 linhas curtas; a última sai em itálico colorido): ex. `Super|Black|Eterna`;
    - **tag** abaixo do título (opcional): ex. `A BLACK QUE NÃO ACABA`;
    - **selo** fixo no topo durante a fala (opcional);
-   - **frases-chave** (1 a 3 trechos fortes, exatamente como foram ditos) que ganham zoom, estrondo e letra gigante;
+   - **frases-chave** (1 a 3 trechos fortes, exatamente como foram ditos) que ganham zoom lento e letra grande em serifa;
    - **chamada** (o trecho em que ela pede a ação, ex. "clica aqui agora") que vira botão com seta;
    - **cor** da marca.
    Se ela disser "faz do seu jeito", escolha você e conte o que escolheu na entrega.

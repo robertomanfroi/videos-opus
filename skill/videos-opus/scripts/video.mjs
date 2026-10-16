@@ -15,7 +15,7 @@ import { join, basename, extname, resolve, dirname } from "node:path";
 import { homedir, cpus, tmpdir } from "node:os";
 import {
   ffmpeg, probe, filtroHDR, encoderRapido, ENCODER_FINAL, FORMATOS, pastaTrabalho, entregar, lerArgs, filtroVeu,
-  areaDeTrabalho, WHISPER, MODELO, FONTES, SKILL, rodar, rodarWhisper, tempo,
+  areaDeTrabalho, WHISPER, MODELO, FONTES, SKILL, FFMPEG, rodar, rodarWhisper, tempo,
 } from "./ferramentas.mjs";
 import { montarLegenda } from "./legenda.mjs";
 
@@ -273,6 +273,33 @@ async function cmdFotos() {
   saida({ ok: true, fotos: await fotos(resolve(html), instantes, prefixo, { largura: W, altura: H }) });
 }
 
+// ---------------------------------------------------------------- referencia
+// Vídeo de referência (um Reels de que ela gostou, salvo no computador): folha com quadros, ritmo dos cortes e áudio.
+function cmdReferencia() {
+  const video = pos[0];
+  if (!video || !existsSync(video)) throw new Error("diga o caminho do vídeo de referência (use o comando achar)");
+  const info = probe(video);
+  if (!info.temVideo) throw new Error("o arquivo não tem imagem de vídeo");
+  const pasta = pastaTrabalho("referencia-" + basename(video));
+  const n = 12, passo = info.duracao / n;
+  // folha 4x3 com 12 quadros espalhados pelo vídeo, cada um com o segundo marcado
+  ffmpeg(["-i", video, "-vf", `fps=1/${passo.toFixed(3)},scale=360:-2,drawtext=text='%{pts\\:hms}':x=10:y=10:fontsize=22:fontcolor=white:box=1:boxcolor=black@0.5,tile=4x3:padding=6:color=black`, "-frames:v", "1", join(pasta, "folha.jpg")]);
+  // quadros grandes do começo (gancho visual): 0,3 s, 1,2 s e 2,5 s
+  const inicio = [0.3, 1.2, 2.5].filter((t) => t < info.duracao).map((t, i) => {
+    const arq = join(pasta, `inicio-${i + 1}.jpg`);
+    ffmpeg(["-ss", String(t), "-i", video, "-frames:v", "1", "-vf", "scale=720:-2", arq]);
+    return arq;
+  });
+  // cortes de cena: quantos e com que ritmo
+  const r = rodar(FFMPEG, ["-hide_banner", "-i", video, "-vf", "select='gt(scene,0.3)',showinfo", "-an", "-f", "null", "-"], { aceitaErro: true });
+  const cortes = [...(r.stderr || "").matchAll(/pts_time:([\d.]+)/g)].map((m) => +(+m[1]).toFixed(2));
+  if (info.temAudio) ffmpeg(["-i", video, "-vn", "-ac", "1", "-ar", "16000", join(pasta, "fala.wav")]);
+  saida({
+    ok: true, pasta, folha: join(pasta, "folha.jpg"), inicio, duracao: +info.duracao.toFixed(1), formato: `${info.largura}x${info.altura}`,
+    cortes: cortes.length, segundosPorCorte: +(info.duracao / (cortes.length + 1)).toFixed(1), temposDosCortes: cortes.slice(0, 40), temAudio: info.temAudio,
+  });
+}
+
 // ---------------------------------------------------------------- viral
 async function cmdViral() {
   const pasta = pos[0];
@@ -349,7 +376,7 @@ async function cmdDiagnosticoCompleto() {
   cmdDiagnostico();
 }
 
-const COMANDOS = { diagnostico: cmdDiagnostico, acervo: cmdAcervo, animar: cmdAnimar, viral: cmdViral, fotos: cmdFotos, achar: cmdAchar, preparar: cmdPreparar, cortar: cmdCortar, transcrever: cmdTranscrever, legendar: cmdLegendar, formato: cmdFormato, entregar: cmdEntregar };
+const COMANDOS = { diagnostico: cmdDiagnostico, acervo: cmdAcervo, animar: cmdAnimar, viral: cmdViral, fotos: cmdFotos, referencia: cmdReferencia, achar: cmdAchar, preparar: cmdPreparar, cortar: cmdCortar, transcrever: cmdTranscrever, legendar: cmdLegendar, formato: cmdFormato, entregar: cmdEntregar };
 try {
   if (!COMANDOS[cmd]) throw new Error(`comando desconhecido: ${cmd || "(nenhum)"}. Use: ${Object.keys(COMANDOS).join(", ")}`);
   await COMANDOS[cmd]();
