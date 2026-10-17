@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Reel</title>
+<script src="assets/gsap.min.js"></script>
+<style>
+/* ===== modelo TELA DIVIDIDA — medidas tiradas dos reels da Suellen (leia SKILL.md antes de mudar) ===== */
+@font-face{font-family:"Figtree";src:url("assets/fonts/Figtree.ttf") format("truetype");font-weight:300 900}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000;color:#fff}
+#reel{position:relative;width:1080px;height:1920px;overflow:hidden}
+/* depois da divisão: ela em tela cheia, sem legenda */
+#cam{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover}
+/* divisão: metade de cima = cena de contexto, metade de baixo = ela falando. Emenda reta em y=960, sem borda. */
+.metade{position:absolute;left:0;width:1080px;height:960px;object-fit:cover}
+#contexto{top:0}
+/* object-position: a 2ª coordenada põe o rosto dela ~25% abaixo da emenda (ajuste por vídeo) */
+#camBaixo{top:960px;object-position:50% 30%}
+/* título do gancho: centralizado, 2 ou 3 linhas, o bloco fica em cima da emenda */
+#titulo{position:absolute;left:180px;width:720px;top:925px;transform:translateY(-50%);text-align:center;
+  font-family:"Figtree",sans-serif;font-weight:700;font-size:69px;line-height:79px;letter-spacing:-.005em;
+  text-shadow:0 0 12px rgba(0,0,0,.5),0 2px 4px rgba(0,0,0,.55)}
+</style></head><body>
+<div id="reel" data-composition-id="reel" data-start="0" data-duration="__DUR__" data-width="1080" data-height="1920">
+  <video id="cam" src="assets/clean.mp4" data-start="0" data-duration="__DUR__" data-track-index="0" muted playsinline></video>
+  <audio id="voice" src="assets/clean.mp4" data-start="0" data-duration="__DUR__" data-track-index="1" data-volume="1"></audio>
+
+  <!-- ===== DIVISÃO (troque por vídeo: FIM = fim do gancho, em segundos do clean) ===== -->
+  <video class="metade" id="contexto" src="assets/broll/contexto.mp4" data-start="0" data-duration="FIM" data-media-start="0" data-track-index="2" muted playsinline></video>
+  <video class="metade" id="camBaixo" src="assets/clean.mp4" data-start="0" data-duration="FIM" data-media-start="0" data-track-index="3" muted playsinline></video>
+  <div class="clip" id="titulo" data-start="0" data-duration="FIM" data-track-index="4">Texto do gancho aqui</div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+// Nada se mexe: a divisão some em corte seco no fim do gancho.
+window.__timelines = window.__timelines || {};
+window.__timelines["reel"] = tl;
+</script>
+</body></html>

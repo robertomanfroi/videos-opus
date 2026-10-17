@@ -59,6 +59,7 @@ A skill funciona por 7 dias a partir do primeiro uso. Se qualquer comando respon
 | "edição viral", "com efeitos", "abertura chamativa" | **Roteiro viral** (análise rápida do gancho) e depois **Edição viral** |
 | "analisa meu roteiro", "melhora meu gancho", "o que eu falo", "escreve um roteiro" (antes de gravar) | **Roteiro viral** |
 | um estilo pelo nome (celular, editorial, explicativo, colagem, anúncio), prints, títulos, "faz um reel completo" | **Estilos de edição completos** |
+| um modelo pelo nome (tela dividida, POV, texto na tela, STA, entrevista), "modelo X" do ebook | **Modelos da Suellen** (no kit de estilos) |
 | vídeo animado, motion graphics, logo animada, vídeo sem gravação | **Vídeos animados** |
 | "quero igual a este vídeo", "nesse estilo", mandou um vídeo ou print de referência | **Vídeo de referência** |
 | só "edita meu vídeo", sem mais nada | pergunte uma vez: "1. Rápida: cortes e legenda (1 min) · 2. Viral: abertura, zoom e efeitos (2 min) · 3. Estilo completo: celular, editorial, explicativo, colagem ou anúncio (5 min ou mais)" |
@@ -121,6 +122,18 @@ Quando ela pedir um destes estilos pelo nome, ou uma edição "com prints em cim
 | explicativo | notícia/explicação: imagens e vídeos de apoio por cima, diagramas, aprovação do roteiro antes de montar |
 | colagem | recortes: títulos atrás da cabeça (a pessoa é recortada do fundo), fotos recortadas, sons |
 | anúncio | tráfego pago: esquemas na faixa de cima, gancho forte, CTA |
+
+### Modelos da Suellen (formatos dos reels dela, pedidos pelo nome)
+
+| Modelo | Para quê |
+|---|---|
+| tela dividida | começo com a tela dividida (cena de contexto em cima, ela embaixo, título na emenda) e depois ela em tela cheia, sem legenda |
+| POV | 6 a 8 s de cena de bastidor com a frase "POV: …" fixa no terço de cima; sem fala, música pelo Instagram |
+| texto na tela | 6 a 12 s de cena com uma lista longa alinhada à esquerda, para pausar e salvar; sem fala |
+| STA | 10 a 18 s de cena calma com uma citação no centro ("Frase de um bilionário:"); sem fala |
+| entrevista | entrevistas de evento: abertura rápida com os convidados, título e print do perfil de cada um; sem legenda |
+
+Os guias ficam em `SKILL_DIR/kit/.claude/skills/modelo-<nome>/SKILL.md` e entram pelo mesmo caminho dos estilos:
 
 Como usar: **leia `SKILL_DIR/kit/.claude/skills/editar/SKILL.md` e siga do começo ao fim**. Ele acha o vídeo, pergunta o estilo uma vez se faltar, pede o perfil dela na primeira vez e manda ler o guia do estilo (`SKILL_DIR/kit/.claude/skills/estilo-<nome>/SKILL.md`). Todos os comandos desses guias passam pelo lançador:
 

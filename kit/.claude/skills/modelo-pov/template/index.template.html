@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Reel</title>
+<script src="assets/gsap.min.js"></script>
+<style>
+/* ===== modelo POV — medidas tiradas dos reels da Suellen (leia SKILL.md antes de mudar) ===== */
+@font-face{font-family:"Figtree";src:url("assets/fonts/Figtree.ttf") format("truetype");font-weight:300 900}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000;color:#fff}
+#reel{position:relative;width:1080px;height:1920px;overflow:hidden}
+#cam{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover}
+/* texto do editor do Instagram: Figtree 700, branco, halo escuro suave (nunca contorno) */
+.ig{position:absolute;font-family:"Figtree",sans-serif;font-weight:700;color:#fff;letter-spacing:-.005em;
+  text-shadow:0 0 12px rgba(0,0,0,.5),0 2px 4px rgba(0,0,0,.55)}
+/* "POV: …" centralizado no terço de cima, 3 a 4 linhas, 44 px, entrelinha 48 px, caixa de 776 px */
+#texto{left:152px;width:776px;top:592px;transform:translateY(-50%);text-align:center;font-size:44px;line-height:48px}
+</style></head><body>
+<div id="reel" data-composition-id="reel" data-start="0" data-duration="__DUR__" data-width="1080" data-height="1920">
+  <video id="cam" src="assets/clean.mp4" data-start="0" data-duration="__DUR__" data-track-index="0" muted playsinline></video>
+  <!-- som original: 0 = mudo (a música entra pelo Instagram na hora de postar); 0.3 = ambiente baixinho -->
+  <audio id="som" src="assets/clean.mp4" data-start="0" data-duration="__DUR__" data-track-index="1" data-volume="0"></audio>
+  <div class="ig clip" id="texto" data-start="0" data-duration="__DUR__" data-track-index="2">POV: frase aqui</div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+// O texto fica parado do primeiro ao último quadro: nada entra, sai ou se mexe.
+window.__timelines = window.__timelines || {};
+window.__timelines["reel"] = tl;
+</script>
+</body></html>

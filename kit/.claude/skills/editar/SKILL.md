@@ -1,6 +1,6 @@
 ---
 name: editar
-description: Porta de entrada para editar um vídeo gravado no celular e transformá-lo em Reel. Use sempre que a aluna pedir para editar, "edita esse vídeo", "faz um reel", "transforma meu vídeo", "edita meu último vídeo", "edita no estilo X", colar o caminho de um vídeo, ou perguntar como editar. Acha o vídeo sozinha, confere se ele serve, pergunta o estilo UMA vez se faltar, delega para a skill do estilo (estilo-celular, estilo-editorial, estilo-explicativo, estilo-colagem, estilo-anuncio) e entrega o vídeo pronto na pasta "prontos".
+description: Porta de entrada para editar um vídeo gravado no celular e transformá-lo em Reel. Use sempre que a aluna pedir para editar, "edita esse vídeo", "faz um reel", "transforma meu vídeo", "edita meu último vídeo", "edita no estilo X", "edita no modelo X", colar o caminho de um vídeo, ou perguntar como editar. Acha o vídeo sozinha, confere se ele serve, pergunta o estilo UMA vez se faltar, delega para a skill do estilo (estilo-celular, estilo-editorial, estilo-explicativo, estilo-colagem, estilo-anuncio) ou do modelo (modelo-tela-dividida, modelo-pov, modelo-texto-na-tela, modelo-sta, modelo-entrevista) e entrega o vídeo pronto na pasta "prontos".
 ---
 
 # Editar — porta de entrada
@@ -64,7 +64,20 @@ Entenda o pedido:
 | colagem, recortes, fotos recortadas, scrapbook | **colagem** | `estilo-colagem` |
 | anúncio, ad, tráfego, patrocinado, vender, oferta | **anúncio** | `estilo-anuncio` |
 
-Se ela não disse e não dá para inferir, pergunte UMA vez, mostrando o catálogo em 5 linhas (nome + 1 frase).
+**Modelos da Suellen** (formatos copiados dos reels dela; a aluna pede pelo nome, como no ebook):
+
+| Ela fala | Modelo | Skill |
+|---|---|---|
+| tela dividida, dividido, metade em cima/embaixo, comentar vídeo de alguém | **tela dividida** | `modelo-tela-dividida` |
+| POV, "frase em cima do vídeo" | **POV** | `modelo-pov` |
+| texto na tela, lista na tela, "vídeo para salvar" | **texto na tela** | `modelo-texto-na-tela` |
+| STA, frase, citação, reflexão | **STA** | `modelo-sta` |
+| entrevista, entrevistei, vox pop | **entrevista** | `modelo-entrevista` |
+
+POV, texto na tela e STA não precisam de fala: o vídeo pode ser uma cena qualquer. Tela dividida pede também a cena de
+contexto; entrevista pede os prints dos perfis dos convidados.
+
+Se ela não disse e não dá para inferir, pergunte UMA vez, mostrando o catálogo em 10 linhas (5 estilos + 5 modelos) (nome + 1 frase).
 Se a skill do estilo ainda não existir nesta instalação, diga isso e ofereça o estilo celular.
 
 ## Passo 3 — perfil

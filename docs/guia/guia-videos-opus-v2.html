@@ -136,6 +136,18 @@
   .caminho .tag { font-family: "Montserrat"; font-size: 8.5px; letter-spacing: 2px; font-weight: 700; padding: 2px 8px; border-radius: 100px; background: var(--terracota); color: var(--branco-quente); }
   .caminho .tag.reserva { background: var(--bege-lt); color: var(--ocre); border: 1px solid var(--bege-escuro); }
   .passo.mini { margin: 5px 0; } .passo.mini .num { flex-basis: 26px; height: 26px; font-size: 17px; }
+
+  /* ===== catálogo de modelos de vídeo ===== */
+  .passos { margin: 6px 0 0; padding-left: 18px; }
+  .passos li { margin: 3px 0; }
+  .cat { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .cat-modelo { display: grid; grid-template-columns: 29mm 1fr; gap: 12px; background: var(--areia); border: 1px solid var(--bege); border-radius: 8px; padding: 8px; align-items: start; }
+  .cat-modelo .quadro { width: 29mm; aspect-ratio: 9/16; border-radius: 5px; object-fit: cover; background: var(--bege); display: block; }
+  .cat-modelo .pequeno { margin: 0; }
+  .cat-modelo h3 { margin: 0 0 3px; }
+  .cat-modelo .link-ref { display: inline-block; margin: 5px 0 6px; font-weight: 700; color: var(--terracota); text-decoration: none; }
+  .cat-modelo .prompt { margin: 0; }
+  .rascunho { border: 2px dashed var(--terracota); border-radius: 8px; padding: 6px 10px; color: var(--terracota); font-weight: 700; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -404,6 +416,84 @@
   <div class="rodape"><span>Vídeos Opus · Guia</span><span>11</span></div>
 </section>
 
+<!-- MODELOS DE VÍDEO (catálogo) -->
+<section class="pagina">
+  <div class="rotulo">Modelos de vídeo</div>
+  <h1>Modelos de vídeo</h1>
+  <h2>Escolha um formato pronto e peça pelo nome.</h2>
+
+  <div class="cartao">
+    <h3>Como usar um modelo</h3>
+    <ol class="passos pequeno">
+      <li>Toque em <b>Ver o vídeo de referência</b> para conhecer o formato.</li>
+      <li>Grave o seu vídeo e passe para o computador, como você já faz.</li>
+      <li>Copie o pedido do modelo e envie para o Claude (ou para o Codex).</li>
+      <li>O Claude aplica tudo do formato: as letras, os tamanhos, os espaçamentos, a posição do vídeo, o ritmo dos cortes e os elementos na tela. Você não precisa baixar o vídeo de referência.</li>
+    </ol>
+  </div>
+  <div class="prompt"><span class="etq">Copie</span>Edita meu último vídeo no modelo [nome do modelo].</div>
+  <div class="prompt"><span class="etq">Com ajuste</span>Edita o vídeo [IMG_2041] no modelo [nome do modelo], mas com a minha cor de destaque [#C14B22].</div>
+
+  <div class="cat">
+    <div class="cat-modelo">
+      <img class="quadro" src="modelos/tela-dividida.jpg" alt="">
+      <div>
+        <h3>Tela dividida</h3>
+        <p class="pequeno">Nos primeiros segundos, a tela se divide: em cima, uma cena que dá contexto (notícia, vídeo de outra pessoa, produto); embaixo, você falando, com o título no meio. Depois, só você, sem legenda.</p>
+        <a class="link-ref" href="https://www.instagram.com/reel/DehQhcfBxaB/">Ver o vídeo de referência →</a>
+        <div class="prompt"><span class="etq">Copie</span>Edita meu último vídeo no modelo tela dividida. A cena de cima é o vídeo [noticia] que está nos Downloads.</div>
+      </div>
+    </div>
+    <div class="cat-modelo">
+      <img class="quadro" src="modelos/pov.jpg" alt="">
+      <div>
+        <h3>POV</h3>
+        <p class="pequeno">Vídeo de 6 a 8 segundos de um momento real (evento, equipe, clientes) com uma frase "POV:" fixa em cima. Sem fala: a música você escolhe no Instagram.</p>
+        <a class="link-ref" href="https://www.instagram.com/reel/DekedMUBTj1/">Ver o vídeo de referência →</a>
+        <div class="prompt"><span class="etq">Copie</span>Faz um vídeo no modelo POV com o vídeo [do evento] e a frase: POV: [você começou a andar com quem pensa grande].</div>
+      </div>
+    </div>
+  </div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>12</span></div>
+</section>
+
+<!-- MODELOS DE VÍDEO (catálogo, continuação) -->
+<section class="pagina">
+  <div class="rotulo">Modelos de vídeo</div>
+  <h1>Mais modelos</h1>
+  <h2>Toque no link para ver o original. Peça pelo nome.</h2>
+  <div class="cat">
+    <div class="cat-modelo">
+      <img class="quadro" src="modelos/texto-na-tela.jpg" alt="">
+      <div>
+        <h3>Texto na tela</h3>
+        <p class="pequeno">Uma lista longa por cima de um vídeo curto de bastidor. É curto de propósito: a pessoa pausa, relê, salva e comenta.</p>
+        <a class="link-ref" href="https://www.instagram.com/reel/DeMqFfDGn9_/">Ver o vídeo de referência →</a>
+        <div class="prompt"><span class="etq">Copie</span>Faz um vídeo no modelo texto na tela com o vídeo [do meu ateliê] e uma lista de [6 erros de quem começa a vender]. No fim: comenta [QUERO].</div>
+      </div>
+    </div>
+    <div class="cat-modelo">
+      <img class="quadro" src="modelos/sta.jpg" alt="">
+      <div>
+        <h3>STA</h3>
+        <p class="pequeno">Uma cena calma (céu, café, viagem) com uma frase forte no centro, com tempo para ler. Sem fala: a música você escolhe no Instagram.</p>
+        <a class="link-ref" href="https://www.instagram.com/reel/Dd6TyABKZD9/">Ver o vídeo de referência →</a>
+        <div class="prompt"><span class="etq">Copie</span>Faz um vídeo no modelo STA com o vídeo [da cafeteria] e a frase: [“Quem se compara com o vizinho nunca enxerga o próprio caminho.”]</div>
+      </div>
+    </div>
+    <div class="cat-modelo">
+      <img class="quadro" src="modelos/entrevista.jpg" alt="">
+      <div>
+        <h3>Entrevista</h3>
+        <p class="pequeno">Você entrevista várias pessoas num evento. Abre com uma sequência rápida delas, um título e o print do perfil de cada uma; depois vêm as respostas, sem legenda.</p>
+        <a class="link-ref" href="https://www.instagram.com/reel/DdJg1HdqsW-/">Ver o vídeo de referência →</a>
+        <div class="prompt"><span class="etq">Copie</span>Edita minhas entrevistas no modelo entrevista. Os vídeos estão nos [Downloads] e os prints dos perfis na pasta Meus prints.</div>
+      </div>
+    </div>
+  </div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>13</span></div>
+</section>
+
 <!-- 7. FORMATOS + AJUSTES -->
 <section class="pagina">
   <div class="modelo" style="margin-top:0">
@@ -425,7 +515,7 @@
 
   <div class="escuro"><div class="aspa">“</div><p>Dica de ouro: na primeira vez, o Claude pergunta seu nome, seu @ e os nomes que você fala muito (sua marca, seu produto). Responda com calma: é isso que deixa a legenda certa.</p></div>
   <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Quer ir além do vídeo? <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>12</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>14</span></div>
 </section>
 
 <!-- 8. PROBLEMAS -->
@@ -455,7 +545,7 @@
 
   <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Última chamada: <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
   <div class="cartao"><b>Suporte:</b> links.suellenwarmling.com.br/fale-com-suporte-aqui</div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>13</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>15</span></div>
 </section>
 
 <section class="pagina pagina-sbe">
@@ -472,7 +562,7 @@
   <p class="fartura">Um valor surreal. Não é uma black comum. É fartura.</p>
   <div><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Black Friday →</a></div>
   <div class="url">suellenwarmling.com.br/super-black-eterna</div>
-  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>14</span></div>
+  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>16</span></div>
 </section>
 
 </body>
