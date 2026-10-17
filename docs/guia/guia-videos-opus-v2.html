@@ -147,6 +147,8 @@
   .cat-modelo h3 { margin: 0 0 3px; }
   .cat-modelo .link-ref { display: inline-block; margin: 5px 0 6px; font-weight: 700; color: var(--terracota); text-decoration: none; }
   .cat-modelo .prompt { margin: 0; }
+  .cartao .parte { font-weight: 700; color: var(--terracota); }
+  .cat-modelo .precisa { margin: 4px 0 0; }
   .rascunho { border: 2px dashed var(--terracota); border-radius: 8px; padding: 6px 10px; color: var(--terracota); font-weight: 700; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
 </style>
 </head>
@@ -426,7 +428,13 @@
   <div class="passo mini"><div class="num">2</div><div class="txt"><b>Passe o seu vídeo para o computador</b>, como sempre (ele cai em Downloads).</div></div>
   <div class="passo mini"><div class="num">3</div><div class="txt"><b>Copie o pedido do modelo</b>, troque o que está entre [colchetes] e envie no Claude Code (ou no Codex).</div></div>
   <div class="passo mini"><div class="num">4</div><div class="txt"><b>Pronto.</b> O Claude acha o vídeo, edita sozinho igual ao modelo (letras, tamanhos, posição, cortes) e entrega na pasta <b>Vídeos editados</b>.</div></div>
-  <div class="cartao pequeno">Não precisa explicar o formato nem baixar o vídeo de referência: <b>o nome do modelo no pedido já basta.</b> Se faltar alguma coisa (a frase, a cena de cima), o Claude pergunta.</div>
+  <div class="cartao pequeno">
+    <b>Entenda o pedido</b> (exemplo da tela dividida):<br>
+    <span class="parte">Edita meu último vídeo</span> → qual é o seu vídeo. Pode ser "meu último vídeo" ou o nome do arquivo.<br>
+    <span class="parte">no modelo tela dividida</span> → <b>é isso que faz o Claude seguir o modelo</b>, igual ao vídeo de referência. Escreva o nome do modelo como está aqui.<br>
+    <span class="parte">A cena de cima é o vídeo [noticia]</span> → o que o modelo precisa. Troque o que está entre [colchetes] pelo seu (o nome do arquivo, a frase, o assunto) e apague os colchetes.<br>
+    Não precisa explicar o formato nem baixar o vídeo de referência. Se faltar alguma coisa, o Claude pergunta antes de editar.
+  </div>
 
   <div class="cat">
     <div class="cat-modelo">
@@ -434,6 +442,7 @@
       <div>
         <h3>Tela dividida</h3>
         <p class="pequeno">Nos primeiros segundos, a tela se divide: em cima, uma cena que dá contexto (notícia, vídeo de outra pessoa, produto); embaixo, você falando, com o título no meio. Depois, só você, sem legenda.</p>
+        <p class="pequeno precisa"><b>Você precisa ter:</b> o seu vídeo falando e um vídeo curto para a parte de cima (notícia, vídeo de outra pessoa, produto), salvo no computador.</p>
         <a class="link-ref" href="https://www.instagram.com/reel/DehQhcfBxaB/">Ver o vídeo de referência →</a>
         <div class="prompt"><span class="etq">Copie e envie</span>Edita meu último vídeo no modelo tela dividida. A cena de cima é o vídeo [noticia] que está nos Downloads.</div>
       </div>
@@ -443,6 +452,7 @@
       <div>
         <h3>POV</h3>
         <p class="pequeno">Vídeo de 6 a 8 segundos de um momento real (evento, equipe, clientes) com uma frase "POV:" fixa em cima. Sem fala: a música você escolhe no Instagram.</p>
+        <p class="pequeno precisa"><b>Você precisa ter:</b> um vídeo de um momento real (6 segundos ou mais) e a frase do POV. Sem frase? Peça: "me dá 3 opções de frase".</p>
         <a class="link-ref" href="https://www.instagram.com/reel/DekedMUBTj1/">Ver o vídeo de referência →</a>
         <div class="prompt"><span class="etq">Copie e envie</span>Faz um vídeo no modelo POV com o vídeo [do evento] e a frase: POV: [você começou a andar com quem pensa grande].</div>
       </div>
@@ -462,6 +472,7 @@
       <div>
         <h3>Texto na tela</h3>
         <p class="pequeno">Uma lista longa por cima de um vídeo curto de bastidor. É curto de propósito: a pessoa pausa, relê, salva e comenta.</p>
+        <p class="pequeno precisa"><b>Você precisa ter:</b> um vídeo de bastidor e o assunto da lista. O Claude escreve a lista e mostra para você aprovar antes.</p>
         <a class="link-ref" href="https://www.instagram.com/reel/DeMqFfDGn9_/">Ver o vídeo de referência →</a>
         <div class="prompt"><span class="etq">Copie e envie</span>Faz um vídeo no modelo texto na tela com o vídeo [do meu ateliê] e uma lista de [6 erros de quem começa a vender]. No fim: comenta [QUERO].</div>
       </div>
@@ -471,6 +482,7 @@
       <div>
         <h3>STA</h3>
         <p class="pequeno">Uma cena calma (céu, café, viagem) com uma frase forte no centro, com tempo para ler. Sem fala: a música você escolhe no Instagram.</p>
+        <p class="pequeno precisa"><b>Você precisa ter:</b> um vídeo de uma cena calma e a frase (com o nome de quem disse, se souber).</p>
         <a class="link-ref" href="https://www.instagram.com/reel/Dd6TyABKZD9/">Ver o vídeo de referência →</a>
         <div class="prompt"><span class="etq">Copie e envie</span>Faz um vídeo no modelo STA com o vídeo [da cafeteria] e a frase: [“Quem se compara com o vizinho nunca enxerga o próprio caminho.”]</div>
       </div>
@@ -480,6 +492,7 @@
       <div>
         <h3>Entrevista</h3>
         <p class="pequeno">Você entrevista várias pessoas num evento. Abre com uma sequência rápida delas, um título e o print do perfil de cada uma; depois vêm as respostas, sem legenda.</p>
+        <p class="pequeno precisa"><b>Você precisa ter:</b> os vídeos das entrevistas e o print do perfil de cada convidado na pasta Meus prints.</p>
         <a class="link-ref" href="https://www.instagram.com/reel/DdJg1HdqsW-/">Ver o vídeo de referência →</a>
         <div class="prompt"><span class="etq">Copie e envie</span>Edita minhas entrevistas no modelo entrevista. Os vídeos estão nos [Downloads] e os prints dos perfis na pasta Meus prints.</div>
       </div>
