@@ -28,11 +28,19 @@ cp "$REPO"/kit/scripts/*.mjs "$OUT/kit/scripts/"
 find "$OUT/kit" -name "*.py" -delete
 
 # textos com fim de linha do Mac; licenças: troca a linha do FFmpeg e do navegador
-for f in "$OUT/DIREITOS.txt" "$OUT/licencas/LEIA.txt"; do perl -pi -e 's/\r$//' "$f"; done
+for f in "$OUT/DIREITOS.txt" "$OUT/licencas/LEIA.txt"; do python3 -c "import sys; p=sys.argv[1]; d=open(p,'rb').read(); open(p,'wb').write(d.replace(b'\r\n', b'\n'))" "$f"; done
 FFV="$("$OUT/bin/ffmpeg" -version | head -1 | awk '{print $3}')"
-perl -0pi -e "s/- FFmpeg 9\.0\.2 \(build \"essentials\"[^\n]*\n[^\n]*\n/- FFmpeg $FFV (build estático para macOS de Martin Riedl, https:\/\/ffmpeg.martin-riedl.de) — GPLv3.\n  Código-fonte: https:\/\/ffmpeg.org\/download.html\n/" "$OUT/licencas/LEIA.txt"
-perl -pi -e 's/Usa o Microsoft Edge já instalado no Windows; nenhum navegador é incluído\./Usa o Google Chrome já instalado no Mac; sem ele, o instalador baixa o Chrome headless do Playwright./' "$OUT/licencas/LEIA.txt"
-perl -pi -e 's/whisper\.cpp \(build b5130/whisper.cpp (compilado para macOS a partir do código-fonte/' "$OUT/licencas/LEIA.txt"
+FFV="$FFV" python3 - "$OUT/licencas/LEIA.txt" <<'PY'
+import os, re, sys
+p = sys.argv[1]; s = open(p, encoding="utf-8").read()
+s = re.sub(r'- FFmpeg 9\.0\.2 \(build "essentials".*\n.*\n',
+           f'- FFmpeg {os.environ["FFV"]} (build estático para macOS de Martin Riedl, https://ffmpeg.martin-riedl.de) — GPLv3.\n'
+           '  Código-fonte: https://ffmpeg.org/download.html\n', s, count=1)
+s = s.replace("Usa o Microsoft Edge já instalado no Windows; nenhum navegador é incluído.",
+              "Usa o Google Chrome já instalado no Mac; sem ele, o instalador baixa o Chrome headless do Playwright.")
+s = s.replace("whisper.cpp (build b5130", "whisper.cpp (compilado para macOS a partir do código-fonte")
+open(p, "w", encoding="utf-8").write(s)
+PY
 
 chmod +x "$OUT/bin/node" "$OUT/bin/ffmpeg" "$OUT/bin/ffprobe" "$OUT/bin/whisper/whisper-cli"
 for f in SKILL.md DIREITOS.txt codex/SKILL.md scripts/video.mjs scripts/navegador.mjs scripts/kit.mjs bin/node bin/ffmpeg \
