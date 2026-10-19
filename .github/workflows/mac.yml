@@ -62,7 +62,7 @@ jobs:
           name: evidencias-${{ matrix.chip }}
           path: evidencias
       - name: Guardar o zip para anexar
-        if: github.event_name == 'release'
+        if: github.event_name == 'release' || (inputs.anexar && inputs.base != 'latest')
         uses: actions/upload-artifact@v5
         with:
           name: zip-${{ matrix.chip }}
