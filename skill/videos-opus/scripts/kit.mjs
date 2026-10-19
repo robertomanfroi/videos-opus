@@ -13,6 +13,7 @@ import { existsSync, mkdirSync, readdirSync, statSync, copyFileSync, symlinkSync
 import { join, resolve } from "node:path";
 import { homedir } from "node:os";
 import { spawn } from "node:child_process";
+import { navegadorPreferido } from "./navegador.mjs";
 import { SKILL } from "./ferramentas.mjs";
 
 const KIT = join(SKILL, "kit");
@@ -45,17 +46,6 @@ export function prepararKit() {
   return W;
 }
 
-function navegador() {
-  return [
-    process.env.VIDEOS_OPUS_NAVEGADOR,
-    "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
-    "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
-    process.env.LOCALAPPDATA && join(process.env.LOCALAPPDATA, "Microsoft", "Edge", "Application", "msedge.exe"),
-    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-    "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-  ].filter(Boolean).find((c) => existsSync(c));
-}
-
 export function ambienteKit(W) {
   const bin = join(SKILL, "bin");
   const sep = process.platform === "win32" ? ";" : ":";
@@ -65,7 +55,7 @@ export function ambienteKit(W) {
   env.VIDEOS_OPUS_SKILL = SKILL;
   env.EDICAO_MODELOS = join(SKILL, "modelos");
   env.HYPERFRAMES_FFMPEG_PATH = join(bin, process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg");
-  const nav = navegador();
+  const nav = navegadorPreferido();   // o que abriu de verdade no teste (o Edge pode estar barrado pelo antivírus)
   if (nav) env.HYPERFRAMES_BROWSER_PATH = nav;
   env.DO_NOT_TRACK = "1";
   env.HYPERFRAMES_NO_UPDATE_CHECK = "1";

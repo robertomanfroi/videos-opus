@@ -1,14 +1,18 @@
 // Grava páginas HTML quadro a quadro com o Microsoft Edge que já vem no Windows (sem baixar Chromium).
 // A página precisa expor window.__render(t) e fazer window.__pronto = true quando fontes e imagens carregarem.
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { basename, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
-import { FFMPEG } from "./ferramentas.mjs";
+import { FFMPEG, SKILL } from "./ferramentas.mjs";
 
 const require = createRequire(import.meta.url);
 
-function caminhoNavegador() {
+const ESCOLHIDO = join(SKILL, "navegador.txt");   // o navegador que abriu de verdade no último teste
+
+// Todos os navegadores instalados, na ordem de preferência (Edge, que vem no Windows, e depois Chrome).
+export function navegadores() {
   const cands = [
     process.env.VIDEOS_OPUS_NAVEGADOR,
     "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
@@ -18,13 +22,37 @@ function caminhoNavegador() {
     "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
     process.env.LOCALAPPDATA && `${process.env.LOCALAPPDATA}\\Google\\Chrome\\Application\\chrome.exe`,
   ].filter(Boolean);
-  return cands.find((c) => existsSync(c));
+  return [...new Set(cands)].filter((c) => existsSync(c));
+}
+
+// O que o kit de estilos (HyperFrames) deve usar: o que já abriu antes; senão o primeiro instalado.
+export function navegadorPreferido() {
+  try { const c = readFileSync(ESCOLHIDO, "utf8").trim(); if (c && existsSync(c)) return c; } catch {}
+  return navegadores()[0];
+}
+
+// Abre o primeiro navegador que o Windows deixar. Se o Edge for barrado (antivírus, política), tenta o Chrome.
+async function lancar(chromium) {
+  const preferido = navegadorPreferido();
+  const lista = [...new Set([preferido, ...navegadores()].filter(Boolean))];
+  if (!lista.length) throw new Error("nenhum navegador encontrado: instale o Google Chrome ou o Microsoft Edge e tente de novo");
+  const erros = [];
+  for (const exe of lista) {
+    try {
+      const b = await chromium.launch({ executablePath: exe });
+      if (exe !== preferido || !existsSync(ESCOLHIDO)) { try { writeFileSync(ESCOLHIDO, exe); } catch {} }
+      return b;
+    } catch (e) { erros.push(`${basename(exe)}: ${e.message.split("\n")[0]}`); }
+  }
+  const bloqueio = erros.some((m) => /EPERM|EACCES|ACCESS_DENIED|UNKNOWN/i.test(m));
+  throw new Error(bloqueio
+    ? `o Windows ou o antivírus bloqueou a abertura do navegador. Libere a pasta ${SKILL} nas exceções do antivírus e tente de novo (${erros.join("; ")})`
+    : `não consegui abrir o navegador (${erros.join("; ")})`);
 }
 
 export async function abrir(html, largura, altura) {
   const { chromium } = require("playwright-core");
-  const exe = caminhoNavegador();
-  const navegador = await chromium.launch(exe ? { executablePath: exe } : { channel: "chromium" });
+  const navegador = await lancar(chromium);
   const pagina = await navegador.newPage({ viewport: { width: largura, height: altura } });
   await pagina.goto(`${pathToFileURL(html).href}#t0`, { waitUntil: "load" });
   await pagina.waitForFunction("window.__pronto === true", null, { timeout: 30000 }).catch(() => {});

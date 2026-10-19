@@ -356,6 +356,12 @@ function cmdDiagnostico() {
   const ac = globalThis.__acesso;
   r.itens["período de uso"] = ac.bloqueado ? "encerrado: disponível para quem se tornar aluna da Super Black Eterna (28/10)" : ac.iniciado ? `${ac.diasRestantes} dia(s) restante(s)` : "7 dias a partir do primeiro uso";
   if (kitOk.startsWith("FALHOU")) r.ok = false;
+  // Só o navegador falhou: cortar, legendar e mudar formato funcionam; estilos, modelos, viral e animados não.
+  const outros = Object.entries(r.itens).filter(([k, v]) => k !== "navegador" && String(v).startsWith("FALHOU"));
+  if (!r.ok && navegadorOk.startsWith("FALHOU") && !outros.length) {
+    r.so_navegador = true;
+    r.itens["o que fazer"] = `libere a pasta ${SKILL} nas exceções do antivírus (ou reinicie o computador) e rode o instalador de novo`;
+  }
   saida(r);
 }
 async function cmdDiagnosticoCompleto() {

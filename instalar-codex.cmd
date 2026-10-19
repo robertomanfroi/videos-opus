@@ -17,6 +17,8 @@ if defined VIDEOS_OPUS_PACOTE set "PACOTE=%VIDEOS_OPUS_PACOTE%"
 set "ZIP=%USERPROFILE%\Downloads\videos-opus-codex-tmp.zip"
 rem só para testes automáticos: VIDEOS_OPUS_SEM_PAUSA=1 pula o "pressione qualquer tecla"
 set "PAUSA=pause"
+set "AVISO="
+set "PASTA=%PACOTE%\videos-opus"
 if defined VIDEOS_OPUS_SEM_PAUSA set "PAUSA=rem"
 set "URL=https://github.com/robertomanfroi/videos-opus/releases/latest/download/videos-opus.zip"
 rem só para testes: VIDEOS_OPUS_URL=file:///C:/caminho/videos-opus.zip
@@ -46,7 +48,12 @@ del /q "%ZIP%" >nul 2>&1
 echo  3/3  Testando...
 "%PACOTE%\videos-opus\bin\node.exe" "%PACOTE%\videos-opus\scripts\video.mjs" diagnostico > "%PACOTE%\videos-opus\diagnostico.txt" 2>&1
 findstr /c:"\"ok\": true" "%PACOTE%\videos-opus\diagnostico.txt" >nul
+if not errorlevel 1 goto teste_ok
+rem só o navegador falhou (antivírus): instala assim mesmo e avisa no fim
+findstr /c:"\"so_navegador\": true" "%PACOTE%\videos-opus\diagnostico.txt" >nul
 if errorlevel 1 goto erro_teste
+set "AVISO=1"
+:teste_ok
 rem na pasta de skills do Codex vai só o SKILL.md, apontando para o pacote
 if exist "%DESTINO%\videos-opus" rmdir /s /q "%DESTINO%\videos-opus"
 "%PACOTE%\videos-opus\bin\node.exe" "%PACOTE%\videos-opus\scripts\instalar-codex.mjs" "%DESTINO%\videos-opus" >nul
@@ -58,11 +65,33 @@ echo    PRONTO! A skill Vídeos Opus está instalada.
 echo    Vídeos Opus é propriedade de Suellen Warmling.
 echo  ==============================================
 echo.
+if defined AVISO call :aviso_navegador
 echo  Agora FECHE e abra de novo o app do Codex, escolha uma pasta (por exemplo, Downloads)
 echo  e peça, por exemplo: "corta as pausas e põe legenda no meu último vídeo".
 echo.
 %PAUSA%
 exit /b 0
+
+:aviso_navegador
+echo  ----------------------------------------------
+echo    ATENÇÃO: o Windows ou o antivírus não deixou o Vídeos Opus
+echo    abrir o navegador (Edge ou Chrome).
+echo.
+echo    Já funciona: cortar as pausas, pôr legenda e mudar o formato.
+echo    Ainda não funciona: os estilos, os modelos, a edição viral
+echo    e os vídeos animados.
+echo.
+echo    Para liberar tudo:
+echo    1. Reinicie o computador e rode este instalador de novo.
+echo    2. Se continuar, abra o seu antivírus e coloque esta pasta
+echo       nas exceções (também chamadas de exclusões ou lista de permissões):
+echo       %PASTA%
+echo       Depois rode este instalador de novo.
+echo    3. Se ainda assim aparecer este aviso, mande uma foto desta tela
+echo       para o suporte, dizendo qual antivírus você usa.
+echo  ----------------------------------------------
+echo.
+goto :eof
 
 :erro_download
 echo.
@@ -80,7 +109,7 @@ exit /b 1
 
 :erro_teste
 echo.
-echo  A skill foi copiada, mas o teste encontrou um problema:
+echo  O pacote foi baixado, mas o teste encontrou um problema:
 type "%PACOTE%\videos-opus\diagnostico.txt"
 echo.
 echo  Mande uma foto desta tela para o suporte.
