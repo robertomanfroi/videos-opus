@@ -78,6 +78,9 @@ for app in "Google Chrome" "Microsoft Edge" "Brave Browser" "Chromium"; do
   [ -d "/Applications/$app.app" ] && sudo mv "/Applications/$app.app" "/Applications/.escondido-$app.app" || true
 done
 bash "$REPO/instalar-mac.sh" codex | tee "$EVID/instalar-codex.txt"
+cp "$HOME/.videos-opus/pacote/videos-opus/diagnostico.txt" "$EVID/diagnostico-codex-instalador.json"
+cat "$EVID/diagnostico-codex-instalador.json"
+find "$HOME/Library/Caches/ms-playwright" -maxdepth 3 | tee "$EVID/playwright-cache.txt"
 grep -q '"ok": true' "$HOME/.videos-opus/pacote/videos-opus/diagnostico.txt"
 grep -q "$HOME/.videos-opus/pacote/videos-opus" "$HOME/.codex/skills/videos-opus/SKILL.md"
 NC="$HOME/.videos-opus/pacote/videos-opus/bin/node"; VC="$HOME/.videos-opus/pacote/videos-opus/scripts/video.mjs"
