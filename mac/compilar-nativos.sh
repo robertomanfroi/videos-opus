@@ -40,6 +40,8 @@ echo "== node_modules do kit"
 mkdir kit && unzip -qo "$BASE_ZIP" "videos-opus/kit/package.json" "videos-opus/kit/package-lock.json" -d kit
 cd kit/videos-opus/kit
 npm ci --no-audit --no-fund   # npm do Node 24 que o workflow instala (mesmo Node do pacote)
+# o onnxruntime-node traz as bibliotecas de todos os sistemas: no zip do Mac fica só a do Mac
+rm -rf node_modules/onnxruntime-node/bin/napi-v3/win32 node_modules/onnxruntime-node/bin/napi-v3/linux
 mv node_modules "$SAIDA/kit-node_modules"
 cd "$SAIDA" && rm -rf "$T"
 file bin/node bin/ffmpeg bin/ffprobe bin/whisper/whisper-cli
