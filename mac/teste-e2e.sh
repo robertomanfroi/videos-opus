@@ -74,9 +74,13 @@ A="$W/video-projects/teste-mac/assets"
 [ -s "$A/fg.webm" ]
 
 passo "7. Instalar para o Codex sem nenhum navegador (baixa o Chrome de gravação)"
-for app in "Google Chrome" "Microsoft Edge" "Brave Browser" "Chromium"; do
-  [ -d "/Applications/$app.app" ] && sudo mv "/Applications/$app.app" "/Applications/.escondido-$app.app" || true
+for base in /Applications "$HOME/Applications"; do
+  for app in "Google Chrome" "Google Chrome for Testing" "Microsoft Edge" "Brave Browser" "Chromium"; do
+    [ -d "$base/$app.app" ] && sudo mv "$base/$app.app" "$base/.escondido-$app.app" || true
+  done
 done
+# o que a skill ainda enxerga como navegador (o Chrome de gravação baixado ainda não existe)
+"$N" --input-type=module -e "const m = await import(process.argv[1]); console.log('navegadores vistos:', JSON.stringify(m.navegadores()))" "$VO/scripts/navegador.mjs" | tee "$EVID/navegadores-escondidos.txt"
 bash "$REPO/instalar-mac.sh" codex | tee "$EVID/instalar-codex.txt"
 cp "$HOME/.videos-opus/pacote/videos-opus/diagnostico.txt" "$EVID/diagnostico-codex-instalador.json"
 cat "$EVID/diagnostico-codex-instalador.json"
@@ -87,6 +91,12 @@ NC="$HOME/.videos-opus/pacote/videos-opus/bin/node"; VC="$HOME/.videos-opus/paco
 "$NC" "$VC" diagnostico | tee "$EVID/diagnostico-codex.json" | grep -q '"navegador": "ok"'
 R=$("$NC" "$VC" animar "$HOME/.videos-opus/pacote/videos-opus/exemplos/oferta-animada.html" --segundos 2 --nome teste-sem-chrome); echo "$R"
 echo "$R" | grep -q '"ok": true'
+cat "$HOME/.videos-opus/pacote/videos-opus/navegador.txt" | tee "$EVID/navegador-escolhido-codex.txt"
+
+passo "8. Kit de estilos sem Chrome (HyperFrames com o Chrome de gravação)"
+KC=("$NC" "$VC" kit)
+"${KC[@]}" --em "$HOME/.videos-opus/pacote/videos-opus/kit/examples/starter" hyperframes render --output "$T/starter-sem-chrome.mp4" 2>&1 | tail -5
+[ -s "$T/starter-sem-chrome.mp4" ] && quadro "$T/starter-sem-chrome.mp4" 1 hyperframes-sem-chrome-1s
 
 passo "TUDO CERTO"
 ls -la "$EVID"

@@ -6,12 +6,16 @@ set -euo pipefail
 BASE_ZIP="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"; SAIDA="$2"
 NODE_V=24.21.0
 WHISPER_TAG=v1.9.4
+FFMPEG_V=9.0.2   # mesma versão do pacote do Windows; o build "latest" que mudar de versão para a compilação
 case "$(uname -m)" in arm64) NA=arm64; FA=arm64 ;; x86_64) NA=x64; FA=amd64 ;; *) exit 1 ;; esac
 mkdir -p "$SAIDA/bin/whisper"; SAIDA="$(cd "$SAIDA" && pwd)"
 T="$(mktemp -d)"; cd "$T"
 
 echo "== Node $NODE_V ($NA)"
-curl -fsSL "https://nodejs.org/dist/v$NODE_V/node-v$NODE_V-darwin-$NA.tar.gz" | tar -xz
+TGZ="node-v$NODE_V-darwin-$NA.tar.gz"
+curl -fsSLO "https://nodejs.org/dist/v$NODE_V/$TGZ"
+curl -fsSL "https://nodejs.org/dist/v$NODE_V/SHASUMS256.txt" | grep " $TGZ\$" | shasum -a 256 -c -
+tar -xzf "$TGZ"
 cp "node-v$NODE_V-darwin-$NA/bin/node" "$SAIDA/bin/node"
 
 echo "== FFmpeg ($FA)"
@@ -21,6 +25,8 @@ for p in ffmpeg ffprobe; do
 done
 chmod +x "$SAIDA/bin/ffmpeg" "$SAIDA/bin/ffprobe"
 "$SAIDA/bin/ffmpeg" -hide_banner -version | head -1
+"$SAIDA/bin/ffmpeg" -hide_banner -version | head -1 | grep -q "ffmpeg version $FFMPEG_V-" \
+  || { echo "o FFmpeg baixado não é o $FFMPEG_V: confira o build novo e atualize FFMPEG_V de propósito"; exit 1; }
 # o que a skill usa: legenda (libass), texto, HDR (zscale), VP9 com transparência, x264 e a placa da Apple
 for f in subtitles drawtext zscale tonemap; do "$SAIDA/bin/ffmpeg" -hide_banner -filters | grep -qw "$f" || { echo "ffmpeg sem filtro $f"; exit 1; }; done
 for e in libx264 libvpx-vp9 h264_videotoolbox aac; do "$SAIDA/bin/ffmpeg" -hide_banner -encoders | grep -qw "$e" || { echo "ffmpeg sem encoder $e"; exit 1; }; done

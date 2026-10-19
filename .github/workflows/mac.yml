@@ -28,8 +28,8 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24.21.0
       - name: Pacote do Windows (base)
@@ -51,14 +51,30 @@ jobs:
         run: bash mac/teste-e2e.sh videos-opus-mac-${{ matrix.chip }}.zip evidencias
       - name: Evidências do teste
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: evidencias-${{ matrix.chip }}
           path: evidencias
-      - name: Anexar à release
+      - name: Guardar o zip para anexar
         if: github.event_name == 'release'
+        uses: actions/upload-artifact@v5
+        with:
+          name: zip-${{ matrix.chip }}
+          path: videos-opus-mac-${{ matrix.chip }}.zip
+          retention-days: 3
+
+  # Só anexa quando os DOIS Macs passaram no teste: a release nunca fica com um zip sem o outro ou sem o instalador.
+  anexar:
+    if: github.event_name == 'release'
+    needs: mac
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v5
+        with:
+          pattern: zip-*
+          merge-multiple: true
+      - name: Anexar à release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release upload "${{ github.event.release.tag_name }}" videos-opus-mac-${{ matrix.chip }}.zip --clobber
-          [ "${{ matrix.chip }}" = arm64 ] && gh release upload "${{ github.event.release.tag_name }}" instalar-mac.sh --clobber || true
+        run: gh release upload "${{ github.event.release.tag_name }}" videos-opus-mac-arm64.zip videos-opus-mac-x64.zip instalar-mac.sh --clobber
