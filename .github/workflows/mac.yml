@@ -9,6 +9,10 @@ on:
       base:
         description: "Tag da release cujo videos-opus.zip (Windows) serve de base"
         default: "latest"
+      anexar:
+        description: "Anexar os zips e o instalar-mac.sh à release da tag acima (refazer uma release que falhou)"
+        type: boolean
+        default: false
   release:
     types: [published]
 
@@ -67,7 +71,7 @@ jobs:
 
   # Só anexa quando os DOIS Macs passaram no teste: a release nunca fica com um zip sem o outro ou sem o instalador.
   anexar:
-    if: github.event_name == 'release'
+    if: github.event_name == 'release' || (inputs.anexar && inputs.base != 'latest')
     needs: mac
     runs-on: ubuntu-latest
     steps:
@@ -79,4 +83,4 @@ jobs:
       - name: Anexar à release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "${{ github.event.release.tag_name }}" videos-opus-mac-arm64.zip videos-opus-mac-x64.zip instalar-mac.sh --clobber
+        run: gh release upload "${{ github.event.release.tag_name || inputs.base }}" videos-opus-mac-arm64.zip videos-opus-mac-x64.zip instalar-mac.sh --clobber

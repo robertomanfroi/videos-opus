@@ -88,12 +88,11 @@ cat "$EVID/diagnostico-codex-instalador.json"
 find "$HOME/Library/Caches/ms-playwright" -maxdepth 3 | tee "$EVID/playwright-cache.txt"
 grep -q '"ok": true' "$HOME/.videos-opus/pacote/videos-opus/diagnostico.txt"
 grep -q "$HOME/.videos-opus/pacote/videos-opus" "$HOME/.codex/skills/videos-opus/SKILL.md"
-if [ -n "${SENHA_ALUNAS:-}" ]; then
-  grep -q "liberada para sempre" "$EVID/instalar-codex.txt"
-  grep -q '"período de uso": "liberado (aluna)"' "$HOME/.videos-opus/pacote/videos-opus/diagnostico.txt"
-fi
+[ -z "${SENHA_ALUNAS:-}" ] || grep -q "liberada para sempre" "$EVID/instalar-codex.txt"
 NC="$HOME/.videos-opus/pacote/videos-opus/bin/node"; VC="$HOME/.videos-opus/pacote/videos-opus/scripts/video.mjs"
 "$NC" "$VC" diagnostico | tee "$EVID/diagnostico-codex.json" | grep -q '"navegador": "ok"'
+# o diagnóstico do instalador roda antes da liberação; este, depois
+[ -z "${SENHA_ALUNAS:-}" ] || grep -q '"período de uso": "liberado (aluna)"' "$EVID/diagnostico-codex.json"
 R=$("$NC" "$VC" animar "$HOME/.videos-opus/pacote/videos-opus/exemplos/oferta-animada.html" --segundos 2 --nome teste-sem-chrome); echo "$R"
 echo "$R" | grep -q '"ok": true'
 cat "$HOME/.videos-opus/pacote/videos-opus/navegador.txt" | tee "$EVID/navegador-escolhido-codex.txt"
