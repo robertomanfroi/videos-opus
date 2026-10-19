@@ -1,5 +1,6 @@
 // Copia o vídeo final para a pasta "prontos" do kit e para "Vídeos editados" na Área de Trabalho, com um nome legível.
 // Uso (na raiz da pasta EdicaoAutomatica): node .claude/skills/_motor/prontos.mjs <slug> [render.mp4]
+import { homedir } from "node:os";
 import { existsSync, mkdirSync, copyFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
@@ -29,7 +30,7 @@ copyFileSync(render, destino);
 let naMesa = null;
 try {
   let mesa = null;
-  if (process.platform === "win32") mesa = execFileSync("powershell", ["-NoProfile", "-Command", "[Environment]::GetFolderPath('Desktop')"], { encoding: "utf8" }).trim();
+  if (process.platform === "win32") mesa = Buffer.from(execFileSync("powershell", ["-NoProfile", "-Command", "[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes([Environment]::GetFolderPath('Desktop')))"], { encoding: "utf8" }).trim(), "base64").toString("utf8");   // base64: acento ("Área de Trabalho") não quebra no codepage do console
   if (mesa && existsSync(mesa)) {
     const pasta = join(mesa, "Vídeos editados");
     mkdirSync(pasta, { recursive: true });
@@ -39,6 +40,17 @@ try {
     naMesa = alvo;
   }
 } catch {}
+// antivírus barrou a Área de Trabalho (pasta protegida): "Vídeos editados" na pasta do usuário, que não é protegida
+if (!naMesa) {
+  try {
+    const pasta = join(homedir(), "Vídeos editados");
+    mkdirSync(pasta, { recursive: true });
+    let alvo = join(pasta, `${slug}-${stamp}.mp4`);
+    for (let n = 2; existsSync(alvo); n++) alvo = join(pasta, `${slug}-${stamp}-v${n}.mp4`);
+    copyFileSync(render, alvo);
+    naMesa = alvo;
+  } catch {}
+}
 if (existsSync(join(proj, "projeto.json"))) marcarEtapa(proj, "entregue", { entregue: resolve(destino) });
 marcarUltimo(".", { slug, arquivo: resolve(destino), duracao: +dur.toFixed(2), projeto: proj });
 console.log(naMesa || resolve(destino));

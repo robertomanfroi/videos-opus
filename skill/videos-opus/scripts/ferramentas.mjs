@@ -1,6 +1,6 @@
 // Caminhos dos programas portáteis que vêm dentro da skill e utilidades comuns.
 // No Windows usa bin/*.exe da própria skill; fora dele (desenvolvimento) cai para o que estiver no PATH.
-import { existsSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
+import { existsSync, mkdirSync, copyFileSync, readdirSync, writeFileSync, unlinkSync } from "node:fs";
 import { join, dirname, basename, extname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
@@ -116,21 +116,37 @@ export function pastaTrabalho(nome) {
 export function areaDeTrabalho() {
   if (WIN) {
     try {
-      const d = execFileSync("powershell", ["-NoProfile", "-Command", "[Environment]::GetFolderPath('Desktop')"], { encoding: "utf8" }).trim();
+      const d = Buffer.from(execFileSync("powershell", ["-NoProfile", "-Command", "[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes([Environment]::GetFolderPath('Desktop')))"], { encoding: "utf8" }).trim(), "base64").toString("utf8");   // base64: acento ("Área de Trabalho") não quebra no codepage do console
       if (d && existsSync(d)) return d;
     } catch {}
   }
-  for (const d of ["Desktop", "Área de Trabalho", join("OneDrive", "Desktop"), join("OneDrive", "Área de Trabalho")]) {
+  for (const d of [join("OneDrive", "Área de Trabalho"), join("OneDrive", "Desktop"), "Desktop", "Área de Trabalho"]) {
     const c = join(homedir(), d);
     if (existsSync(c)) return c;
   }
   return homedir();
 }
 
-// Copia o resultado para "Vídeos editados" na Área de Trabalho sem sobrescrever nada.
+// Onde os vídeos prontos vão: "Vídeos editados" na Área de Trabalho. Se o antivírus (Acesso a Pastas Controladas,
+// escudo anti-ransomware) não deixar gravar ali, vai para C:\Users\<ela>\Vídeos editados, que não é pasta protegida.
+let saidaCache = null;
+export function pastaSaida() {
+  if (saidaCache) return saidaCache;
+  for (const p of [join(areaDeTrabalho(), "Vídeos editados"), join(homedir(), "Vídeos editados")]) {
+    try {
+      mkdirSync(p, { recursive: true });
+      const t = join(p, `.teste-${process.pid}`);
+      writeFileSync(t, "ok");
+      unlinkSync(t);
+      return (saidaCache = p);
+    } catch {}
+  }
+  throw new Error(`o Windows ou o antivírus não deixou gravar em "Vídeos editados" na Área de Trabalho nem em ${join(homedir(), "Vídeos editados")}: libere a pasta ${SKILL} nas exceções do antivírus`);
+}
+
+// Copia o resultado para "Vídeos editados" sem sobrescrever nada.
 export function entregar(arquivo, nomeBase) {
-  const destino = join(areaDeTrabalho(), "Vídeos editados");
-  mkdirSync(destino, { recursive: true });
+  const destino = pastaSaida();
   const base = basename(nomeBase, extname(nomeBase));
   for (let n = 1; ; n++) {
     const alvo = join(destino, n === 1 ? `${base}.mp4` : `${base}-${n}.mp4`);

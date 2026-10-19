@@ -15,7 +15,7 @@ import { join, basename, extname, resolve, dirname } from "node:path";
 import { homedir, cpus, tmpdir } from "node:os";
 import {
   ffmpeg, probe, filtroHDR, encoderRapido, ENCODER_FINAL, FORMATOS, pastaTrabalho, entregar, lerArgs, filtroVeu,
-  areaDeTrabalho, WHISPER, MODELO, FONTES, SKILL, FFMPEG, rodar, rodarWhisper, tempo,
+  areaDeTrabalho, pastaSaida, WHISPER, MODELO, FONTES, SKILL, FFMPEG, rodar, rodarWhisper, tempo,
 } from "./ferramentas.mjs";
 import { montarLegenda } from "./legenda.mjs";
 
@@ -351,7 +351,10 @@ function cmdDiagnostico() {
   testa("whisper", () => { if (!existsSync(MODELO)) throw new Error("modelo ausente"); rodarWhisper({ f: join(FONTES, "..", "scripts", "teste.wav"), of: join(tmpdir(), "videos-opus-teste") }, ["-l", "pt", "-np", "-nt"]); });
   testa("fontes", () => `${readdirSync(FONTES).filter((f) => /\.ttf$/i.test(f)).length} fontes`);
   testa("encoder", () => encoderRapido()[1]);
-  testa("pasta de saída", () => join(areaDeTrabalho(), "Vídeos editados"));
+  testa("pasta de saída", () => {
+    const p = pastaSaida();
+    return p.startsWith(areaDeTrabalho()) ? p : `${p} (o antivírus não deixou gravar na Área de Trabalho)`;
+  });
   r.itens["kit de estilos"] = kitOk;
   const ac = globalThis.__acesso;
   r.itens["período de uso"] = ac.bloqueado ? "encerrado: disponível para quem se tornar aluna da Super Black Eterna (28/10)" : ac.iniciado ? `${ac.diasRestantes} dia(s) restante(s)` : "7 dias a partir do primeiro uso";

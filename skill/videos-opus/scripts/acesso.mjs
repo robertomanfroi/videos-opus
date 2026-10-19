@@ -1,7 +1,7 @@
 // Período de uso: a skill funciona por PRAZO_DIAS a partir do primeiro uso (o diagnóstico da instalação não conta).
 // Depois disso, fica disponível para quem se tornar aluna da Super Black Eterna (28/10).
 // A data do primeiro uso fica guardada fora da pasta da skill, em dois lugares, para não zerar ao reinstalar.
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { homedir } from "node:os";
 import { createHash } from "node:crypto";
@@ -29,7 +29,7 @@ function ler(arq) {
     const d = JSON.parse(readFileSync(arq, "utf8"));
     if (Number.isFinite(d.inicio) && Number.isFinite(d.ultimo) && d.assinatura === assinar(d.inicio, d.ultimo)) return d;
     return "invalido";
-  } catch { return existsSync(arq) ? "invalido" : null; }
+  } catch { return null; }   // arquivo truncado (disco cheio, queda de energia) não bloqueia: os outros locais valem
 }
 
 function gravar(inicio, ultimo) {
@@ -51,8 +51,10 @@ export function verificarAcesso({ iniciar = true } = {}) {
     return { bloqueado: false, diasRestantes: PRAZO_DIAS, iniciado: true };
   }
   const inicio = Math.min(...validos.map((d) => d.inicio));
-  // relógio atrasado de propósito não devolve dias: vale o maior horário já visto
-  const ultimo = Math.max(agora, ...validos.map((d) => d.ultimo));
+  // relógio atrasado de propósito não devolve dias: vale o maior horário já visto. Mas um horário mais de 1 dia
+  // à frente de agora é relógio que estava errado (bateria do computador), não uso: esse é ignorado.
+  const vistos = validos.map((d) => d.ultimo).filter((u) => u <= agora + DIA);
+  const ultimo = Math.max(agora, ...vistos);
   if (iniciar) gravar(inicio, ultimo);
   const usados = (ultimo - inicio) / DIA;
   if (usados >= PRAZO_DIAS) return { bloqueado: true, mensagem: MENSAGEM };

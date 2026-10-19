@@ -24,7 +24,7 @@ function pastasCandidatas() {
   // Área de Trabalho real no Windows (pode estar no OneDrive)
   if (process.platform === "win32") {
     try {
-      const d = execFileSync("powershell", ["-NoProfile", "-Command", "[Environment]::GetFolderPath('Desktop')"], { encoding: "utf8" }).trim();
+      const d = Buffer.from(execFileSync("powershell", ["-NoProfile", "-Command", "[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes([Environment]::GetFolderPath('Desktop')))"], { encoding: "utf8" }).trim(), "base64").toString("utf8");   // base64: acento ("Área de Trabalho") não quebra no codepage do console
       if (d && existsSync(d) && !p.includes(d)) p.push(d);
     } catch {}
   }
