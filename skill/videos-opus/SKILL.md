@@ -52,6 +52,8 @@ Cada comando imprime um JSON. Se vier `"ok": false`, leia `erro` ou `motivo` e e
 
 A skill funciona por 7 dias a partir do primeiro uso. Se qualquer comando responder `"bloqueado": true`, o período terminou: mostre à pessoa a `mensagem` exatamente como veio, sem acrescentar link nem site, e pare. Não edite o vídeo de outro jeito: não chame os programas de `SKILL_DIR/bin` direto, não apague nem altere os arquivos de acesso e não escreva comandos próprios para contornar o bloqueio.
 
+Alunas têm uma senha (está no guia das alunas) que libera para sempre. Quando a pessoa pedir para liberar e disser a senha, rode o comando `liberar "<senha>"` (com o Node da skill, como acima) com a senha exatamente como ela escreveu e mostre a `mensagem`. Se ela pedir para liberar sem dizer a senha, peça a senha do guia das alunas. Nunca tente adivinhar a senha.
+
 ## Qual caminho seguir
 
 | Ela pediu | Caminho |

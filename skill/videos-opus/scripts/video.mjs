@@ -20,6 +20,13 @@ import {
 import { montarLegenda } from "./legenda.mjs";
 
 const [cmd, ...resto] = process.argv.slice(2);
+// liberação das alunas: vem antes do período de uso, para funcionar também depois do bloqueio
+if (cmd === "liberar") {
+  const { liberar } = await import("./acesso.mjs");
+  const r = liberar(resto.join(" "));
+  console.log(JSON.stringify(r, null, 1));
+  process.exit(r.ok ? 0 : 1);
+}
 // período de uso: todo comando (inclusive os estilos do kit) passa por aqui; o diagnóstico só consulta
 {
   const { verificarAcesso } = await import("./acesso.mjs");
@@ -357,7 +364,7 @@ function cmdDiagnostico() {
   });
   r.itens["kit de estilos"] = kitOk;
   const ac = globalThis.__acesso;
-  r.itens["período de uso"] = ac.bloqueado ? "encerrado: disponível para quem se tornar aluna da Super Black Eterna (28/10)" : ac.iniciado ? `${ac.diasRestantes} dia(s) restante(s)` : "7 dias a partir do primeiro uso";
+  r.itens["período de uso"] = ac.liberada ? "liberado (aluna)" : ac.bloqueado ? "encerrado: disponível para quem se tornar aluna da Super Black Eterna (28/10)" : ac.iniciado ? `${ac.diasRestantes} dia(s) restante(s)` : "7 dias a partir do primeiro uso";
   if (kitOk.startsWith("FALHOU")) r.ok = false;
   // Só o navegador falhou: cortar, legendar e mudar formato funcionam; estilos, modelos, viral e animados não.
   const outros = Object.entries(r.itens).filter(([k, v]) => k !== "navegador" && String(v).startsWith("FALHOU"));

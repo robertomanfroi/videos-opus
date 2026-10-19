@@ -81,12 +81,17 @@ for base in /Applications "$HOME/Applications"; do
 done
 # o que a skill ainda enxerga como navegador (o Chrome de gravação baixado ainda não existe)
 "$N" --input-type=module -e "const m = await import(process.argv[1]); console.log('navegadores vistos:', JSON.stringify(m.navegadores()))" "$VO/scripts/navegador.mjs" | tee "$EVID/navegadores-escondidos.txt"
-bash "$REPO/instalar-mac.sh" codex | tee "$EVID/instalar-codex.txt"
+# com a senha do guia das alunas (segredo do repositório SENHA_ALUNAS), testa também a liberação para sempre
+bash "$REPO/instalar-mac.sh" codex "${SENHA_ALUNAS:-}" | tee "$EVID/instalar-codex.txt"
 cp "$HOME/.videos-opus/pacote/videos-opus/diagnostico.txt" "$EVID/diagnostico-codex-instalador.json"
 cat "$EVID/diagnostico-codex-instalador.json"
 find "$HOME/Library/Caches/ms-playwright" -maxdepth 3 | tee "$EVID/playwright-cache.txt"
 grep -q '"ok": true' "$HOME/.videos-opus/pacote/videos-opus/diagnostico.txt"
 grep -q "$HOME/.videos-opus/pacote/videos-opus" "$HOME/.codex/skills/videos-opus/SKILL.md"
+if [ -n "${SENHA_ALUNAS:-}" ]; then
+  grep -q "liberada para sempre" "$EVID/instalar-codex.txt"
+  grep -q '"período de uso": "liberado (aluna)"' "$HOME/.videos-opus/pacote/videos-opus/diagnostico.txt"
+fi
 NC="$HOME/.videos-opus/pacote/videos-opus/bin/node"; VC="$HOME/.videos-opus/pacote/videos-opus/scripts/video.mjs"
 "$NC" "$VC" diagnostico | tee "$EVID/diagnostico-codex.json" | grep -q '"navegador": "ok"'
 R=$("$NC" "$VC" animar "$HOME/.videos-opus/pacote/videos-opus/exemplos/oferta-animada.html" --segundos 2 --nome teste-sem-chrome); echo "$R"

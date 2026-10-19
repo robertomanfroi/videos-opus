@@ -48,6 +48,8 @@ jobs:
       - name: Montar o zip do Mac
         run: bash mac/empacotar-mac.sh base.zip nativos ${{ matrix.chip }} videos-opus-mac-${{ matrix.chip }}.zip
       - name: Teste de ponta a ponta
+        env:
+          SENHA_ALUNAS: ${{ secrets.SENHA_ALUNAS }}
         run: bash mac/teste-e2e.sh videos-opus-mac-${{ matrix.chip }}.zip evidencias
       - name: Evidências do teste
         if: always()

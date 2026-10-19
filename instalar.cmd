@@ -14,6 +14,9 @@ set "ZIP=%USERPROFILE%\Downloads\videos-opus.zip"
 rem só para testes automáticos: VIDEOS_OPUS_SEM_PAUSA=1 pula o "pressione qualquer tecla"
 set "PAUSA=pause"
 set "AVISO="
+rem guia das alunas: o instalador exclusivo traz a senha aqui e libera para sempre (no instalador comum fica vazia)
+set "SENHA="
+set "LIBERADA="
 set "PASTA=%DESTINO%\videos-opus"
 if defined VIDEOS_OPUS_SEM_PAUSA set "PAUSA=rem"
 set "URL=https://github.com/robertomanfroi/videos-opus/releases/latest/download/videos-opus.zip"
@@ -84,10 +87,13 @@ findstr /c:"\"so_navegador\": true" "%DESTINO%\videos-opus\diagnostico.txt" >nul
 if errorlevel 1 goto erro_teste
 set "AVISO=1"
 :teste_ok
+if defined SENHA "%DESTINO%\videos-opus\bin\node.exe" "%DESTINO%\videos-opus\scripts\video.mjs" liberar "%SENHA%" >nul 2>&1
+if defined SENHA if not errorlevel 1 set "LIBERADA=1"
 
 echo.
 echo  ==============================================
 echo    PRONTO! A skill Vídeos Opus está instalada.
+if defined LIBERADA echo    Versão das alunas: liberada para sempre, sem limite de dias.
 echo    Vídeos Opus é propriedade de Suellen Warmling.
 echo  ==============================================
 echo.

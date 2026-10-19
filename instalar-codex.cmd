@@ -18,6 +18,9 @@ set "ZIP=%USERPROFILE%\Downloads\videos-opus-codex-tmp.zip"
 rem só para testes automáticos: VIDEOS_OPUS_SEM_PAUSA=1 pula o "pressione qualquer tecla"
 set "PAUSA=pause"
 set "AVISO="
+rem guia das alunas: o instalador exclusivo traz a senha aqui e libera para sempre (no instalador comum fica vazia)
+set "SENHA="
+set "LIBERADA="
 set "PASTA=%PACOTE%\videos-opus"
 if defined VIDEOS_OPUS_SEM_PAUSA set "PAUSA=rem"
 set "URL=https://github.com/robertomanfroi/videos-opus/releases/latest/download/videos-opus.zip"
@@ -92,10 +95,13 @@ rem na pasta de skills do Codex vai só o SKILL.md, apontando para o pacote
 if exist "%DESTINO%\videos-opus" rmdir /s /q "%DESTINO%\videos-opus"
 "%PACOTE%\videos-opus\bin\node.exe" "%PACOTE%\videos-opus\scripts\instalar-codex.mjs" "%DESTINO%\videos-opus" >nul
 if errorlevel 1 goto erro_instalar
+if defined SENHA "%PACOTE%\videos-opus\bin\node.exe" "%PACOTE%\videos-opus\scripts\video.mjs" liberar "%SENHA%" >nul 2>&1
+if defined SENHA if not errorlevel 1 set "LIBERADA=1"
 
 echo.
 echo  ==============================================
 echo    PRONTO! A skill Vídeos Opus está instalada.
+if defined LIBERADA echo    Versão das alunas: liberada para sempre, sem limite de dias.
 echo    Vídeos Opus é propriedade de Suellen Warmling.
 echo  ==============================================
 echo.

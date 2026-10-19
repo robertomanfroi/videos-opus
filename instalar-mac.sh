@@ -5,6 +5,7 @@
 # Uso (cole no Terminal):
 #   Claude: curl -fsSL https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar-mac.sh | bash
 #   Codex:  curl -fsSL https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar-mac.sh | bash -s codex
+#   Guia das alunas (sem limite de dias): ... | bash -s claude <senha>   ou   ... | bash -s codex <senha>
 #
 # O que ele faz: baixa o pacote do seu tipo de Mac (Apple Silicon ou Intel) da página de Releases do GitHub,
 # descompacta em ~/.claude/skills/videos-opus (Claude) ou ~/.videos-opus/pacote (Codex, com o SKILL.md em
@@ -16,6 +17,7 @@ set -u
 main() {
 
   ALVO="${1:-claude}"
+  SENHA="${2:-}"   # guia das alunas: libera para sempre
   BASE="${VIDEOS_OPUS_BASE:-https://github.com/robertomanfroi/videos-opus/releases/latest/download}"
 
   case "$(uname -m)" in
@@ -124,9 +126,17 @@ main() {
       falha "A instalação terminou, mas o teste falhou (veja acima)."
     fi
   fi
+  LIBERADA=""
+  if [ -n "$SENHA" ]; then
+    if "$NODE" "$PASTA/scripts/video.mjs" liberar "$SENHA" >/dev/null 2>&1; then LIBERADA=1; else
+      echo "      Atenção: a senha não confere. A skill foi instalada com o período de teste."
+      echo "      Confira a senha no guia das alunas e rode o comando de novo."
+    fi
+  fi
   echo
   echo " =============================================="
   echo "   PRONTO! A skill Vídeos Opus está instalada."
+  [ -n "$LIBERADA" ] && echo "   Versão das alunas: liberada para sempre, sem limite de dias."
   echo "   Vídeos Opus é propriedade de Suellen Warmling."
   echo " =============================================="
   echo
