@@ -67,9 +67,11 @@ W=$("${K[@]}" pasta | campo "['pasta']"); echo "pasta do kit: $W"
 [ -s "$W/video-projects/teste-mac/assets/raw.json" ]
 "${K[@]}" --em "$VO/kit/examples/starter" hyperframes render --output "$T/starter.mp4" 2>&1 | tail -5
 [ -s "$T/starter.mp4" ] && quadro "$T/starter.mp4" 1 hyperframes-1s
-"$F" -v error -y -i "$P/cortado.mp4" -t 2 -vf scale=540:960 -an "$T/clip.mp4"
-"${K[@]}" --em "$T" node "$VO/kit/.claude/skills/estilo-colagem/scripts/matte-pessoa.mjs" clip.mp4 fg.webm 0.25 | tee "$EVID/matte.txt"
-[ -s "$T/fg.webm" ]
+# como o estilo colagem faz: dentro de video-projects/<slug>/assets
+A="$W/video-projects/teste-mac/assets"
+"$F" -v error -y -i "$P/cortado.mp4" -t 2 -vf scale=540:960 -an "$A/clip.mp4"
+"${K[@]}" --em video-projects/teste-mac/assets node ../../../.claude/skills/estilo-colagem/scripts/matte-pessoa.mjs clip.mp4 fg.webm 0.25 | tee "$EVID/matte.txt"
+[ -s "$A/fg.webm" ]
 
 passo "7. Instalar para o Codex sem nenhum navegador (baixa o Chrome de gravação)"
 for app in "Google Chrome" "Microsoft Edge" "Brave Browser" "Chromium"; do
