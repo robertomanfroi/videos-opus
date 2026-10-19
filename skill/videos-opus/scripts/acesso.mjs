@@ -11,8 +11,7 @@ import { createHash } from "node:crypto";
 export const PRAZO_DIAS = 7;
 export const MENSAGEM =
   `Seu período de teste de ${PRAZO_DIAS} dias terminou. ` +
-  "Essa skill está disponível para quem se tornar aluna da Super Black Eterna (28/10). " +
-  "Se você já é aluna, peça: \"libera o Vídeos Opus com a senha do guia das alunas\" e diga a senha.";
+  "Essa skill está disponível para quem se tornar aluna da Super Black Eterna (28/10).";
 
 const DIA = 24 * 60 * 60 * 1000;
 const SAL = "vop-sbe-2026";
