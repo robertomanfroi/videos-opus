@@ -6,10 +6,10 @@ Tudo roda no seu computador. Você instala uma vez e não precisa instalar mais 
 
 ## O que você precisa
 
-- Computador com **Windows 10 ou 11** e uns 3 GB livres
+- Computador com **Windows 10 ou 11** ou **Mac** (Apple Silicon ou Intel, macOS 12 ou mais novo) e uns 3 GB livres
 - O **app do Claude** instalado ([claude.ai/download](https://claude.ai/download)), com plano **Pro ou acima** (a aba **Code** não existe no plano gratuito)
 
-## Como instalar (uma vez só, uns 3 minutos)
+## Como instalar no Windows (uma vez só, uns 3 minutos)
 
 1. [**Baixe o instalador**](https://github.com/robertomanfroi/videos-opus/releases/latest/download/Instalar-Videos-Opus.cmd). Se o navegador perguntar, clique em **Manter**.
 2. Na pasta **Downloads**, dê dois cliques em **Instalar-Videos-Opus**.
@@ -21,6 +21,25 @@ Depois de instalar, não precisa adicionar, ativar nem configurar nada: é só a
 Para atualizar no futuro, é só baixar e abrir o instalador de novo.
 
 **O que o instalador faz** ([instalar.cmd](instalar.cmd), texto simples, dá para ler antes): baixa o pacote `videos-opus.zip` da página de [Releases](https://github.com/robertomanfroi/videos-opus/releases) deste repositório, descompacta em `%USERPROFILE%\.claude\skills\videos-opus` (substituindo a versão anterior), apaga o zip e roda um teste. Não pede senha de administrador e não mexe em mais nada do computador.
+
+## Como instalar no Mac (uma vez só, uns 3 minutos)
+
+1. Abra o **Terminal** (aperte **Command + Espaço**, digite `Terminal` e aperte Enter).
+2. Copie a linha abaixo, cole no Terminal e aperte **Enter**:
+
+   ```
+   curl -fsSL https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar-mac.sh | bash
+   ```
+
+3. Espere aparecer **PRONTO!**. Está instalado.
+
+Para o **ChatGPT (modo Codex)**, use esta linha no lugar da de cima:
+
+```
+curl -fsSL https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar-mac.sh | bash -s codex
+```
+
+O instalador escolhe sozinho o pacote do seu Mac (chip da Apple ou Intel). Os vídeos animados e a edição viral usam o Google Chrome; se o Mac não tiver Chrome, o instalador baixa um Chrome só para gravar os vídeos. Para atualizar no futuro, rode a mesma linha de novo.
 
 ## Como usar
 
@@ -47,4 +66,5 @@ O Vídeos Opus é propriedade de **Suellen Warmling**. © 2026, todos os direito
 - `skill/videos-opus/` — a skill (SKILL.md e scripts). `kit/` — motor dos 5 estilos (adaptado da Edição Automática de Vídeo).
 - `./empacotar.sh` gera `dist/videos-opus.zip` com os programas portáteis (FFmpeg, Node, whisper.cpp, modelos e o kit compilado para Windows), que ficam fora do git em `vendor-cache/`.
 - Cada versão é publicada como **Release** com os arquivos `videos-opus.zip` e `instalar.cmd` (`gh release create vX.Y.Z dist/videos-opus.zip instalar.cmd Instalar-Videos-Opus.cmd`, o último é cópia do `instalar.cmd` com nome amigável); os links `releases/latest/download/...` sempre apontam para a mais nova.
+- Mac: ao publicar a release, o workflow **Mac** (`.github/workflows/mac.yml`) compila os programas nos Macs do GitHub, monta `videos-opus-mac-arm64.zip` e `videos-opus-mac-x64.zip` a partir do `videos-opus.zip` da release, testa de ponta a ponta e anexa os dois zips e o `instalar-mac.sh` (uns 20 min depois de publicar; até lá o comando do Mac não acha o pacote).
 - Licenças dos programas incluídos: pasta `licencas/` dentro do pacote.
