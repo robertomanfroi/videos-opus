@@ -23,7 +23,7 @@ export async function sessao() {
   for (const prov of [[process.platform === "darwin" ? "coreml" : "dml"], ["cpu"]]) {
     try {
       const s = await o.InferenceSession.create(rvm, { executionProviders: prov, intraOpNumThreads: threads });
-      return { s, Tensor: o.Tensor, provedor: prov[0] === "dml" ? "placa de vídeo (DirectML)" : prov[0] === "coreml" ? "chip da Apple (CoreML)" : "processador" };
+      return { s, Tensor: o.Tensor, provedor: prov[0] === "dml" ? "placa de vídeo (DirectML)" : prov[0] === "coreml" ? "aceleração da Apple (CoreML)" : "processador" };
     } catch (e) { if (prov[0] === "cpu") throw e; }
   }
 }
