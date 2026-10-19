@@ -1,0 +1,64 @@
+# Pacote do Vídeos Opus para Mac: compila os programas nos Macs do GitHub (Apple Silicon e Intel), monta o zip a
+# partir do pacote do Windows da release, testa de ponta a ponta instalando como a aluna e, quando a release é
+# publicada, anexa os zips e o instalar-mac.sh a ela.
+name: Mac
+
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: "Tag da release cujo videos-opus.zip (Windows) serve de base"
+        default: "latest"
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  mac:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            chip: arm64
+          - runner: macos-15-intel
+            chip: x64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.21.0
+      - name: Pacote do Windows (base)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name || inputs.base }}
+        run: |
+          if [ "$TAG" = "latest" ]; then
+            curl -fsSL -o base.zip https://github.com/${{ github.repository }}/releases/latest/download/videos-opus.zip
+          else
+            gh release download "$TAG" -p videos-opus.zip -O base.zip
+          fi
+          ls -la base.zip
+      - name: Compilar programas do Mac
+        run: bash mac/compilar-nativos.sh base.zip nativos
+      - name: Montar o zip do Mac
+        run: bash mac/empacotar-mac.sh base.zip nativos ${{ matrix.chip }} videos-opus-mac-${{ matrix.chip }}.zip
+      - name: Teste de ponta a ponta
+        run: bash mac/teste-e2e.sh videos-opus-mac-${{ matrix.chip }}.zip evidencias
+      - name: Evidências do teste
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-${{ matrix.chip }}
+          path: evidencias
+      - name: Anexar à release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" videos-opus-mac-${{ matrix.chip }}.zip --clobber
+          [ "${{ matrix.chip }}" = arm64 ] && gh release upload "${{ github.event.release.tag_name }}" instalar-mac.sh --clobber || true

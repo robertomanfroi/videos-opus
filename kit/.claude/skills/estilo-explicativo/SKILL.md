@@ -95,7 +95,7 @@ Se a gravação não é um mecanismo (ex.: um convite, uma dica), adapte: os pas
 ## Fluxo (todo comando pelo lançador `$K`)
 
 `M=.claude/skills/_motor` · `X=.claude/skills/estilo-explicativo/scripts` ·
-`K` = o lançador da skill videos-opus: `"<VO>\bin\node.exe" "<VO>\scripts\video.mjs" kit`, onde `<VO>` é a pasta da skill videos-opus (a que tem o `SKILL.md` que mandou você ler este guia). Ele põe os programas portáteis no caminho e roda na pasta de trabalho do kit (`$K pasta` mostra qual é; projetos ficam em `<pasta>\video-projects\<slug>`). `$K --em <subpasta> …` roda dentro dela. Nada de `npx`, Python ou `node` solto: tudo passa pelo `$K`.
+`K` = o lançador da skill videos-opus: `"<VO>\bin\node.exe" "<VO>\scripts\video.mjs" kit` (no Mac: `"<VO>/bin/node" "<VO>/scripts/video.mjs" kit`), onde `<VO>` é a pasta da skill videos-opus (a que tem o `SKILL.md` que mandou você ler este guia). Ele põe os programas portáteis no caminho e roda na pasta de trabalho do kit (`$K pasta` mostra qual é; projetos ficam em `<pasta>\video-projects\<slug>`). `$K --em <subpasta> …` roda dentro dela. Nada de `npx`, Python ou `node` solto: tudo passa pelo `$K`.
 
 1. **Projeto + transcrição rápida**: `$K node $M/novo-projeto.mjs "<video>" <slug> .claude/skills/estilo-explicativo`
    → `video-projects/<slug>/` com `assets/raw.mp4`, `raw.json`, `palavras.txt`, fontes, `DESIGN.md` e `src/index.template.html`.
@@ -119,7 +119,7 @@ Se a gravação não é um mecanismo (ex.: um convite, uma dica), adapte: os pas
    **pedido de material** pronto para copiar — por item: o que mostrar, duração, "não aceito IA/render/simulação",
    link + canal + data + início/fim conferidos —, e **Antes da publicação**: fatos a confirmar, valores aproximados,
    relações de marca que as imagens não podem sugerir). Abra para a aluna
-   (`powershell -NoProfile -Command "Start-Process '<pasta do kit>\video-projects\<slug>\assets\checkpoint.html'"` com o caminho completo — `$K pasta` mostra a pasta do kit; nunca `cmd /c`, que no Bash do Claude trava), resuma em 3 linhas
+   (`powershell -NoProfile -Command "Start-Process '<pasta do kit>\video-projects\<slug>\assets\checkpoint.html'"` com o caminho completo — `$K pasta` mostra a pasta do kit; nunca `cmd /c`, que no Bash do Claude trava; no Mac: `open "<pasta do kit>/video-projects/<slug>/assets/checkpoint.html"`), resuma em 3 linhas
    e termine com **"Revisar agora. Montar depois."** ESPERE a aprovação (por ID). Quando ela aprovar, registre com
    `$K --em video-projects/<slug> node ../../$X/checkpoint.mjs --aprovar "<a resposta dela>"` — sem esse registro o `renderizar.mjs` recusa o render.
    Mapa mudou depois? Gere o checkpoint de novo (a aprovação antiga é apagada).

@@ -76,6 +76,7 @@ export function encoderRapido() {
     ["h264_nvenc", ["-preset", "p4", "-rc", "vbr", "-cq", "19", "-b:v", "0"]],
     ["h264_qsv", ["-global_quality", "20"]],
     ["h264_amf", ["-quality", "balanced", "-rc", "cqp", "-qp_i", "18", "-qp_p", "20"]],
+    ["h264_videotoolbox", ["-b:v", "12M", "-allow_sw", "1"]],   // Mac
   ]) {
     const t = spawnSync(FFMPEG, ["-v", "error", "-f", "lavfi", "-i", "color=c=black:s=320x320:d=0.2", "-pix_fmt", "yuv420p", "-c:v", nome, ...extra, "-f", "null", "-"]);
     if (t.status === 0) return (encCache = ["-c:v", nome, ...extra, "-pix_fmt", "yuv420p"]);

@@ -18,6 +18,7 @@ function locais() {
   const l = [];
   if (process.env.LOCALAPPDATA) l.push(join(process.env.LOCALAPPDATA, "videos-opus", "acesso.json"));
   if (process.env.APPDATA) l.push(join(process.env.APPDATA, "videos-opus", "acesso.json"));
+  if (process.platform === "darwin") l.push(join(homedir(), "Library", "Application Support", "videos-opus", "acesso.json"));
   l.push(join(homedir(), ".videos-opus", "acesso.json"));
   return [...new Set(l)];
 }

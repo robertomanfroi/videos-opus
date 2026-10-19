@@ -10,6 +10,7 @@ const CANDIDATOS = [
   ["h264_nvenc", ["-preset", "p4", "-rc", "vbr", "-cq", "20", "-b:v", "0"]],
   ["h264_qsv", ["-global_quality", "22"]],
   ["h264_amf", ["-quality", "balanced", "-rc", "cqp", "-qp_i", "20", "-qp_p", "22"]],
+  ["h264_videotoolbox", ["-b:v", "12M", "-allow_sw", "1"]],   // Mac
   ["h264_videotoolbox", ["-b:v", "14M"]],
 ];
 let cache;

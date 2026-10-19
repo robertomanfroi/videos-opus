@@ -111,7 +111,7 @@ Cores, tamanhos e proibições: `template/DESIGN.md` (copiado para cada projeto)
 
 ## Fluxo (todo comando pelo lançador `$K`)
 
-`E=.claude/skills/estilo-anuncio` · `M=.claude/skills/_motor` · `K` = o lançador da skill videos-opus: `"<VO>\bin\node.exe" "<VO>\scripts\video.mjs" kit`, onde `<VO>` é a pasta da skill videos-opus (a que tem o `SKILL.md` que mandou você ler este guia). Ele põe os programas portáteis no caminho e roda na pasta de trabalho do kit (`$K pasta` mostra qual é; projetos ficam em `<pasta>\video-projects\<slug>`). `$K --em <subpasta> …` roda dentro dela. Nada de `npx`, Python ou `node` solto: tudo passa pelo `$K`.
+`E=.claude/skills/estilo-anuncio` · `M=.claude/skills/_motor` · `K` = o lançador da skill videos-opus: `"<VO>\bin\node.exe" "<VO>\scripts\video.mjs" kit` (no Mac: `"<VO>/bin/node" "<VO>/scripts/video.mjs" kit`), onde `<VO>` é a pasta da skill videos-opus (a que tem o `SKILL.md` que mandou você ler este guia). Ele põe os programas portáteis no caminho e roda na pasta de trabalho do kit (`$K pasta` mostra qual é; projetos ficam em `<pasta>\video-projects\<slug>`). `$K --em <subpasta> …` roda dentro dela. Nada de `npx`, Python ou `node` solto: tudo passa pelo `$K`.
 
 1. **Projeto + transcrição rápida**: `$K node $E/scripts/novo-anuncio.mjs "<video>" <slug>` → `video-projects/<slug>/`
    com raw.mp4, raw.json, `assets/palavras.txt`, os dois modelos, `assets/img/bruto.jpg` e `reel.json`.

@@ -1,7 +1,9 @@
-// Grava páginas HTML quadro a quadro com o Microsoft Edge que já vem no Windows (sem baixar Chromium).
+// Grava páginas HTML quadro a quadro com o navegador do computador: Edge (vem no Windows) ou Chrome. No Mac sem
+// Chrome, o instalador baixa o Chrome headless do Playwright para a pasta de cache (`navegadores-baixados`).
 // A página precisa expor window.__render(t) e fazer window.__pronto = true quando fontes e imagens carregarem.
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
+import { homedir } from "node:os";
 import { pathToFileURL } from "node:url";
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
@@ -21,8 +23,32 @@ export function navegadores() {
     "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
     process.env.LOCALAPPDATA && `${process.env.LOCALAPPDATA}\\Google\\Chrome\\Application\\chrome.exe`,
+    // Mac: em /Applications ou na pasta Aplicativos do próprio usuário
+    ...["/Applications", join(homedir(), "Applications")].flatMap((a) => [
+      join(a, "Google Chrome.app/Contents/MacOS/Google Chrome"),
+      join(a, "Microsoft Edge.app/Contents/MacOS/Microsoft Edge"),
+      join(a, "Brave Browser.app/Contents/MacOS/Brave Browser"),
+      join(a, "Chromium.app/Contents/MacOS/Chromium"),
+    ]),
+    ...navegadoresBaixados(),
   ].filter(Boolean);
   return [...new Set(cands)].filter((c) => existsSync(c));
+}
+
+// Chrome headless que o Playwright baixa (instalador do Mac, quando não há navegador). Fica no cache padrão dele.
+function navegadoresBaixados() {
+  const base = process.env.PLAYWRIGHT_BROWSERS_PATH || join(homedir(), process.platform === "darwin" ? "Library/Caches/ms-playwright" : ".cache/ms-playwright");
+  const achados = [];
+  try {
+    for (const d of readdirSync(base)) {
+      if (!d.startsWith("chromium")) continue;
+      for (const sub of ["chrome-mac/headless_shell", "chrome-mac-arm64/headless_shell", "chrome-headless-shell-mac-arm64/chrome-headless-shell", "chrome-headless-shell-mac-x64/chrome-headless-shell", "chrome-linux/headless_shell"]) {
+        const c = join(base, d, sub);
+        if (existsSync(c)) achados.push(c);
+      }
+    }
+  } catch {}
+  return achados;
 }
 
 // O que o kit de estilos (HyperFrames) deve usar: o que já abriu antes; senão o primeiro instalado.
@@ -35,7 +61,7 @@ export function navegadorPreferido() {
 async function lancar(chromium) {
   const preferido = navegadorPreferido();
   const lista = [...new Set([preferido, ...navegadores()].filter(Boolean))];
-  if (!lista.length) throw new Error("nenhum navegador encontrado: instale o Google Chrome ou o Microsoft Edge e tente de novo");
+  if (!lista.length) throw new Error("nenhum navegador encontrado: instale o Google Chrome (google.com/chrome) e tente de novo");
   const erros = [];
   for (const exe of lista) {
     try {
@@ -45,7 +71,9 @@ async function lancar(chromium) {
     } catch (e) { erros.push(`${basename(exe)}: ${e.message.split("\n")[0]}`); }
   }
   const bloqueio = erros.some((m) => /EPERM|EACCES|ACCESS_DENIED|UNKNOWN/i.test(m));
-  throw new Error(bloqueio
+  throw new Error(bloqueio && process.platform === "darwin"
+    ? `o Mac bloqueou a abertura do navegador. Abra o Google Chrome uma vez pelo Launchpad e tente de novo (${erros.join("; ")})`
+    : bloqueio
     ? `o Windows ou o antivírus bloqueou a abertura do navegador. Libere a pasta ${SKILL} nas exceções do antivírus e tente de novo (${erros.join("; ")})`
     : `não consegui abrir o navegador (${erros.join("; ")})`);
 }

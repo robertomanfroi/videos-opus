@@ -9,7 +9,7 @@ A aluna não sabe (nem precisa saber) de pastas, caminhos ou terminal. Ela grava
 para o computador (Downloads, Área de Trabalho, WhatsApp Web, Google Drive…) e fala com você em português.
 Tudo que ela vê é a resposta e o vídeo pronto. Fale curto, em português simples, sem jargão.
 
-`M=.claude/skills/_motor` · `K` = o lançador da skill videos-opus: `"<VO>\bin\node.exe" "<VO>\scripts\video.mjs" kit`,
+`M=.claude/skills/_motor` · `K` = o lançador da skill videos-opus: `"<VO>\bin\node.exe" "<VO>\scripts\video.mjs" kit` (no Mac: `"<VO>/bin/node" "<VO>/scripts/video.mjs" kit`),
 onde `<VO>` é a pasta da skill videos-opus (a que tem o `SKILL.md` que mandou você ler este guia). Ele põe os programas
 portáteis no caminho e roda tudo na **pasta de trabalho do kit** (`$K pasta` mostra qual é). Os caminhos deste guia
 (`video-projects/…`, `prontos/…`, `perfil.json`) são relativos a ela: para ler ou editar um arquivo, junte com essa pasta.

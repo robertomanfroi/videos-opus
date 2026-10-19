@@ -45,7 +45,7 @@ const salvarTrabalho = (pasta, extra) => writeFileSync(join(pasta, "trabalho.jso
 const EXT = new Set([".mp4", ".mov", ".m4v", ".mkv", ".webm", ".3gp", ".avi"]);
 function pastasDeVideo() {
   const h = homedir();
-  const p = [join(h, "Downloads"), areaDeTrabalho(), join(h, "Videos"), join(h, "Vídeos"), join(h, "Pictures"), join(h, "OneDrive", "Imagens"), join(h, "OneDrive", "Pictures")];
+  const p = [join(h, "Downloads"), areaDeTrabalho(), join(h, "Videos"), join(h, "Vídeos"), join(h, "Movies"), join(h, "Pictures"), join(h, "OneDrive", "Imagens"), join(h, "OneDrive", "Pictures")];
   return [...new Set(p)].filter(existsSync);
 }
 function listar(pasta, fundo = 2) {

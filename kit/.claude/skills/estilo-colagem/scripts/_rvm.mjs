@@ -1,5 +1,6 @@
 // Modelo de recorte de pessoa (Robust Video Matting, licença GPL-3.0 do modelo; usado só como ferramenta local).
-// Vem dentro da skill videos-opus (modelos/rvm_mobilenetv3_fp32.onnx). Placa de vídeo pelo DirectML quando existir, senão CPU.
+// Vem dentro da skill videos-opus (modelos/rvm_mobilenetv3_fp32.onnx). Placa de vídeo pelo DirectML (Windows) ou CoreML
+// (Mac) quando existir, senão CPU.
 import { existsSync } from "node:fs";
 import { cpus } from "node:os";
 import { createRequire } from "node:module";
@@ -19,10 +20,10 @@ export async function sessao() {
   if (!rvm || !existsSync(rvm)) throw new Error(`modelo de recorte não encontrado (${rvm}). Reinstale a skill videos-opus.`);
   const o = ort();
   const threads = Math.max(1, cpus().length - 1);
-  for (const prov of [["dml"], ["cpu"]]) {
+  for (const prov of [[process.platform === "darwin" ? "coreml" : "dml"], ["cpu"]]) {
     try {
       const s = await o.InferenceSession.create(rvm, { executionProviders: prov, intraOpNumThreads: threads });
-      return { s, Tensor: o.Tensor, provedor: prov[0] === "dml" ? "placa de vídeo (DirectML)" : "processador" };
+      return { s, Tensor: o.Tensor, provedor: prov[0] === "dml" ? "placa de vídeo (DirectML)" : prov[0] === "coreml" ? "chip da Apple (CoreML)" : "processador" };
     } catch (e) { if (prov[0] === "cpu") throw e; }
   }
 }
