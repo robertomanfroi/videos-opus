@@ -194,9 +194,9 @@
     <tr><td>Chat normal do Claude (site ou app)</td><td><span class="nao">NÃO</span></td><td>O chat não tem acesso aos programas de vídeo do seu computador.</td></tr>
     <tr><td>Claude no celular</td><td><span class="nao">NÃO</span></td><td>A edição precisa do computador.</td></tr>
     <tr><td><b>Codex</b> (app do ChatGPT no computador)</td><td><span class="sim">SIM</span></td><td>Com o instalador próprio (páginas 5 e 6).</td></tr>
-    <tr><td>Mac</td><td><span class="nao">AINDA NÃO</span></td><td>Esta versão é para Windows 10 e 11.</td></tr>
+    <tr><td><b>Mac</b> (chip da Apple ou Intel)</td><td><span class="sim">SIM</span></td><td>Com o comando do Terminal (página 7). macOS 12 ou mais novo.</td></tr>
   </table>
-  <div class="atencao"><b>Resumo:</b> você precisa do <b>app do Claude no computador com Windows</b> e de um <b>plano pago (Pro ou acima)</b>, porque a aba Code não existe no plano gratuito.</div>
+  <div class="atencao"><b>Resumo:</b> você precisa do <b>app do Claude no computador (Windows ou Mac)</b> e de um <b>plano pago (Pro ou acima)</b>, porque a aba Code não existe no plano gratuito.</div>
   <div class="rodape"><span>Vídeos Opus · Guia</span><span>2</span></div>
 </section>
 
@@ -224,7 +224,7 @@
   <div class="rotulo">Checklist</div>
   <h1>Antes de instalar</h1>
   <ul class="check">
-    <li>Computador com <b>Windows 10 ou 11</b></li>
+    <li>Computador com <b>Windows 10 ou 11</b> (no Mac, veja a página 7)</li>
     <li>Uns <b>3 GB livres</b> no disco</li>
     <li>App do <b>Claude</b> instalado no computador, com login feito (veja a página anterior)</li>
     <li>Plano <b>Pro, Max, Team ou Enterprise</b> (a aba <b>Code</b> aparece no topo do app)</li>
@@ -285,10 +285,34 @@
   <table style="margin-top:10px">
     <tr><th style="width:36%">Aconteceu</th><th>O que fazer</th></tr>
     <tr><td>O Codex diz que não conhece a skill</td><td>Feche e abra o app. Em <b>Habilidades</b>, confira se <b>videos-opus</b> está em "Minhas habilidades". Se não estiver, abra o instalador do Codex de novo.</td></tr>
-    <tr><td>ChatGPT no site ou no celular</td><td>Não funciona: só o app do ChatGPT no computador com Windows usa a skill.</td></tr>
+    <tr><td>ChatGPT no site ou no celular</td><td>Não funciona: só o app no computador (Windows ou Mac) usa a skill.</td></tr>
   </table>
   <p class="pequeno" style="margin-top:8px;opacity:.75">O período de uso de 7 dias é o mesmo no Claude e no Codex.</p>
   <div class="rodape"><span>Vídeos Opus · Guia</span><span>6</span></div>
+</section>
+
+<!-- 3c. INSTALAR NO MAC -->
+<section class="pagina">
+  <div class="rotulo">Só para quem usa Mac</div>
+  <h1>Instalar no Mac</h1>
+  <h2>Copie, cole no Terminal, pronto.</h2>
+  <p class="pequeno">Funciona em Mac com chip da Apple (M1, M2, M3, M4) ou Intel, com macOS 12 ou mais novo. Antes, instale o <b>app do Claude para Mac</b> em <b>claude.ai/download</b> (botão <b>Download for Mac</b>) e faça login, como na página 3.</p>
+  <div class="passo"><div class="num">1</div><div class="txt">Abra o <b>Terminal</b>: aperte <b>Command + Espaço</b>, digite <b>Terminal</b> e aperte <b>Enter</b>.</div></div>
+  <div class="passo"><div class="num">2</div><div class="txt">Copie a linha abaixo <b>inteira</b>, cole no Terminal (<b>Command + V</b>) e aperte <b>Enter</b>:
+    <div style="margin-top:8px;padding:10px 12px;border-radius:8px;background:#1b120c;color:#f3e6d6;font-family:Menlo,Consolas,monospace;font-size:8.4px;line-height:1.45;white-space:nowrap">curl -fsSL https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar-mac.sh | bash</div></div></div>
+  <div class="passo"><div class="num">3</div><div class="txt">O Terminal baixa e instala tudo sozinho (uns 3 minutos). Quando aparecer <b>PRONTO!</b>, está instalado. Pode fechar o Terminal.</div></div>
+  <div class="passo"><div class="num">4</div><div class="txt">Use igual ao Windows: app do Claude, aba <b>Code</b>, ambiente <b>Local</b>. O vídeo pronto aparece na pasta <b>Vídeos editados</b>, na Mesa (Área de Trabalho).</div></div>
+
+  <h3>No Codex (Mac)</h3>
+  <p class="pequeno">Use esta linha no lugar da de cima. Depois feche e abra de novo o Codex (o app do Codex ou o app do ChatGPT, modo Codex) e peça como no Claude.</p>
+  <div style="margin-top:6px;padding:10px 12px;border-radius:8px;background:#1b120c;color:#f3e6d6;font-family:Menlo,Consolas,monospace;font-size:8.4px;line-height:1.45;white-space:nowrap">curl -fsSL https://github.com/robertomanfroi/videos-opus/releases/latest/download/instalar-mac.sh | bash -s codex</div>
+  <table style="margin-top:12px">
+    <tr><th style="width:36%">Aconteceu</th><th>O que fazer</th></tr>
+    <tr><td>"Não consegui baixar o pacote"</td><td>Confira a internet e cole a mesma linha de novo.</td></tr>
+    <tr><td>"O Mac não deixou o Vídeos Opus abrir o navegador"</td><td>Cortes e legenda já funcionam. Para o resto, instale o <b>Google Chrome</b>, abra ele uma vez e cole a linha de novo.</td></tr>
+    <tr><td>Quero atualizar</td><td>Cole a mesma linha de novo. Seus vídeos não são apagados.</td></tr>
+  </table>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>7</span></div>
 </section>
 
 <!-- 4. COMO USAR -->
@@ -312,7 +336,7 @@
   </table>
   <div class="escuro"><div class="aspa">“</div><p>Não precisa decorar nenhum comando. Fale com o Claude como falaria com uma editora: o que você quer, para onde vai o vídeo e o que não pode faltar.</p></div>
   <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Super Black <span>Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>7</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>8</span></div>
 </section>
 
 <section class="pagina pagina-sbe">
@@ -329,7 +353,7 @@
   <p class="fartura">Um valor surreal. Não é uma black comum. É fartura.</p>
   <div><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Black Friday →</a></div>
   <div class="url">suellenwarmling.com.br/super-black-eterna</div>
-  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>8</span></div>
+  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>9</span></div>
 </section>
 
 <!-- 5. MODELOS 1-3 -->
@@ -358,7 +382,7 @@
     <p class="pequeno">Parece que você editou no próprio Instagram: uma palavra de legenda por vez, prints acima da cabeça e cortes secos. Ótimo para bastidores e resultados.</p>
     <div class="prompt"><span class="etq">Copie</span>Edita meu último vídeo no estilo celular. Usa os prints que coloquei na pasta Meus prints quando eu falar dos resultados.</div>
   </div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>9</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>10</span></div>
 </section>
 
 <!-- 6. MODELOS 4-7 -->
@@ -393,7 +417,7 @@
     <div class="prompt"><span class="etq">Copie</span>Cria um vídeo animado de 15 segundos para Reels anunciando [o Planner 2027 por R$ 47, só esta semana]. Usa as cores da minha marca: [terracota e areia].</div>
     <div class="prompt"><span class="etq">Logo animada</span>Cria uma logo animada de 5 segundos com o nome "[Ateliê Bia]" para abrir meus vídeos.</div>
   </div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>10</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>11</span></div>
 </section>
 
 <!-- ROTEIRO VIRAL + REFERÊNCIA -->
@@ -415,7 +439,7 @@
     <div class="prompt"><span class="etq">Copie</span>Salvei nos Downloads um vídeo chamado [referencia-reels]. Edita o meu último vídeo num estilo parecido com o dele.</div>
     <div class="prompt"><span class="etq">Com prints</span>Coloquei na pasta [Referências] uns prints de um vídeo que eu gosto. Faz a legenda e a abertura do meu vídeo nesse estilo.</div>
   </div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>11</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>12</span></div>
 </section>
 
 <!-- MODELOS DE VÍDEO (catálogo) -->
@@ -458,7 +482,7 @@
       </div>
     </div>
   </div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>12</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>13</span></div>
 </section>
 
 <!-- MODELOS DE VÍDEO (catálogo, continuação) -->
@@ -498,7 +522,7 @@
       </div>
     </div>
   </div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>13</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>14</span></div>
 </section>
 
 <!-- 7. FORMATOS + AJUSTES -->
@@ -522,7 +546,7 @@
 
   <div class="escuro"><div class="aspa">“</div><p>Dica de ouro: na primeira vez, o Claude pergunta seu nome, seu @ e os nomes que você fala muito (sua marca, seu produto). Responda com calma: é isso que deixa a legenda certa.</p></div>
   <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Quer ir além do vídeo? <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>14</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>15</span></div>
 </section>
 
 <!-- 8. PROBLEMAS -->
@@ -552,7 +576,7 @@
 
   <a class="faixa-sbe" href="https://suellenwarmling.com.br/super-black-eterna/"><div style="flex:1"><div class="tit">Última chamada: <span>Super Black Eterna</span></div><p>28/10, quarta · cursos com acesso vitalício, o clone do cérebro da Suellen e conteúdo pronto por muitos meses. Não é uma black comum. É fartura.</p></div><span class="btn-sbe">Garantir minha vaga →</span></a>
   <div class="cartao"><b>Suporte:</b> links.suellenwarmling.com.br/fale-com-suporte-aqui</div>
-  <div class="rodape"><span>Vídeos Opus · Guia</span><span>15</span></div>
+  <div class="rodape"><span>Vídeos Opus · Guia</span><span>16</span></div>
 </section>
 
 <section class="pagina pagina-sbe">
@@ -569,7 +593,7 @@
   <p class="fartura">Um valor surreal. Não é uma black comum. É fartura.</p>
   <div><a class="btn-sbe grande" href="https://suellenwarmling.com.br/super-black-eterna/">Garantir minha vaga na Black Friday →</a></div>
   <div class="url">suellenwarmling.com.br/super-black-eterna</div>
-  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>16</span></div>
+  <div class="rodape" style="color:var(--bege-escuro)"><span>Vídeos Opus · Guia</span><span>17</span></div>
 </section>
 
 </body>
