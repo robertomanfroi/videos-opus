@@ -15,7 +15,7 @@ ditto -x -k "$BASE_ZIP" "$TRAB"
 # programas: fora os do Windows, dentro os do Mac
 rm -rf "$OUT/bin" "$OUT/kit/node_modules"
 mkdir -p "$OUT/bin/whisper"
-cp "$NATIVOS/bin/node" "$NATIVOS/bin/ffmpeg" "$NATIVOS/bin/ffprobe" "$OUT/bin/"
+cp "$NATIVOS/bin/node" "$NATIVOS/bin/ffmpeg" "$NATIVOS/bin/ffprobe" "$NATIVOS/bin/yt-dlp" "$OUT/bin/"
 cp "$NATIVOS/bin/whisper/whisper-cli" "$OUT/bin/whisper/"
 ditto "$NATIVOS/kit-node_modules" "$OUT/kit/node_modules"
 
@@ -38,12 +38,13 @@ s = re.sub(r'- FFmpeg 9\.0\.2 \(build "essentials".*\n.*\n',
            '  Código-fonte: https://ffmpeg.org/download.html\n', s, count=1)
 s = s.replace("Usa o Microsoft Edge já instalado no Windows; nenhum navegador é incluído.",
               "Usa o Google Chrome já instalado no Mac; sem ele, o instalador baixa o Chrome headless do Playwright.")
+s = s.replace("o .exe traz o Python", "o binário traz o Python")
 s = s.replace("whisper.cpp (build b5130", "whisper.cpp (compilado para macOS a partir do código-fonte")
 open(p, "w", encoding="utf-8").write(s)
 PY
 
-chmod +x "$OUT/bin/node" "$OUT/bin/ffmpeg" "$OUT/bin/ffprobe" "$OUT/bin/whisper/whisper-cli"
-for f in SKILL.md DIREITOS.txt codex/SKILL.md scripts/video.mjs scripts/navegador.mjs scripts/kit.mjs bin/node bin/ffmpeg \
+chmod +x "$OUT/bin/node" "$OUT/bin/ffmpeg" "$OUT/bin/ffprobe" "$OUT/bin/yt-dlp" "$OUT/bin/whisper/whisper-cli"
+for f in SKILL.md DIREITOS.txt codex/SKILL.md scripts/video.mjs scripts/navegador.mjs scripts/kit.mjs scripts/referencia.mjs bin/node bin/ffmpeg bin/yt-dlp \
          bin/ffprobe bin/whisper/whisper-cli modelos/ggml-small-q5_1.bin modelos/ggml-silero-v5.1.2.bin \
          modelos/rvm_mobilenetv3_fp32.onnx acervo/data/videos.json node_modules/playwright-core/package.json \
          kit/node_modules/hyperframes/dist/cli.js kit/.claude/skills/editar/SKILL.md kit/examples/starter/index.html; do

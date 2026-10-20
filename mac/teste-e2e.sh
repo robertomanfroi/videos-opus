@@ -54,6 +54,14 @@ R=$("$N" "$V" viral "$P" --titulo "Edite|com|IA" --tag "TESTE NO MAC" --cta "cli
 VIRAL=$(echo "$R" | campo ".get('entregue') or d.get('final') or d.get('arquivo')")
 [ -f "$VIRAL" ] && quadro "$VIRAL" 1 viral-1s && quadro "$VIRAL" 6 viral-6s
 
+passo "4b. Vídeo de referência (arquivo local; o Instagram barra IP de servidor, então o link fica para o teste manual)"
+"$VO/bin/yt-dlp" --version | tee "$EVID/yt-dlp.txt"
+R=$("$N" "$V" referencia "$VID"); echo "$R" > "$EVID/referencia.json"
+echo "$R" | campo "['ok']" | grep -q True || { echo "referencia falhou"; exit 1; }
+RP=$(echo "$R" | campo "['pasta']")
+for f in ficha.json folha-gancho.jpg folha-cenas.jpg folha-geral.jpg; do [ -s "$RP/$f" ] || { echo "referencia sem $f"; exit 1; }; done
+cp "$RP/folha-cenas.jpg" "$EVID/referencia-cenas.jpg"
+
 passo "5. Vídeo animado"
 R=$("$N" "$V" animar "$VO/exemplos/oferta-animada.html" --segundos 4 --nome teste-animado); echo "$R" | tee "$EVID/animar.json"
 ANIM=$(echo "$R" | campo ".get('entregue') or d.get('final') or d.get('arquivo')")

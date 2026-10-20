@@ -16,6 +16,7 @@ const exe = (nome, sub = "") => {
 export const FFMPEG = exe("ffmpeg");
 export const FFPROBE = exe("ffprobe");
 export const WHISPER = exe("whisper-cli", "whisper");
+export const YTDLP = exe("yt-dlp");
 export const MODELO = process.env.VIDEOS_OPUS_MODELO || join(SKILL, "modelos", "ggml-small-q5_1.bin");
 export const FONTES = join(SKILL, "fontes");
 

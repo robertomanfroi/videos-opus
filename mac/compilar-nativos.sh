@@ -7,6 +7,7 @@ BASE_ZIP="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"; SAIDA="$2"
 NODE_V=24.21.0
 WHISPER_TAG=v1.9.4
 FFMPEG_V=9.0.2   # mesma versão do pacote do Windows; o build "latest" que mudar de versão para a compilação
+YTDLP_V=2026.08.19   # mesmo yt-dlp do pacote do Windows
 case "$(uname -m)" in arm64) NA=arm64; FA=arm64 ;; x86_64) NA=x64; FA=amd64 ;; *) exit 1 ;; esac
 mkdir -p "$SAIDA/bin/whisper"; SAIDA="$(cd "$SAIDA" && pwd)"
 T="$(mktemp -d)"; cd "$T"
@@ -30,6 +31,12 @@ chmod +x "$SAIDA/bin/ffmpeg" "$SAIDA/bin/ffprobe"
 # o que a skill usa: legenda (libass), texto, HDR (zscale), VP9 com transparência, x264 e a placa da Apple
 for f in subtitles drawtext zscale tonemap; do "$SAIDA/bin/ffmpeg" -hide_banner -filters | grep -qw "$f" || { echo "ffmpeg sem filtro $f"; exit 1; }; done
 for e in libx264 libvpx-vp9 h264_videotoolbox aac; do "$SAIDA/bin/ffmpeg" -hide_banner -encoders | grep -qw "$e" || { echo "ffmpeg sem encoder $e"; exit 1; }; done
+
+echo "== yt-dlp $YTDLP_V (baixar vídeo de referência)"
+curl -fsSL -o "$SAIDA/bin/yt-dlp" "https://github.com/yt-dlp/yt-dlp/releases/download/$YTDLP_V/yt-dlp_macos"
+curl -fsSL "https://github.com/yt-dlp/yt-dlp/releases/download/$YTDLP_V/SHA2-256SUMS" | grep " yt-dlp_macos\$" | awk '{print $1"  '"$SAIDA"'/bin/yt-dlp"}' | shasum -a 256 -c -
+chmod +x "$SAIDA/bin/yt-dlp"
+"$SAIDA/bin/yt-dlp" --version
 
 echo "== whisper.cpp $WHISPER_TAG"
 git clone -q --depth 1 --branch "$WHISPER_TAG" https://github.com/ggml-org/whisper.cpp

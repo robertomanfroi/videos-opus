@@ -1,6 +1,6 @@
 ---
 name: videos-opus
-description: Edita vídeos gravados no celular e cria vídeos animados no padrão premium. Corta as pausas, põe legenda palavra a palavra, edita nos 5 estilos (celular, editorial, explicativo, colagem, anúncio) e nos 5 modelos da Suellen do ebook (tela dividida, POV, texto na tela, STA, entrevista), sugere roteiro viral (gancho de Hormozi), faz edição viral, cria no estilo de um vídeo de referência, muda o formato (Reels, feed, horizontal), deixa leve para WhatsApp e faz motion graphics. Use quando pedirem "edita meu vídeo", "edita no estilo X", "no modelo tela dividida/POV/texto na tela/STA/entrevista", "faz um reel", "edição viral", "analisa meu roteiro", "melhora meu gancho", "quero um vídeo igual a este", "corta as pausas", "põe legenda", "formato do Reels", "diminui para o WhatsApp", "vídeo animado", "motion graphics", "logo animada" ou "vídeo de lançamento".
+description: Edita vídeos gravados no celular e cria vídeos animados no padrão premium. Corta as pausas, põe legenda palavra a palavra, edita nos 5 estilos (celular, editorial, explicativo, colagem, anúncio) e nos 5 modelos da Suellen do ebook (tela dividida, POV, texto na tela, STA, entrevista), sugere roteiro viral (gancho de Hormozi), faz edição viral, cria no estilo de um vídeo de referência, muda o formato (Reels, feed, horizontal), deixa leve para WhatsApp e faz motion graphics. Use quando pedirem "edita meu vídeo", "edita no estilo X", "no modelo tela dividida/POV/texto na tela/STA/entrevista", "faz um reel", "edição viral", "analisa meu roteiro", "melhora meu gancho", "quero um vídeo igual a este", link de um Reels/TikTok como referência, "corta as pausas", "põe legenda", "formato do Reels", "diminui para o WhatsApp", "vídeo animado", "motion graphics", "logo animada" ou "vídeo de lançamento".
 argument-hint: "<o que fazer> [nome do vídeo]"
 allowed-tools: Bash, Read, Write, Edit, AskUserQuestion
 license: Proprietária. © 2026 Suellen Warmling. Todos os direitos reservados (termos em DIREITOS.txt).
@@ -64,7 +64,7 @@ Alunas têm uma senha (está no guia das alunas) que libera para sempre. Quando 
 | um estilo pelo nome (celular, editorial, explicativo, colagem, anúncio), prints, títulos, "faz um reel completo" | **Estilos de edição completos** |
 | um modelo pelo nome (tela dividida, POV, texto na tela, STA, entrevista), "modelo X" do ebook | **Modelos da Suellen** (no kit de estilos) |
 | vídeo animado, motion graphics, logo animada, vídeo sem gravação | **Vídeos animados** |
-| "quero igual a este vídeo", "nesse estilo", mandou um vídeo ou print de referência | **Vídeo de referência** |
+| "quero igual a este vídeo", "nesse estilo", mandou um link do Instagram/TikTok/YouTube, um vídeo ou print de referência | **Vídeo de referência** |
 | só "edita meu vídeo", sem mais nada | pergunte uma vez: "1. Rápida: cortes e legenda (1 min) · 2. Viral: abertura, zoom e efeitos (2 min) · 3. Estilo completo: celular, editorial, explicativo, colagem ou anúncio (5 min ou mais)" |
 
 ## Editar um vídeo gravado
@@ -170,13 +170,36 @@ Antes de qualquer sugestão, **leia `SKILL_DIR/roteiro/roteiro-viral.md`** e sig
 
 ## Vídeo de referência ("quero um vídeo nesse estilo")
 
-A pessoa pode mostrar um vídeo de que gostou para você criar algo parecido com o vídeo dela.
-1. A referência precisa estar no computador: um Reels salvo, uma gravação de tela do celular ou prints. Se ela mandar só um link do Instagram ou TikTok, peça para salvar o vídeo (ou gravar a tela) e colocar em Downloads; você não consegue baixar de link.
-2. `achar "<nome>"` e depois `referencia "<video>"`. Ele devolve `folha` (12 quadros do vídeo inteiro), `inicio` (3 quadros dos primeiros segundos), o ritmo dos cortes (`segundosPorCorte`) e `fala.wav` (para `transcrever` o roteiro, se ela quiser também o texto). Abra as imagens e observe:
-   - **gancho visual** dos primeiros segundos; **texto na tela** (fonte serifada ou reta, tamanho, posição, cor de destaque); **legenda** (palavra a palavra, frase, caixa);
-   - **ritmo** (corte a cada X s, zoom, tela dividida, prints e imagens por cima); **cores e clima**; **estrutura do roteiro** (gancho, lista, história, chamada).
-3. Resuma em 4 a 6 linhas simples o que define aquele estilo e diga como vai reproduzir com o vídeo dela, escolhendo o caminho mais próximo: edição comum (opções de legenda), edição viral (título, frases-chave, chamada), um dos 5 estilos, ou um vídeo animado próprio para o que nenhum deles cobre.
-4. Crie algo **parecido no estilo**, nunca uma cópia: não reaproveite o texto, a marca, a música nem as imagens da referência. Mantenha o padrão premium: se a referência usa contorno nas letras ou efeitos agressivos, traduza para a versão elegante (sombra suave, véu, movimento lento) e avise em uma frase.
+A pessoa mostra um vídeo de que gostou (link do Instagram, TikTok ou YouTube, ou o arquivo) para você modelar a edição dele no vídeo novo.
+1. **Baixar e destrinchar.** Com link: `referencia "<link>"`, que baixa o vídeo sozinho. Com arquivo: `achar "<nome>"` e depois `referencia "<video>"`. Leva de 20 s a 1 min. Avise numa linha que está baixando e analisando.
+   - Se vier `ok: false`, o link é privado, é post só de fotos, ou o Instagram barrou. Repita o `motivo` numa frase e peça para ela salvar o vídeo (ou gravar a tela) em Downloads.
+2. **Ler a análise.** O JSON (também em `ficha.json`) traz:
+   - `ritmo`: número de cortes, segundos por cena, cena mais curta e mais longa, `cortesNos3Primeiros` e os tempos dos cortes.
+   - `movimento`: leitura (parado, moderado ou muito movimento) e `porSegundo`.
+   - `audio`: volume em LUFS e `silencioPct`.
+   - `origem`: autor e legenda do post.
+   - As imagens. **Abra todas com Read:**
+     - `folha-gancho` (quadro a cada 0,25 s dos 3 primeiros segundos);
+     - `folha-cenas` (começo e fim de cada cena lado a lado: mostra zoom, câmera andando, texto que entra e sai);
+     - `folha-geral` (12 quadros do vídeo todo);
+     - `inicio-1..3` (quadros grandes, para ler o texto na tela).
+   - Para saber se é fala ou só música, e qual é a estrutura do roteiro: `transcrever "<pasta>" --arquivo referencia.mp4`. Se a referência veio de arquivo, passe o caminho completo dele. Poucas palavras = vídeo de música ou texto na tela.
+3. **Ficha de estilo.** Escreva `ficha-estilo.md` na pasta da análise e mostre a ela em 6 a 8 linhas simples:
+   - **gancho** (o que acontece nos 3 primeiros segundos: montagem rápida, frase na tela, pergunta);
+   - **ritmo** (corte a cada X s; cenas longas ou picotadas);
+   - **texto na tela** (posição, tamanho, fonte serifada ou reta, cor, quanto tempo fica);
+   - **legenda** (palavra a palavra, frase, caixa, ou nenhuma);
+   - **movimento e efeitos** (zoom, câmera na mão, tela dividida, prints por cima, transições);
+   - **cores e clima**; **áudio** (fala, música, os dois); **estrutura** (gancho, lista, história, chamada).
+4. **Escolher o caminho mais próximo** e dizer como vai reproduzir com o vídeo dela:
+   - a edição comum (opções de legenda);
+   - a edição viral;
+   - um dos 5 estilos;
+   - um dos 5 modelos (entrevista, POV, texto na tela, STA, tela dividida);
+   - um vídeo animado próprio, para o que nenhum deles cobre.
+
+   Use os números da ficha nos parâmetros: o ritmo dos cortes, o tempo do texto na tela e o tamanho e a posição do texto.
+5. Crie algo **parecido no estilo**, nunca uma cópia. Não reaproveite o texto, a marca, a música nem as imagens da referência. O vídeo baixado serve só para estudo, no computador dela: nunca o publique nem o entregue como se fosse dela. Mantenha o padrão premium: se a referência usa contorno nas letras ou efeitos agressivos, traduza para a versão elegante (sombra suave, véu, movimento lento) e avise em uma frase.
 
 ## Edição viral
 

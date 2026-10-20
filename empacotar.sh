@@ -13,6 +13,7 @@ rsync -a --exclude .git ~/.claude/skills/videos-opus/acervo/ "$OUT/acervo/"
 unzip -qjo $V/ffmpeg.zip '*/bin/ffmpeg.exe' '*/bin/ffprobe.exe' -d "$OUT/bin"
 unzip -qjo $V/ffmpeg.zip '*/LICENSE' -d build/tmp && mv build/tmp/LICENSE "$OUT/licencas/FFmpeg-GPLv3.txt"
 unzip -qjo $V/node.zip '*/node.exe' -d "$OUT/bin"
+cp $V/yt-dlp.exe "$OUT/bin/" && cp $V/LICENSE-yt-dlp.txt "$OUT/licencas/yt-dlp-Unlicense.txt"
 unzip -qjo $V/node.zip 'node-v24.21.0-win-x64/LICENSE' -d build/tmp && mv build/tmp/LICENSE "$OUT/licencas/Node.js.txt"
 unzip -qjo $V/whisper-bin-x64.zip 'Release/whisper-cli.exe' 'Release/whisper.dll' 'Release/ggml*.dll' -d "$OUT/bin/whisper"
 cp $V/LICENSE-whisper.cpp.txt "$OUT/licencas/whisper.cpp-MIT.txt"
@@ -31,6 +32,8 @@ Programas de terceiros incluídos, cada um com a sua licença (arquivos nesta pa
 - FFmpeg 9.0.2 (build "essentials" de Gyan Doshi, https://www.gyan.dev/ffmpeg/builds/) — GPLv3.
   Código-fonte: https://ffmpeg.org/download.html e https://github.com/GyanD/codexffmpeg/releases/tag/9.0.2
 - Node.js 24.21.0 — licença MIT e licenças de terceiros em Node.js.txt.
+- yt-dlp 2026.08.19 (https://github.com/yt-dlp/yt-dlp), para baixar vídeos de referência — domínio público
+  (Unlicense, yt-dlp-Unlicense.txt); o .exe traz o Python e bibliotecas de terceiros, cada uma com a sua licença.
 - whisper.cpp (build b5130, https://github.com/ggml-org/whisper.cpp) — MIT.
 - Modelo Whisper small (OpenAI, MIT), quantizado por ggerganov (ggml-small-q5_1.bin).
 - Fontes Bebas Neue, Anton, Montserrat, Poppins e EB Garamond — SIL Open Font License 1.1.
@@ -52,7 +55,7 @@ TXT
 cp LEIA-PRIMEIRO.txt build/LEIA-PRIMEIRO.txt
 sed -i 's/$/\r/' build/LEIA-PRIMEIRO.txt "$OUT/licencas/LEIA.txt" "$OUT/DIREITOS.txt"
 rm -rf build/tmp
-for f in SKILL.md DIREITOS.txt codex/SKILL.md scripts/instalar-codex.mjs roteiro/roteiro-viral.md scripts/video.mjs scripts/ferramentas.mjs scripts/correcoes.mjs bin/ffmpeg.exe bin/ffprobe.exe bin/node.exe bin/whisper/whisper-cli.exe modelos/ggml-small-q5_1.bin fontes/BebasNeue-Regular.ttf acervo/data/videos.json node_modules/playwright-core/package.json scripts/viral.html scripts/viral.mjs scripts/som.mjs scripts/navegador.mjs scripts/legenda.mjs fontes/EBGaramond-Italic.ttf exemplos/oferta-animada.html scripts/kit.mjs modelos/ggml-silero-v5.1.2.bin modelos/rvm_mobilenetv3_fp32.onnx kit/node_modules/hyperframes/dist/cli.js kit/node_modules/onnxruntime-node/bin/napi-v3/win32/x64/onnxruntime_binding.node kit/scripts/new-video.mjs kit/.claude/skills/editar/SKILL.md kit/.claude/skills/_motor/transcrever.mjs kit/.claude/skills/estilo-colagem/scripts/matte-pessoa.mjs kit/examples/starter/index.html; do
+for f in SKILL.md DIREITOS.txt codex/SKILL.md scripts/instalar-codex.mjs roteiro/roteiro-viral.md scripts/video.mjs scripts/ferramentas.mjs scripts/correcoes.mjs bin/ffmpeg.exe bin/ffprobe.exe bin/node.exe bin/whisper/whisper-cli.exe modelos/ggml-small-q5_1.bin fontes/BebasNeue-Regular.ttf acervo/data/videos.json node_modules/playwright-core/package.json scripts/viral.html scripts/viral.mjs scripts/som.mjs scripts/navegador.mjs scripts/legenda.mjs scripts/referencia.mjs bin/yt-dlp.exe fontes/EBGaramond-Italic.ttf exemplos/oferta-animada.html scripts/kit.mjs modelos/ggml-silero-v5.1.2.bin modelos/rvm_mobilenetv3_fp32.onnx kit/node_modules/hyperframes/dist/cli.js kit/node_modules/onnxruntime-node/bin/napi-v3/win32/x64/onnxruntime_binding.node kit/scripts/new-video.mjs kit/.claude/skills/editar/SKILL.md kit/.claude/skills/_motor/transcrever.mjs kit/.claude/skills/estilo-colagem/scripts/matte-pessoa.mjs kit/examples/starter/index.html; do
   [ -f "$OUT/$f" ] || { echo "FALTA $f"; exit 1; }
 done
 rm -f dist/videos-opus.zip
