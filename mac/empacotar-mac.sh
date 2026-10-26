@@ -39,6 +39,7 @@ s = re.sub(r'- FFmpeg 9\.0\.2 \(build "essentials".*\n.*\n',
 s = s.replace("Usa o Microsoft Edge já instalado no Windows; nenhum navegador é incluído.",
               "Usa o Google Chrome já instalado no Mac; sem ele, o instalador baixa o Chrome headless do Playwright.")
 s = s.replace("o .exe traz o Python", "o binário traz o Python")
+s = re.sub(r'- Microsoft Visual C\+\+ Redistributable.*\n.*\n', "", s, count=1)
 s = s.replace("whisper.cpp (build b5130", "whisper.cpp (compilado para macOS a partir do código-fonte")
 open(p, "w", encoding="utf-8").write(s)
 PY

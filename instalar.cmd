@@ -78,6 +78,9 @@ if errorlevel 1 goto erro_extrair
 if defined ANTIGO rmdir /s /q "%ANTIGO%" >nul 2>&1
 del /q "%ZIP%" >nul 2>&1
 
+rem libera a senha antes do teste: se o teste falhar, a aluna já fica liberada ao corrigir
+if defined SENHA "%DESTINO%\videos-opus\bin\node.exe" "%DESTINO%\videos-opus\scripts\video.mjs" liberar "%SENHA%" >nul 2>&1
+if defined SENHA if not errorlevel 1 set "LIBERADA=1"
 echo  3/3  Testando...
 "%DESTINO%\videos-opus\bin\node.exe" "%DESTINO%\videos-opus\scripts\video.mjs" diagnostico > "%DESTINO%\videos-opus\diagnostico.txt" 2>&1
 findstr /c:"\"ok\": true" "%DESTINO%\videos-opus\diagnostico.txt" >nul
@@ -87,8 +90,6 @@ findstr /c:"\"so_navegador\": true" "%DESTINO%\videos-opus\diagnostico.txt" >nul
 if errorlevel 1 goto erro_teste
 set "AVISO=1"
 :teste_ok
-if defined SENHA "%DESTINO%\videos-opus\bin\node.exe" "%DESTINO%\videos-opus\scripts\video.mjs" liberar "%SENHA%" >nul 2>&1
-if defined SENHA if not errorlevel 1 set "LIBERADA=1"
 
 echo.
 echo  ==============================================
