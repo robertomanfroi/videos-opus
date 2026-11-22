@@ -35,7 +35,7 @@ Siga o **Fluxo** do `estilo-celular/SKILL.md` (mesmos comandos e o mesmo jeito d
   cabeças ficam abaixo de y≈720; se o assunto estiver no alto, suba o `top` do `#texto` no template, mas mantenha-o no terço de cima.
 - **Passo 3:** `keeps.json` com **um trecho só** (`from` e `to` do trecho escolhido).
 - **Passo 4:** antes do `cortar.mjs`, crie um `assets/silences.txt` **vazio** (a cena não tem fala: assim nada é cortado).
-- **Passo 5:** a transcrição só é feita porque a trava do render pede; não há legenda nem conferência de fala.
+- **Passo 5:** a transcrição só é feita porque a trava do render pede; não há legenda nem conferência de fala. Acrescente `--sem-fala` ao comando do `transcrever.mjs` (a cena pode não ter fala nenhuma).
 - **Passos 6 e 7:** sem prints. Escreva a frase no `#texto` do template.
 - **Passo 8:** snapshot no 1º quadro, no meio e no último. Texto inteiro legível sobre a cena; nenhuma cabeça coberta.
 - **Entrega:** lembre que o vídeo sai **sem som** e que a música entra no Instagram (Reels → Áudio).

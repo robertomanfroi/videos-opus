@@ -39,7 +39,7 @@ Siga o **Fluxo** do `estilo-celular/SKILL.md` (mesmos comandos e o mesmo jeito d
 
 - **Passo 3:** `keeps.json` com um trecho só (6–12 s; mais itens = mais perto de 12 s).
 - **Passo 4:** antes do `cortar.mjs`, crie `assets/silences.txt` **vazio** (nada é cortado).
-- **Passo 5:** a transcrição só é feita porque a trava do render pede.
+- **Passo 5:** a transcrição só é feita porque a trava do render pede. Acrescente `--sem-fala` ao comando do `transcrever.mjs` (a cena pode não ter fala nenhuma).
 - **Passo 7:** cada parte vira um `<p>` dentro do `#texto` (título, um `<p>` por item, conclusão). Destaque só com
   MAIÚSCULAS, como nas referências (*MARKETING*), nunca com cor.
 - **Passo 8:** snapshot no 1º e no último quadro. Confira se o bloco não passa de y≈1640 nem começa acima de y≈280;

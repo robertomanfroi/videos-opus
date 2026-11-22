@@ -21,6 +21,8 @@ if (!existsSync(src)) { console.error(`não achei o vídeo: ${src}`); process.ex
 const st = statSync(src);
 const origem = { origem: resolve(src), tamanho: st.size, mtime: st.mtimeMs };
 const nomeEstilo = basename(estilo);
+// modelos que não precisam de fala (a cena pode ser muda): transcrição vazia não trava o projeto
+const SEM_FALA = new Set(["modelo-pov", "modelo-texto-na-tela", "modelo-sta"]);
 
 // estilo com criador próprio (ex.: estilo-anuncio/scripts/novo-anuncio.mjs) só entra por ele
 const criador = existsSync(join(estilo, "scripts")) && readdirSync(join(estilo, "scripts")).find((f) => /^novo-.*\.mjs$/.test(f));
@@ -59,7 +61,7 @@ const jaTranscrito = existsSync(join(a, "raw.json")) && statSync(join(a, "raw.js
 if (!jaTranscrito) {
 console.log("Transcrevendo o vídeo — no seu computador pode levar alguns minutos…");
 const nomes = lerNomes();
-execFileSync(process.execPath, [join(motor, "transcrever.mjs"), join(a, "raw.mp4"), join(a, "raw.json"), "--rapido", "--quieto", ...(nomes ? ["--nomes", nomes] : [])],
+execFileSync(process.execPath, [join(motor, "transcrever.mjs"), join(a, "raw.mp4"), join(a, "raw.json"), "--rapido", "--quieto", ...(SEM_FALA.has(nomeEstilo) ? ["--sem-fala"] : []), ...(nomes ? ["--nomes", nomes] : [])],
   { stdio: ["ignore", "inherit", "inherit"] });
 }
 marcarEtapa(proj, "transcrito");

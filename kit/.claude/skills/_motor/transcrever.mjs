@@ -18,7 +18,7 @@ import { binarios } from "./binarios.mjs";
 const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf(`--${k}`); return i >= 0 && args[i + 1] && !args[i + 1].startsWith("--") ? args[i + 1] : d; };
 const flag = (k) => args.includes(`--${k}`);
-const pos = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && args[i - 1].startsWith("--") && !["--rapido", "--txt", "--srt", "--quieto", "--cpu"].includes(args[i - 1])));
+const pos = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && args[i - 1].startsWith("--") && !["--rapido", "--txt", "--srt", "--quieto", "--cpu", "--sem-fala"].includes(args[i - 1])));
 const [midia, saida] = pos;
 const idioma = opt("idioma", "pt"), span = Number(opt("span", 3)), nomes = opt("nomes", "").trim(), quieto = flag("quieto");
 const log = (m) => { if (!quieto) console.log(m); };
@@ -88,7 +88,8 @@ try {
     if (words.length && !/^\s/.test(bruto)) { const p = words[words.length - 1]; p.text += t; p.end = +end.toFixed(3); continue; }
     words.push({ text: t, start: +start.toFixed(3), end: +end.toFixed(3) });
   }
-  if (!words.length) { console.error("ERRO: transcrição vazia. O vídeo tem fala? O som está muito baixo?"); process.exit(1); }
+  // --sem-fala: modelos POV, texto na tela e STA aceitam uma cena sem fala; a transcrição vazia não é erro.
+  if (!words.length && !flag("sem-fala")) { console.error("ERRO: transcrição vazia. O vídeo tem fala? O som está muito baixo?"); process.exit(1); }
 
   // frases (para .txt/.srt e para o log)
   const frases = [];

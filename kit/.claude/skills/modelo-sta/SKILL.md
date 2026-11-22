@@ -37,7 +37,7 @@ Siga o **Fluxo** do `estilo-celular/SKILL.md` (mesmos comandos e o mesmo jeito d
 
 - **Passo 3:** `keeps.json` com um trecho só, na duração da regra acima.
 - **Passo 4:** antes do `cortar.mjs`, crie `assets/silences.txt` **vazio**.
-- **Passo 5:** a transcrição só é feita porque a trava do render pede.
+- **Passo 5:** a transcrição só é feita porque a trava do render pede. Acrescente `--sem-fala` ao comando do `transcrever.mjs` (a cena pode não ter fala nenhuma).
 - **Passo 7:** título no primeiro `<p>`, frase no segundo, com aspas curvas.
 - **Passo 8:** snapshot no 1º, no meio e no último quadro. Texto legível nos pontos mais claros da cena;
   se não estiver, escureça a cena com `#cam{filter:brightness(.82)}` (nunca caixa atrás do texto).
