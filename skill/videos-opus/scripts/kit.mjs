@@ -59,6 +59,10 @@ export function ambienteKit(W) {
   if (nav) env.HYPERFRAMES_BROWSER_PATH = nav;
   env.DO_NOT_TRACK = "1";
   env.HYPERFRAMES_NO_UPDATE_CHECK = "1";
+  // Captura "rápida" (drawElement) do HyperFrames 0.7.109: liga sozinha em PC com placa de vídeo, mas depende de um
+  // recurso experimental do navegador que muda a cada versão do Edge/Chrome ("DrawElementImage requires the canvas to
+  // have the content=drawable attribute") e derruba o render em 0%. A captura normal funciona em qualquer navegador.
+  env.PRODUCER_EXPERIMENTAL_FAST_CAPTURE = "false";
   return env;
 }
 
