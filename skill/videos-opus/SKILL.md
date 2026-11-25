@@ -1,6 +1,6 @@
 ---
 name: videos-opus
-description: Edita vídeos gravados no celular e cria vídeos animados no padrão premium. Corta as pausas, põe legenda palavra a palavra, edita nos 5 estilos (celular, editorial, explicativo, colagem, anúncio) e nos 5 modelos da Suellen do ebook (tela dividida, POV, texto na tela, STA, entrevista), sugere roteiro viral (gancho de Hormozi), faz edição viral, cria no estilo de um vídeo de referência, muda o formato (Reels, feed, horizontal), deixa leve para WhatsApp e faz motion graphics. Use quando pedirem "edita meu vídeo", "edita no estilo X", "no modelo tela dividida/POV/texto na tela/STA/entrevista", "faz um reel", "edição viral", "analisa meu roteiro", "melhora meu gancho", "quero um vídeo igual a este", link de um Reels/TikTok como referência, "corta as pausas", "põe legenda", "formato do Reels", "diminui para o WhatsApp", "vídeo animado", "motion graphics", "logo animada" ou "vídeo de lançamento".
+description: Edita vídeos gravados no celular e cria vídeos animados no padrão premium. Corta as pausas, põe legenda palavra a palavra, edita nos 5 estilos (celular, editorial, explicativo, colagem, anúncio) e nos 5 modelos da Suellen do ebook (tela dividida, POV, texto na tela, STA, entrevista), sugere roteiro viral (gancho de Hormozi), faz edição viral, cria no estilo de um vídeo de referência, muda o formato (Reels, feed, horizontal), deixa leve para WhatsApp faz motion graphics e mostra um menu numerado para quem não sabe o que pedir ("menu"). Use quando pedirem "edita meu vídeo", "edita no estilo X", "no modelo tela dividida/POV/texto na tela/STA/entrevista", "faz um reel", "edição viral", "analisa meu roteiro", "melhora meu gancho", "quero um vídeo igual a este", link de um Reels/TikTok como referência, "corta as pausas", "põe legenda", "formato do Reels", "diminui para o WhatsApp", "vídeo animado", "motion graphics", "logo animada" ou "vídeo de lançamento".
 argument-hint: "<o que fazer> [nome do vídeo]"
 allowed-tools: Bash, Read, Write, Edit, AskUserQuestion
 license: Proprietária. © 2026 Suellen Warmling. Todos os direitos reservados (termos em DIREITOS.txt).
@@ -65,7 +65,68 @@ Alunas têm uma senha (está no guia das alunas) que libera para sempre. Quando 
 | um modelo pelo nome (tela dividida, POV, texto na tela, STA, entrevista), "modelo X" do ebook | **Modelos da Suellen** (no kit de estilos) |
 | vídeo animado, motion graphics, logo animada, vídeo sem gravação | **Vídeos animados** |
 | "quero igual a este vídeo", "nesse estilo", mandou um link do Instagram/TikTok/YouTube, um vídeo ou print de referência | **Vídeo de referência** |
+| "menu", "quero editar", "o que você faz?", "me mostra as opções", "não sei o que pedir", ou só um número de 1 a 18 | **Menu** |
 | só "edita meu vídeo", sem mais nada | pergunte uma vez: "1. Rápida: cortes e legenda (1 min) · 2. Viral: abertura, zoom e efeitos (2 min) · 3. Estilo completo: celular, editorial, explicativo, colagem ou anúncio (5 min ou mais)" |
+
+## Menu (para quem não sabe o que pedir)
+
+Quando ela escrever "menu", "quero editar", "o que você faz?", "me mostra as opções" ou disser que não sabe o que pedir, mostre esta lista, exatamente com estes números (são os mesmos do guia e da página de pedidos prontos), e peça para responder só com o número:
+
+```
+O que você quer fazer? Responda só com o número.
+
+VÍDEO QUE VOCÊ GRAVOU
+ 1. Cortes e legenda (até 5 min)
+ 2. Edição viral: abertura com título, zoom e botão de chamada
+
+ROTEIRO
+ 3. Escrever um roteiro antes de gravar
+ 4. Analisar o roteiro de um vídeo já gravado
+
+ESTILOS COMPLETOS
+ 5. Celular       6. Editorial       7. Explicativo
+ 8. Colagem       9. Anúncio para tráfego pago
+
+OUTROS JEITOS
+10. Igual a um vídeo de que você gostou (você cola o link)
+11. Vídeo animado, sem gravar nada
+12. Mudar o formato ou deixar leve para o WhatsApp
+13. Ajustar um vídeo que eu já editei
+
+MODELOS
+14. Tela dividida   15. POV   16. Texto na tela   17. STA   18. Entrevista
+```
+
+Quando ela responder com o número (ou mandar só um número de 1 a 18 no começo da conversa), faça **uma única pergunta**, numa mensagem só, com o que aquele item precisa, e termine com: "Se preferir, diga *faz do seu jeito* que eu escolho e te conto o que escolhi." Depois siga o caminho do item, como se ela tivesse pedido pelo nome. Não pergunte o que o caminho já descobre sozinho (o vídeo você acha; o perfil dela já está salvo depois da primeira vez).
+
+| Nº | Caminho | Pergunte só isto |
+|---|---|---|
+| 1 | Editar um vídeo gravado | nada: ache o último vídeo, confirme que é ele e edite |
+| 2 | Roteiro viral e depois Edição viral | se ela quer escolher o título e as frases fortes ou se você escolhe |
+| 3 | Roteiro viral (antes de gravar) | o tema, para quem é e o que a pessoa deve fazer no fim |
+| 4 | Roteiro viral (vídeo gravado) | nada |
+| 5 | Estilo celular | o título acima da cabeça (se quiser) e se há prints na pasta Meus prints |
+| 6 | Estilo editorial | a cor de destaque e as palavras que merecem o itálico (se quiser) |
+| 7 | Estilo explicativo | o que ela está explicando e quais imagens de apoio tem (nome do arquivo) |
+| 8 | Estilo colagem | o título que vai atrás da cabeça e as fotos para recortar; avise que é o mais demorado |
+| 9 | Estilo anúncio | o que está sendo anunciado e qual é a chamada |
+| 10 | Vídeo de referência | o link (Reels, TikTok ou YouTube) ou o nome do arquivo salvo |
+| 11 | Vídeos animados | o que o vídeo mostra, para quem é e as cores da marca |
+| 12 | Mudar formato ou deixar leve | qual formato: feed, quadrado, YouTube ou WhatsApp |
+| 13 | ajuste no último vídeo editado | o que ela quer mudar |
+| 14 | Modelo tela dividida | qual vídeo vai na parte de cima |
+| 15 | Modelo POV | o vídeo da cena e a frase do POV (sem frase, ofereça 3 opções) |
+| 16 | Modelo texto na tela | o vídeo de bastidor, o assunto da lista e a palavra para comentar no fim |
+| 17 | Modelo STA | o vídeo da cena calma e a frase (com o nome de quem disse, se souber) |
+| 18 | Modelo entrevista | onde estão os vídeos das entrevistas e os prints dos perfis |
+
+## Pedidos copiados do guia
+
+O guia e a página de pedidos prontos trazem pedidos para copiar. Reconheça e siga assim:
+
+- **"Formato: …" no fim do pedido** (por exemplo "Formato: uma palavra de legenda por vez, prints acima da cabeça e cortes secos") é só a descrição do estilo que ela já nomeou. Siga o guia do estilo normalmente; não monte uma edição nova a partir dessa frase.
+- **"Vídeo de referência do modelo: <link do Instagram>"** junto com o nome de um modelo (tela dividida, POV, texto na tela, STA, entrevista) é o reel da Suellen de onde o modelo veio. O modelo já está pronto no kit: **não baixe esse link e não rode `referencia`**. Vá direto para os **Modelos da Suellen**. O caminho **Vídeo de referência** é só para quando ela manda um link ou arquivo **sem** nomear estilo nem modelo.
+- **Colchetes que sobraram** (por exemplo "o vídeo [noticia]", "a frase: POV: [você começou a andar com quem pensa grande]", "[IMG_2041]"): ela copiou o exemplo sem trocar. Não use o texto do exemplo como se fosse dela. Pergunte, numa mensagem só, o que vai em cada colchete que ficou, e diga que pode responder "faz do seu jeito".
 
 ## Editar um vídeo gravado
 
