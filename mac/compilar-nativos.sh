@@ -6,7 +6,9 @@ set -euo pipefail
 BASE_ZIP="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"; SAIDA="$2"
 NODE_V=24.21.0
 WHISPER_TAG=v1.9.4
-FFMPEG_V=9.0.2   # mesma versão do pacote do Windows; o build "latest" que mudar de versão para a compilação
+FFMPEG_V=9.0.2   # mesma versão do pacote do Windows
+# build fixo do 9.0.2 por chip (o "latest" passou para o 9.1 em nov/2026 e parava a compilação)
+FFMPEG_BUILD_arm64=1789931890_9.0.2; FFMPEG_BUILD_amd64=1789931006_9.0.2
 YTDLP_V=2026.08.19   # mesmo yt-dlp do pacote do Windows
 case "$(uname -m)" in arm64) NA=arm64; FA=arm64 ;; x86_64) NA=x64; FA=amd64 ;; *) exit 1 ;; esac
 mkdir -p "$SAIDA/bin/whisper"; SAIDA="$(cd "$SAIDA" && pwd)"
@@ -21,13 +23,14 @@ cp "node-v$NODE_V-darwin-$NA/bin/node" "$SAIDA/bin/node"
 
 echo "== FFmpeg ($FA)"
 for p in ffmpeg ffprobe; do
-  curl -fsSL -o "$p.zip" "https://ffmpeg.martin-riedl.de/redirect/latest/macos/$FA/release/$p.zip"
+  FB="FFMPEG_BUILD_$FA"
+  curl -fsSL -o "$p.zip" "https://ffmpeg.martin-riedl.de/download/macos/$FA/${!FB}/$p.zip"
   unzip -qo "$p.zip" "$p" -d "$SAIDA/bin"
 done
 chmod +x "$SAIDA/bin/ffmpeg" "$SAIDA/bin/ffprobe"
 "$SAIDA/bin/ffmpeg" -hide_banner -version | head -1
 "$SAIDA/bin/ffmpeg" -hide_banner -version | head -1 | grep -q "ffmpeg version $FFMPEG_V-" \
-  || { echo "o FFmpeg baixado não é o $FFMPEG_V: confira o build novo e atualize FFMPEG_V de propósito"; exit 1; }
+  || { echo "o FFmpeg baixado não é o $FFMPEG_V: confira FFMPEG_BUILD_* e FFMPEG_V"; exit 1; }
 # o que a skill usa: legenda (libass), texto, HDR (zscale), VP9 com transparência, x264 e a placa da Apple
 for f in subtitles drawtext zscale tonemap; do "$SAIDA/bin/ffmpeg" -hide_banner -filters | grep -qw "$f" || { echo "ffmpeg sem filtro $f"; exit 1; }; done
 for e in libx264 libvpx-vp9 h264_videotoolbox aac; do "$SAIDA/bin/ffmpeg" -hide_banner -encoders | grep -qw "$e" || { echo "ffmpeg sem encoder $e"; exit 1; }; done
