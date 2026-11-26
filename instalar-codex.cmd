@@ -77,8 +77,24 @@ timeout /t 5 /nobreak >nul
 move "%PACOTE%\videos-opus" "%ANTIGO%" >nul 2>&1
 if errorlevel 1 goto erro_em_uso
 :extrair
-tar -xf "%ZIP%" -C "%PACOTE%" videos-opus
+rem o descompactador do Windows (tar) fica em System32. Chamar só "tar" falha quando o PATH foi alterado, e um tar de
+rem outro programa (Git, por exemplo) não abre zip. Em Windows 10 de antes de 2018 ele não existe: aí vai pelo PowerShell.
+set "TAR="
+if exist "%SystemRoot%\System32\tar.exe" set "TAR=%SystemRoot%\System32\tar.exe"
+if not defined TAR if exist "%SystemRoot%\Sysnative\tar.exe" set "TAR=%SystemRoot%\Sysnative\tar.exe"
+rem só para testes automáticos: VIDEOS_OPUS_SEM_TAR=1 força o caminho do PowerShell
+if defined VIDEOS_OPUS_SEM_TAR set "TAR="
+if not defined TAR goto extrair_powershell
+"%TAR%" -xf "%ZIP%" -C "%PACOTE%" videos-opus
 if errorlevel 1 goto erro_extrair
+goto extraido
+:extrair_powershell
+echo       Este Windows não tem o descompactador rápido. Vai por outro caminho: pode levar alguns minutos...
+set "VOP_ZIP=%ZIP%"
+set "VOP_DEST=%PACOTE%"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; Add-Type -AssemblyName System.IO.Compression.FileSystem; $z=[IO.Compression.ZipFile]::OpenRead($env:VOP_ZIP); try { foreach($e in $z.Entries){ if(-not $e.FullName.StartsWith('videos-opus/')){continue}; $p=Join-Path $env:VOP_DEST $e.FullName; if($e.FullName.EndsWith('/')){[void][IO.Directory]::CreateDirectory($p)} else {[void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($p)); [IO.Compression.ZipFileExtensions]::ExtractToFile($e,$p,$true)} } } finally { $z.Dispose() }"
+if errorlevel 1 goto erro_extrair
+:extraido
 if defined ANTIGO rmdir /s /q "%ANTIGO%" >nul 2>&1
 del /q "%ZIP%" >nul 2>&1
 
